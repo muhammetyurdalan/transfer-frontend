@@ -4,19 +4,29 @@ import type { RouteInfo } from './types';
 
 type Result = { key: string; route: RouteInfo | null; failed: boolean };
 
-/** İki nokta seçiliyse OSRM'den rota alır. Nokta değişince önceki istek iptal edilir. */
-export function useRoute(from: LatLng | null, to: LatLng | null) {
+/**
+ * `points` (pickup, seçilmiş ara duraklar, dropoff) sırasıyla OSRM'den rota alır.
+ * İlk ve son nokta seçilmeden istek atılmaz. Noktalar değişince önceki istek iptal edilir.
+ */
+export function useRoute(points: (LatLng | null)[]) {
   const [result, setResult] = useState<Result | null>(null);
   const [attempt, setAttempt] = useState(0);
-  const coords = from && to ? `${from.lat},${from.lng};${to.lat},${to.lng}` : null;
+  const first = points[0];
+  const last = points[points.length - 1];
+  const route = first && last && points.length >= 2 ? points.filter((p): p is LatLng => !!p) : null;
+  const coords = route?.map((p) => `${p.lat},${p.lng}`).join(';') ?? null;
   const key = coords && `${coords}#${attempt}`;
 
   useEffect(() => {
-    if (!key || !from || !to) return;
+    if (!key || !route) return;
     const controller = new AbortController();
-    fetchRoute(from, to, controller.signal)
+    fetchRoute(route, controller.signal)
       .then((r) =>
-        setResult({ key, failed: false, route: { distance: r.distance, duration: r.duration, path: r.path } }),
+        setResult({
+          key,
+          failed: false,
+          route: { distance: r.distance, duration: r.duration, path: r.path, segments: r.segments },
+        }),
       )
       .catch((e: unknown) => {
         if ((e as Error).name !== 'AbortError') setResult({ key, failed: true, route: null });

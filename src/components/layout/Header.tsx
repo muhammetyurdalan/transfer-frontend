@@ -8,6 +8,7 @@ import { useIsCompact } from '@/hooks/useIsMobile';
 import { BrandLogo } from './BrandLogo';
 import { LanguageMenu } from './LanguageMenu';
 import { ProfileMenu } from './ProfileMenu';
+import { ThemeModeMenu } from './ThemeModeMenu';
 import { activeNavPath, navItemsFor } from './navItems';
 
 /** Alt kenarı altın çizgili sticky header (§6.1). Renkler `inverse` token'ından. */
@@ -53,6 +54,7 @@ export function Header({ onOpenDrawer }: { onOpenDrawer: () => void }) {
         )}
         <Box sx={{ flexGrow: 1 }} />
         <NotificationMenu />
+        <ThemeModeMenu />
         <LanguageMenu />
         <ProfileMenu />
       </Toolbar>

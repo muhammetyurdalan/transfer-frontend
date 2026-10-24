@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, Outlet } from 'react-router';
 import type { Role } from '@/graphql/generated/graphql';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AuthLayout } from '@/components/layout/AuthLayout';
+import ErrorBoundaryPage from '@/features/errors/ErrorBoundaryPage';
 import NotFoundPage from '@/features/errors/NotFoundPage';
 import { AuthProvider } from './providers/AuthProvider';
 import { SubscriptionProvider } from './providers/SubscriptionProvider';
@@ -42,6 +43,8 @@ const guard = (element: React.ReactNode, roles?: Role[]) => <RequireAuth roles={
 export const router = createBrowserRouter([
   {
     element: <Root />,
+    // Layout dışı (provider, layout, auth sayfaları) hatalar: tam sayfa
+    errorElement: <ErrorBoundaryPage fullPage />,
     children: [
       {
         element: (
@@ -59,20 +62,26 @@ export const router = createBrowserRouter([
       {
         element: guard(<AppLayout />),
         children: [
-          { path: '/', element: <HomeRedirect /> },
-          { path: '/transfers', element: <TransferListPage /> },
-          { path: '/transfers/new', element: guard(<CreateTransferPage />, ['CUSTOMER']) },
-          { path: '/transfers/:id', element: <TransferDetailPage /> },
-          { path: '/transfers/:id/vehicle', element: guard(<SelectVehiclePage />, ['CUSTOMER']) },
-          { path: '/transfers/:id/edit', element: guard(<EditTransferPage />, ['CUSTOMER']) },
-          { path: '/dispatch', element: guard(<DispatchPage />, OPERATIONS) },
-          { path: '/jobs', element: guard(<JobsPage />, ['DRIVER']) },
-          { path: '/vehicles', element: guard(<VehiclesPage />, [...OPERATIONS, 'DRIVER']) },
-          { path: '/vehicle-categories', element: guard(<VehicleCategoriesPage />, STAFF) },
-          { path: '/users', element: guard(<UsersPage />, STAFF) },
-          { path: '/settings', element: <Navigate to="/settings/profile" replace /> },
-          { path: '/settings/:tab', element: <SettingsPage /> },
-          { path: '*', element: <NotFoundPage /> },
+          {
+            // Sayfa hataları header/menü korunarak içerik alanında gösterilir
+            errorElement: <ErrorBoundaryPage />,
+            children: [
+              { path: '/', element: <HomeRedirect /> },
+              { path: '/transfers', element: <TransferListPage /> },
+              { path: '/transfers/new', element: guard(<CreateTransferPage />, ['CUSTOMER']) },
+              { path: '/transfers/:id', element: <TransferDetailPage /> },
+              { path: '/transfers/:id/vehicle', element: guard(<SelectVehiclePage />, ['CUSTOMER']) },
+              { path: '/transfers/:id/edit', element: guard(<EditTransferPage />, ['CUSTOMER']) },
+              { path: '/dispatch', element: guard(<DispatchPage />, OPERATIONS) },
+              { path: '/jobs', element: guard(<JobsPage />, ['DRIVER']) },
+              { path: '/vehicles', element: guard(<VehiclesPage />, [...OPERATIONS, 'DRIVER']) },
+              { path: '/vehicle-categories', element: guard(<VehicleCategoriesPage />, STAFF) },
+              { path: '/users', element: guard(<UsersPage />, STAFF) },
+              { path: '/settings', element: <Navigate to="/settings/profile" replace /> },
+              { path: '/settings/:tab', element: <SettingsPage /> },
+              { path: '*', element: <NotFoundPage /> },
+            ],
+          },
         ],
       },
     ],

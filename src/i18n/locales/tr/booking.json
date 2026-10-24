@@ -35,7 +35,7 @@
     "time": "Zaman",
     "passengers": "Yolcu ve ihtiyaçlar",
     "passenger": "Yolcu bilgisi",
-    "legs": "Ara duraklar (opsiyonel)"
+    "legs": "Ara duraklar"
   },
   "fields": {
     "pickup": "Alış noktası",
@@ -60,15 +60,9 @@
     "selectBoth": "Rotayı görmek için alış ve bırakış noktası seçin"
   },
   "legs": {
-    "add": "Ara durak ekle",
-    "remove": "Durağı sil",
-    "item": "Durak {{n}}",
-    "start": "Başlangıç adresi",
-    "end": "Bitiş adresi",
-    "startTime": "Başlangıç zamanı",
-    "endTime": "Bitiş zamanı",
     "readOnly": "Ara duraklar oluşturulduktan sonra değiştirilemez.",
-    "none": "Ara durak yok"
+    "none": "Ara durak yok",
+    "segment": "{{n}}. bölüm"
   },
   "validation": {
     "required": "Zorunlu",
@@ -76,7 +70,6 @@
     "min": "En az {{min}} olmalı",
     "future": "Şu andan en az 15 dakika sonrasını seçin",
     "address": "Bir adres seçin",
-    "legOrder": "Bitiş zamanı başlangıçtan sonra olmalı",
     "integer": "Tam sayı olmalı"
   },
   "vehicle": {
@@ -99,5 +92,11 @@
   "summary": {
     "passengers": "{{count}} yolcu",
     "luggage": "{{count}} bagaj"
+  },
+  "stops": {
+    "add": "Durak ekle",
+    "remove": "Durağı kaldır",
+    "item": "{{n}}. durak",
+    "limit": "En fazla {{max}} durak"
   }
 }

@@ -95,7 +95,7 @@
     "notFoundBody": "Aradığınız sayfa yok veya taşınmış.",
     "forbiddenTitle": "Erişim yok",
     "forbiddenBody": "Bu sayfayı görüntüleme yetkiniz yok.",
-    "goHome": "Ana sayfaya dön"
+    "goHome": "Ana sayfaya git"
   },
   "error": {
     "title": "Bir şeyler ters gitti",
@@ -110,5 +110,12 @@
     "from": "Başlangıç",
     "to": "Bitiş"
   },
-  "confirmTyping": "Onaylamak için {{word}} yazın"
+  "confirmTyping": "Onaylamak için {{word}} yazın",
+  "errorBoundary": {
+    "title": "Bir şeyler ters gitti",
+    "body": "Bu sayfa gösterilirken beklenmeyen bir hata oluştu. Sayfayı yenileyebilir veya ana sayfaya dönebilirsiniz.",
+    "chunk": "Uygulamanın yeni bir sürümü yayınlandı. Devam etmek için sayfayı yenileyin.",
+    "reload": "Sayfayı yenile",
+    "details": "Hata detayları"
+  }
 }

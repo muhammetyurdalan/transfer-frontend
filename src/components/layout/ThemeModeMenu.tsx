@@ -3,7 +3,7 @@ import { IconButton, ListItemIcon, Menu, MenuItem, Tooltip, useColorScheme } fro
 import { useTranslation } from 'react-i18next';
 import { themeModeOptions } from '@/components/themeModeOptions';
 
-/** Giriş öncesi sayfaların sağ üstündeki tema seçici (ikon menü). */
+/** Tema seçici (Açık / Koyu / Sistem) ikon menüsü: header'da ve giriş öncesi sayfaların sağ üstünde. */
 export function ThemeModeMenu() {
   const { t } = useTranslation();
   const { mode, setMode } = useColorScheme();
@@ -22,7 +22,13 @@ export function ThemeModeMenu() {
           {current.icon}
         </IconButton>
       </Tooltip>
-      <Menu anchorEl={anchor} open={!!anchor} onClose={() => setAnchor(null)}>
+      <Menu
+        anchorEl={anchor}
+        open={!!anchor}
+        onClose={() => setAnchor(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
         {themeModeOptions.map((o) => (
           <MenuItem
             key={o.value}

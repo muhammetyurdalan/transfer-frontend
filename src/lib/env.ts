@@ -21,6 +21,8 @@ function parseCenter(value: string): [number, number] {
 }
 
 export const env = {
+  /** Geliştirme modu (hata detayları gibi sadece geliştiriciye gösterilenler için) */
+  DEV: import.meta.env.DEV,
   API_URL: required('VITE_API_URL'),
   WS_URL: required('VITE_WS_URL'),
   MEDIA_URL: required('VITE_MEDIA_URL'),

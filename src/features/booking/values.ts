@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import type {
   BookingTransferFieldsFragment,
+  CreateLeg,
   CreateTransfer,
   CurrentUserFragment,
   UpdateTransfer,
@@ -28,7 +29,7 @@ export function emptyValues(user: CurrentUserFragment | null): TransferFormValue
     passengerPhone: user?.phone ?? '',
     flightNumber: '',
     note: '',
-    legs: [],
+    stops: [],
   };
 }
 
@@ -61,7 +62,7 @@ export function fromTransfer(t: BookingTransferFieldsFragment): TransferFormValu
     passengerPhone: t.passengerPhone ?? '',
     flightNumber: t.flightNumber ?? '',
     note: t.note ?? '',
-    legs: [],
+    stops: [],
   };
 }
 
@@ -69,20 +70,39 @@ export function routeFromTransfer(t: BookingTransferFieldsFragment): RouteInfo |
   return t.distance && t.duration ? { distance: Number(t.distance).toFixed(2), duration: t.duration } : null;
 }
 
+/**
+ * Ara durak varsa rota bölümlerinden `legs` üretilir: pickup → durak 1 → … → dropoff.
+ * Zamanlar pickup zamanından başlayıp OSRM bölüm süreleri eklenerek hesaplanır.
+ */
+export function buildLegs(v: TransferFormValues, route: RouteInfo): CreateLeg[] {
+  const stops = v.stops.map((s) => s.address).filter((a): a is SelectedAddress => !!a);
+  if (stops.length === 0 || !v.pickup || !v.dropoff || !v.pickupTime) return [];
+  const points = [v.pickup, ...stops, v.dropoff];
+  let start = v.pickupTime;
+  return points.slice(0, -1).map((from, order) => {
+    const to = points[order + 1];
+    const minutes = Math.max(1, route.segments?.[order]?.duration ?? 1);
+    const end = start.add(minutes, 'minute');
+    const leg: CreateLeg = {
+      startAddress: from.address,
+      startLatitude: from.latitude,
+      startLongitude: from.longitude,
+      startTime: start.toISOString(),
+      endAddress: to.address,
+      endLatitude: to.latitude,
+      endLongitude: to.longitude,
+      endTime: end.toISOString(),
+      order,
+    };
+    start = end;
+    return leg;
+  });
+}
+
 export function toCreateInput(v: TransferFormValues, route: RouteInfo): CreateTransfer {
   const pickup = v.pickup!;
   const dropoff = v.dropoff!;
-  const legs = v.legs.map((leg, order) => ({
-    startAddress: leg.start!.address,
-    startLatitude: leg.start!.latitude,
-    startLongitude: leg.start!.longitude,
-    startTime: leg.startTime!.toISOString(),
-    endAddress: leg.end!.address,
-    endLatitude: leg.end!.latitude,
-    endLongitude: leg.end!.longitude,
-    endTime: leg.endTime!.toISOString(),
-    order,
-  }));
+  const legs = buildLegs(v, route);
   return {
     pickupAddress: pickup.address,
     pickupLatitude: pickup.latitude,

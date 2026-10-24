@@ -95,7 +95,7 @@
     "notFoundBody": "The page you are looking for does not exist or was moved.",
     "forbiddenTitle": "No access",
     "forbiddenBody": "You don't have permission to view this page.",
-    "goHome": "Go to home"
+    "goHome": "Go to home page"
   },
   "error": {
     "title": "Something went wrong",
@@ -110,5 +110,12 @@
     "from": "From",
     "to": "To"
   },
-  "confirmTyping": "Type {{word}} to confirm"
+  "confirmTyping": "Type {{word}} to confirm",
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "body": "An unexpected error occurred while showing this page. You can reload the page or go back to the home page.",
+    "chunk": "A new version of the app is available. Reload the page to continue.",
+    "reload": "Reload page",
+    "details": "Error details"
+  }
 }

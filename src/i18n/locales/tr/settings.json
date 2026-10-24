@@ -7,16 +7,11 @@
   },
   "profile": {
     "cardTitle": "Profil",
-    "avatar": "Fotoğrafı değiştir",
     "firstName": "Ad",
     "lastName": "Soyad",
     "phone": "Telefon",
-    "language": "Dil",
     "email": "E-posta",
-    "role": "Rol",
     "saved": "Profil güncellendi",
-    "appearance": "Görünüm",
-    "appearanceBody": "Uygulamanın bu cihazdaki görünümünü seçin.",
     "security": "Güvenlik",
     "securityBody": "Yeni şifre belirlemek için e-postanıza doğrulama kodu göndereceğiz.",
     "changePassword": "Şifre değiştir",
@@ -29,7 +24,8 @@
     "validation": {
       "required": "Zorunlu",
       "max": "En fazla {{count}} karakter"
-    }
+    },
+    "changePhoto": "Fotoğrafı değiştir"
   },
   "statement": {
     "title": "Ödeme hareketleri",

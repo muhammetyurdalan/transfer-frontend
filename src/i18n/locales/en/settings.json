@@ -7,16 +7,11 @@
   },
   "profile": {
     "cardTitle": "Profile",
-    "avatar": "Change photo",
     "firstName": "First name",
     "lastName": "Last name",
     "phone": "Phone",
-    "language": "Language",
     "email": "E-mail",
-    "role": "Role",
     "saved": "Profile updated",
-    "appearance": "Appearance",
-    "appearanceBody": "Choose how the app looks on this device.",
     "security": "Security",
     "securityBody": "We will send a verification code to your e-mail to set a new password.",
     "changePassword": "Change password",
@@ -29,7 +24,8 @@
     "validation": {
       "required": "Required",
       "max": "Max {{count}} characters"
-    }
+    },
+    "changePhoto": "Change photo"
   },
   "statement": {
     "title": "Statement",

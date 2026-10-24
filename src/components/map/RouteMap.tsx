@@ -9,6 +9,8 @@ import { pinIcon } from './leafletSetup';
 type Props = {
   from?: LatLng | null;
   to?: LatLng | null;
+  /** Ara duraklar, sırayla 1, 2, 3… numaralı pin */
+  stops?: LatLng[];
   /** [lat, lng][] (decodePolyline çıktısı) */
   path?: [number, number][];
   height?: number | string;
@@ -26,11 +28,12 @@ function FitBounds({ points }: { points: [number, number][] }) {
   return null;
 }
 
-/** Alış (A) / bırakış (B) pin'leri ve rota çizgisi olan salt-okunur harita. */
-export function RouteMap({ from, to, path, height = 280, sx }: Props) {
+/** Alış (A), ara durak (1, 2…) ve bırakış (B) pin'leri ile rota çizgisi olan salt-okunur harita. */
+export function RouteMap({ from, to, stops = [], path, height = 280, sx }: Props) {
   const points: [number, number][] = [
     ...(path && path.length > 1 ? path : []),
     ...(from ? [[from.lat, from.lng] as [number, number]] : []),
+    ...stops.map((s) => [s.lat, s.lng] as [number, number]),
     ...(to ? [[to.lat, to.lng] as [number, number]] : []),
   ];
   return (
@@ -46,6 +49,9 @@ export function RouteMap({ from, to, path, height = 280, sx }: Props) {
       <MapContainer center={env.DEFAULT_MAP_CENTER} zoom={env.DEFAULT_MAP_ZOOM} scrollWheelZoom={false}>
         <TileLayer url={env.TILE_URL} attribution={env.TILE_ATTRIBUTION} />
         {from && <Marker position={[from.lat, from.lng]} icon={pinIcon('A')} />}
+        {stops.map((s, i) => (
+          <Marker key={`${i}-${s.lat},${s.lng}`} position={[s.lat, s.lng]} icon={pinIcon(String(i + 1), 'inverse')} />
+        ))}
         {to && <Marker position={[to.lat, to.lng]} icon={pinIcon('B', 'inverse')} />}
         {path && path.length > 1 && (
           <Polyline positions={path} pathOptions={{ className: 'route-line', weight: 5, opacity: 0.9 }} />

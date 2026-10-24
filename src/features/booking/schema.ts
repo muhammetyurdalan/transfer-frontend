@@ -7,6 +7,9 @@ import type { SelectedAddress } from '@/lib/geo';
 export const MIN_LEAD_MINUTES = 15;
 export const minPickupTime = () => dayjs().add(MIN_LEAD_MINUTES, 'minute');
 
+/** Pickup ile dropoff arasına eklenebilecek en fazla ara durak */
+export const MAX_STOPS = 10;
+
 const isAddress = (v: unknown): v is SelectedAddress =>
   !!v &&
   typeof v === 'object' &&
@@ -29,14 +32,6 @@ export function makeTransferSchema(t: TFunction, initialPickupTime?: Dayjs | nul
       .int({ message: t('booking:validation.integer') })
       .min(min, { message: t('booking:validation.min', { min }) });
 
-  const leg = z
-    .object({ start: address, end: address, startTime: dateTime, endTime: dateTime })
-    .superRefine((v, ctx) => {
-      if (v.startTime && v.endTime && !v.endTime.isAfter(v.startTime)) {
-        ctx.addIssue({ code: 'custom', path: ['endTime'], message: t('booking:validation.legOrder') });
-      }
-    });
-
   return z.object({
     pickup: address,
     dropoff: address,
@@ -55,6 +50,6 @@ export function makeTransferSchema(t: TFunction, initialPickupTime?: Dayjs | nul
     passengerPhone: z.string().trim().max(20, { message: max(20) }),
     flightNumber: z.string().trim().max(10, { message: max(10) }),
     note: z.string(),
-    legs: z.array(leg),
+    stops: z.array(z.object({ address })).max(MAX_STOPS),
   });
 }

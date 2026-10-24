@@ -31,11 +31,11 @@ import { RouteMap } from '@/components/map/RouteMap';
 import { StickyActionBar } from '@/components/StickyActionBar';
 import { errorKey } from '@/lib/errors';
 import { formatRoute } from '@/lib/format';
-import type { SelectedAddress } from '@/lib/geo';
+import type { LatLng, SelectedAddress } from '@/lib/geo';
 import { CounterField } from './CounterField';
 import { FormSection } from './FormSection';
-import { LegsEditor } from './LegsSection';
 import { makeTransferSchema, minPickupTime } from './schema';
+import { StopsEditor } from './StopsEditor';
 import type { RouteInfo, TransferFormValues } from './types';
 import { useRoute } from './useRoute';
 import { sameAddress } from './values';
@@ -79,8 +79,11 @@ export function TransferForm({
   const [formError, setFormError] = useState<string | null>(null);
   const values = useWatch({ control }) as TransferFormValues;
   const { pickup, dropoff } = values;
+  const stops = useMemo(() => values.stops ?? [], [values.stops]);
+  const stopPositions = stops.map((s) => positionOf(s.address)).filter((p): p is LatLng => !!p);
 
-  const route = useRoute(positionOf(pickup), positionOf(dropoff));
+  // Rota pickup → seçilmiş ara duraklar → dropoff sırasıyla hesaplanır.
+  const route = useRoute([positionOf(pickup), ...stopPositions, positionOf(dropoff)]);
   const addressesUnchanged =
     mode === 'edit' && sameAddress(pickup, defaultValues.pickup) && sameAddress(dropoff, defaultValues.dropoff);
   // Düzenlemede adresler aynıysa kayıtlı mesafe/süre geçerlidir; OSRM sadece çizgiyi verir.
@@ -118,14 +121,34 @@ export function TransferForm({
     }
   });
 
+  // Yer değiştirmede ara duraklar da ters sıraya girer.
   const swap = () => {
-    const { pickup: p, dropoff: d } = getValues();
+    const { pickup: p, dropoff: d, stops: s } = getValues();
     setValue('pickup', d, { shouldDirty: true, shouldValidate: true });
     setValue('dropoff', p, { shouldDirty: true, shouldValidate: true });
+    if (s.length > 1) setValue('stops', [...s].reverse(), { shouldDirty: true, shouldValidate: true });
   };
 
+  const swapButton = (
+    <Tooltip title={t('booking:fields.swap')}>
+      <IconButton
+        aria-label={t('booking:fields.swap')}
+        onClick={swap}
+        sx={{ bgcolor: 'inverse.main', color: 'inverse.accent', '&:hover': { bgcolor: 'inverse.light' } }}
+      >
+        <SwapVertRounded />
+      </IconButton>
+    </Tooltip>
+  );
+
   const map = (height: number) => (
-    <RouteMap from={positionOf(pickup)} to={positionOf(dropoff)} path={effectiveRoute?.path} height={height} />
+    <RouteMap
+      from={positionOf(pickup)}
+      to={positionOf(dropoff)}
+      stops={stopPositions}
+      path={effectiveRoute?.path}
+      height={height}
+    />
   );
 
   const routeSummary = routeLoading ? (
@@ -181,17 +204,11 @@ export function TransferForm({
                     />
                   )}
                 />
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Tooltip title={t('booking:fields.swap')}>
-                    <IconButton
-                      aria-label={t('booking:fields.swap')}
-                      onClick={swap}
-                      sx={{ bgcolor: 'inverse.main', color: 'inverse.accent', '&:hover': { bgcolor: 'inverse.light' } }}
-                    >
-                      <SwapVertRounded />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
+                {mode === 'create' ? (
+                  <StopsEditor control={control} near={positionOf(pickup)} trailing={swapButton} />
+                ) : (
+                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>{swapButton}</Box>
+                )}
                 <Controller
                   control={control}
                   name="dropoff"
@@ -253,7 +270,7 @@ export function TransferForm({
                     ['childSeatCount', <ChildFriendlyRounded key="c" />, 0],
                   ] as const
                 ).map(([name, icon, min]) => (
-                  <Grid key={name} size={{ xs: 12, sm: 4 }}>
+                  <Grid key={name} size={12}>
                     <Controller
                       control={control}
                       name={name}
@@ -352,7 +369,7 @@ export function TransferForm({
               </Grid>
             </FormSection>
 
-            {legsSlot ?? <LegsEditor control={control} near={pickup} />}
+            {legsSlot}
           </Stack>
         </Grid>
 

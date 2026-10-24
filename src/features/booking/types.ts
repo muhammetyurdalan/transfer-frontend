@@ -1,12 +1,8 @@
 import type { Dayjs } from 'dayjs';
-import type { SelectedAddress } from '@/lib/geo';
+import type { RouteSegment, SelectedAddress } from '@/lib/geo';
 
-export type LegValues = {
-  start: SelectedAddress | null;
-  end: SelectedAddress | null;
-  startTime: Dayjs | null;
-  endTime: Dayjs | null;
-};
+/** Pickup ile dropoff arasındaki ara durak (useFieldArray nesne ister). */
+export type StopValue = { address: SelectedAddress | null };
 
 export type TransferFormValues = {
   pickup: SelectedAddress | null;
@@ -20,7 +16,8 @@ export type TransferFormValues = {
   passengerPhone: string;
   flightNumber: string;
   note: string;
-  legs: LegValues[];
+  /** Ara duraklar, sırayla ziyaret edilir. En fazla `MAX_STOPS` */
+  stops: StopValue[];
 };
 
 /** OSRM'den hesaplanan rota (submit'te `distance` / `duration` olarak gider). */
@@ -28,6 +25,8 @@ export type RouteInfo = {
   distance: string;
   duration: number;
   path?: [number, number][];
+  /** Ardışık noktalar arası bölümler (ara durak varsa `legs` bunlardan üretilir) */
+  segments?: RouteSegment[];
 };
 
 /** Form gönderiminde sunucudan dönen hata kodu (alanlara dağıtılır). */

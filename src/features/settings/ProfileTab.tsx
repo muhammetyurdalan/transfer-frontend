@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Box, Button, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, Stack, TextField, Typography } from '@mui/material';
 import { DeleteForeverRounded, LockResetRounded } from '@mui/icons-material';
-import { useApolloClient, useMutation } from '@apollo/client/react';
-import { Controller, useForm } from 'react-hook-form';
+import { useMutation } from '@apollo/client/react';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link as RouterLink } from 'react-router';
@@ -10,29 +10,23 @@ import { useTranslation } from 'react-i18next';
 import { useSnackbar } from 'notistack';
 import { DeleteUserDocument, UpdateUserDocument, type UpdateUser } from '@/graphql/generated/graphql';
 import { useAuth, useCurrentUser } from '@/app/providers/AuthProvider';
-import { FileInput } from '@/components/FileInput';
-import { ThemeModeToggle } from '@/components/ThemeModeToggle';
 import { ConfirmDialog } from '@/components/feedback/ConfirmDialog';
-import { UserAvatar } from '@/components/UserAvatar';
-import { fromBackendLanguage } from '@/i18n';
-import { mediaUrl } from '@/lib/media';
+import { AvatarPicker } from './AvatarPicker';
 import { SectionCard } from './SectionCard';
 
 const schema = z.object({
   firstName: z.string().trim().min(1, 'settings:profile.validation.required').max(50, 'settings:profile.validation.max'),
   lastName: z.string().trim().min(1, 'settings:profile.validation.required').max(50, 'settings:profile.validation.max'),
   phone: z.string().trim().max(20, 'settings:profile.validation.max'),
-  language: z.enum(['EN', 'TR']),
 });
 type FormValues = z.infer<typeof schema>;
-const MAX: Record<keyof FormValues, number> = { firstName: 50, lastName: 50, phone: 20, language: 0 };
+const MAX: Record<keyof FormValues, number> = { firstName: 50, lastName: 50, phone: 20 };
 
-/** Profil sekmesi (§8.12): profil, görünüm, güvenlik ve tehlikeli bölge kartları. */
+/** Profil sekmesi (§8.12): profil, güvenlik ve tehlikeli bölge kartları. Dil header'daki menüden değişir. */
 export function ProfileTab() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const user = useCurrentUser();
   const { logout } = useAuth();
-  const client = useApolloClient();
   const { enqueueSnackbar } = useSnackbar();
   const [avatar, setAvatar] = useState<File | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -41,10 +35,8 @@ export function ProfileTab() {
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
     phone: user.phone ?? '',
-    language: user.language ?? 'EN',
   };
   const {
-    control,
     register,
     handleSubmit,
     reset,
@@ -59,7 +51,6 @@ export function ProfileTab() {
     if (dirtyFields.firstName) data.firstName = v.firstName.trim();
     if (dirtyFields.lastName) data.lastName = v.lastName.trim();
     if (dirtyFields.phone) data.phone = v.phone.trim();
-    if (dirtyFields.language) data.language = v.language;
     if (avatar) data.profileImage = avatar;
     try {
       const res = await updateUser({ variables: { data } });
@@ -69,14 +60,9 @@ export function ProfileTab() {
           firstName: updated.firstName ?? '',
           lastName: updated.lastName ?? '',
           phone: updated.phone ?? '',
-          language: updated.language ?? v.language,
         });
       }
       setAvatar(null);
-      if (data.language) {
-        await i18n.changeLanguage(fromBackendLanguage(data.language));
-        void client.refetchQueries({ include: ['VehicleOptions', 'VehicleCategories'] });
-      }
       enqueueSnackbar(t('settings:profile.saved'), { variant: 'success' });
     } catch {
       // hata snackbar'ı error link'ten
@@ -104,7 +90,7 @@ export function ProfileTab() {
         <form onSubmit={onSubmit} noValidate>
           <Stack spacing={3}>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2.5} sx={{ alignItems: { sm: 'center' } }}>
-              <UserAvatar user={user} size={72} />
+              <AvatarPicker user={user} value={avatar} onChange={setAvatar} />
               <Box sx={{ minWidth: 0, flexGrow: 1 }}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 700 }} noWrap>
                   {user.name}
@@ -113,12 +99,6 @@ export function ProfileTab() {
                   {user.email}
                 </Typography>
               </Box>
-              <FileInput
-                value={avatar}
-                onChange={setAvatar}
-                label={t('settings:profile.avatar')}
-                currentUrl={mediaUrl(user.profileImage)}
-              />
             </Stack>
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, md: 6 }}>
@@ -137,22 +117,7 @@ export function ProfileTab() {
                 />
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
-                <Controller
-                  control={control}
-                  name="language"
-                  render={({ field }) => (
-                    <TextField select label={t('settings:profile.language')} {...field}>
-                      <MenuItem value="EN">{t('languages.en')}</MenuItem>
-                      <MenuItem value="TR">{t('languages.tr')}</MenuItem>
-                    </TextField>
-                  )}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
                 <TextField label={t('settings:profile.email')} value={user.email ?? ''} disabled />
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <TextField label={t('settings:profile.role')} value={user.role ? t(`roles.${user.role}`) : ''} disabled />
               </Grid>
             </Grid>
             <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
@@ -162,12 +127,6 @@ export function ProfileTab() {
             </Stack>
           </Stack>
         </form>
-      </SectionCard>
-
-      <SectionCard title={t('settings:profile.appearance')} description={t('settings:profile.appearanceBody')}>
-        <Box sx={{ maxWidth: 480 }}>
-          <ThemeModeToggle />
-        </Box>
       </SectionCard>
 
       <SectionCard title={t('settings:profile.security')} description={t('settings:profile.securityBody')}>

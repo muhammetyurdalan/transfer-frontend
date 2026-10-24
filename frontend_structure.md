@@ -221,17 +221,17 @@ src/
     map/                   # RouteMap (A/B pin + rota), leafletSetup (ikon düzeltmesi, pinIcon)
     feedback/              # ConfirmDialog, EmptyState, ErrorState, LoadingSkeleton
     StatusChip.tsx (+TransactionChip), Money.tsx, UserAvatar.tsx, PageHeader.tsx, FileInput.tsx,
-    StickyActionBar.tsx, ThemeModeToggle.tsx, themeModeOptions.tsx
+    StickyActionBar.tsx, themeModeOptions.tsx
   features/
     auth/                  # LoginPage, RegisterPage, ForgotPasswordPage, EmailVerification (ortak 1-2. adım)
-    booking/               # TransferForm (oluştur + düzenle), LegsSection, VehicleOptionCard, TripSummaryCard, schema, useRoute
+    booking/               # TransferForm (oluştur + düzenle), StopsEditor (ara duraklar), LegsSection (salt okunur), VehicleOptionCard, TripSummaryCard, schema, useRoute
     transfers/             # List, Create, Edit, SelectVehicle, Detail, Dispatch, Jobs sayfaları, dialog'lar, transferPermissions
     messages/              # MessagePanel, MessageBubble, MessageComposer, messageRules
     vehicles/              # VehiclesPage, VehicleDialog, VehicleCategoriesPage, VehicleCategoryDialog
     users/                 # UsersPage, UpdateRoleDialog, SendNotificationDialog
-    settings/              # SettingsPage, ProfileTab, StatementTab (+RefundDialog), NotificationsTab
+    settings/              # SettingsPage, ProfileTab (+AvatarPicker), StatementTab (+RefundDialog), NotificationsTab
     notifications/         # NotificationMenu (header zili)
-    errors/                # NotFoundPage, ForbiddenPage
+    errors/                # NotFoundPage, ForbiddenPage, ErrorBoundaryPage, StatusPage (ortak düzen)
   i18n/
     index.ts               # i18next + dayjs kurulumu, dil yardımcıları
     locales/<en|tr>/<namespace>.json
@@ -330,7 +330,7 @@ transfers(filters: TransferFilter, ordering: [TransferOrder!], pagination: Offse
 - `ThemeProvider` kullanılır, `defaultMode="light"`.
 - SPA'da `InitColorSchemeScript` component'i render edilemediği için `index.html`'de eşdeğer küçük bir inline script vardır: `localStorage['mui-mode']`'u okuyup `<html>`'e `light`/`dark` class'ını ilk boyamadan önce ekler (flash olmaz).
 - `useColorScheme()` → `mode` değeri `'light' | 'dark' | 'system'` olur, `setMode` ile değişir. MUI tercihi `localStorage`'da saklar.
-- **Seçici:** `Settings > Profil > Görünüm` kartında `ThemeModeToggle` (üç seçenekli `ToggleButtonGroup`: ☀ Açık, ☾ Koyu, 🖥 Sistem). Aynı seçici giriş öncesi sayfaların (AuthLayout) sağ üstünde `ThemeModeMenu` ikon menüsü olarak da bulunur. Seçenekler `components/themeModeOptions.tsx`'tedir.
+- **Seçici:** `ThemeModeMenu` (`components/layout/ThemeModeMenu.tsx`). İkon butonu o anki modun ikonunu gösterir (☀ / ☾ / 🖥), tıklanınca açılır menüde ☀ Açık, ☾ Koyu, 🖥 Sistem seçenekleri listelenir, seçili olan işaretlidir. Giriş yapılmışsa **header'da** (dil menüsünün solunda), giriş öncesi sayfalarda (AuthLayout) sağ üstte bulunur. Settings'te ayrı bir Görünüm kartı yoktur. Seçenekler `components/themeModeOptions.tsx`'tedir.
 
 ### 5.3 Responsive ve mobil (zorunlu kurallar)
 - **Mobile-first:** stiller önce `xs` için yazılır, `sm/md/lg` ile genişletilir.
@@ -384,6 +384,7 @@ transfers(filters: TransferFilter, ordering: [TransferOrder!], pagination: Offse
 | Logo | `/`'a gider | herkes |
 | Nav linkleri | Role göre (§7). CUSTOMER'da ilk link **Create Transfer** (`/transfers/new`), diğer sekmelerle aynı stilde ve "Transferlerim"in solunda. `< md`'de drawer'da aynı sırayla | `>= md` |
 | **Notification** (zil) | `Badge` + `NotificationMenu` (§6.4) | giriş yapmış herkes |
+| **Theme** | İkon butonu + açılır `Menu`: Açık / Koyu / Sistem (§5.2) | herkes |
 | **Language** | `Menu`: English / Türkçe (§6.5) | herkes |
 | **Profile** | `Avatar` (profileImage veya baş harfler). Tıklanınca `Menu`: kullanıcı adı ve rolü (başlık), **Settings** (`/settings/profile`), **Logout** | giriş yapmış herkes |
 
@@ -451,7 +452,7 @@ type DataTableProps<T> = {
 - `FileInput`: `accept`, maksimum boyut kontrolü (istemci tarafında). Görsel için önizleme yapar, `currentUrl` ile mevcut görseli gösterir.
 - `StickyActionBar`: form/sayfa aksiyonları için alta yapışan `inverse` bar (altın üst çizgi, safe-area padding).
 - `RouteMap` (`components/map`): salt okunur harita, A (altın) / B (`inverse`) pin'leri ve OSRM rotası, sınırlara otomatik sığar.
-- `ThemeModeToggle` / `ThemeModeMenu`: tema seçiciler (§5.2).
+- `ThemeModeMenu`: tema seçici açılır menü (§5.2).
 - Hook'lar: `useIsMobile` (`< sm`), `useIsCompact` (`< md`), `useDebouncedValue`, `useAppEvent` (§9).
 
 ### 6.4 NotificationMenu (`features/notifications/NotificationMenu.tsx`)
@@ -486,7 +487,7 @@ type DataTableProps<T> = {
 | Harita karoları | OSM tile (`VITE_TILE_URL`) | `react-leaflet` `TileLayer`, attribution zorunlu. Yoğun prod kullanımında kendi tile sunucusu veya sağlayıcı kullanılmalı |
 | Adres autocomplete | **Photon** (`VITE_GEOCODER_URL/api?q=&limit=6&lat=&lon=`) | OSM verisi, yazarken arama için tasarlandı. **Nominatim kullanma**, kullanım politikası autocomplete'i yasaklıyor |
 | Reverse geocode (haritadan seç, konumum) | Photon `/reverse?lat=&lon=` | |
-| Mesafe ve süre | **OSRM** (`VITE_ROUTING_URL/route/v1/driving/{lng},{lat};{lng},{lat}?overview=full&geometries=polyline`) | Public demo sunucusu sadece geliştirme içindir, prod'da self-host OSRM |
+| Mesafe ve süre | **OSRM** (`VITE_ROUTING_URL/route/v1/driving/{lng},{lat};…;{lng},{lat}?overview=full&geometries=polyline`, ara duraklar waypoint olarak araya girer, `routes[0].legs` bölüm süreleri) | Public demo sunucusu sadece geliştirme içindir, prod'da self-host OSRM |
 
 - **`lang` parametresi gönderilmez.** Photon yerel isimleri (Türkçe ilçe adlarını) döndürsün, backend `District.name` ile eşleşebilsin.
 - Sonuçlar `VITE_GEOCODER_COUNTRY_CODES`'a göre istemcide süzülür.
@@ -560,7 +561,15 @@ type SelectedAddress = {
 
 - **Aktif link:** adrese en uzun eşleşen link aktif sayılır (`activeNavPath`). `/transfers/new`'de sadece Create Transfer, `/transfers/12`'de Transferlerim vurgulanır.
 
-**Yetki dışı route:** 403 sayfası. Giriş yapmamış kullanıcı `/login?next=...`'e gider.
+**Yetki dışı route:** 403 sayfası.
+
+**Error Boundary (`features/errors/ErrorBoundaryPage.tsx`):** react-router `errorElement` olarak iki seviyede tanımlıdır:
+- Giriş yapılmış sayfaları saran pathless route'ta: sayfa render/yükleme hatası header ve menü korunarak içerik alanında gösterilir.
+- Kök route'ta (`fullPage`): provider, layout veya auth sayfalarındaki hatalar tam sayfa, kendi zemini ile gösterilir.
+- İçerik: uyarı ikonu, kod (`500` veya route hata yanıtının status'u), başlık ve açıklama. Butonlar: **Sayfayı yenile** (`window.location.reload()`) ve **Ana sayfaya git** (`/`, uygulama durumu bozuk olabileceği için `reloadDocument` ile tam yenileme).
+- Yeni sürüm sonrası eski lazy chunk yüklenemezse (`Failed to fetch dynamically imported module`) "Yeni sürüm yayınlandı, sayfayı yenileyin" metni gösterilir.
+- Geliştirme modunda (`env.DEV`) katlanır "Hata detayları" bölümünde stack gösterilir. Hata konsola da yazılır.
+- 403/404/Error Boundary sayfaları ortak `StatusPage` düzenini kullanır. Giriş yapmamış kullanıcı `/login?next=...`'e gider.
 
 ## 8. Sayfa sayfa query / mutation kullanımı
 
@@ -672,14 +681,16 @@ Satır tıklama → `/transfers/:id`.
 
 1. **Güzergah**
    - `Pickup` → `AddressField` (konumum, haritadan seç, sil butonlarıyla)
+   - **Ara duraklar** (`StopsEditor`): pickup ile dropoff arasında **Add stop** butonu. Her tıklama araya numaralı yeni bir `AddressField` açar (1., 2., … durak), her durağın yanında kaldır butonu vardır. **En fazla 10 durak** (`MAX_STOPS`, `features/booking/schema.ts`), sınıra gelince buton disabled olur ve "En fazla 10 durak" yazar. Sayaç `n/10` gösterilir.
    - `Dropoff` → `AddressField`
-   - Aralarında "yer değiştir" (`SwapVert`) ikon butonu
-   - İki adres de seçilince OSRM'den rota alınır:
-     - `distance` = metre / 1000, 2 ondalık
-     - `duration` = saniye / 60, yukarı yuvarlanır
+   - "Add stop" satırının sağında "yer değiştir" (`SwapVert`) ikon butonu. Pickup ↔ dropoff değişir, ara duraklar ters sıraya girer.
+   - Pickup ve dropoff seçilince OSRM'den rota alınır. Seçilmiş ara duraklar sırayla waypoint olarak eklenir (pickup → 1 → 2 → … → dropoff):
+     - `distance` = toplam metre / 1000, 2 ondalık (ara duraklar dahil, yani fiyat da durakları içerir)
+     - `duration` = toplam saniye / 60, yukarı yuvarlanır
+     - Haritada ara duraklar 1, 2, 3… numaralı pin olarak gösterilir.
      - Rota alınırken skeleton gösterilir. Hata olursa "Rota hesaplanamadı, tekrar dene" + tekrar butonu.
 2. **Zaman:** `pickupTime` → `DateTimePicker`, `disablePast`, minimum şu an + 15 dk (backend sadece gelecek ister, `ERR016`).
-3. **Yolcu ve ihtiyaçlar**
+3. **Yolcu ve ihtiyaçlar** (alanlar her ekran genişliğinde alt alta, tam genişlik)
    - `passengerCount`: stepper input, min 1
    - `luggageCount`: min 0
    - `childSeatCount`: min 0
@@ -689,13 +700,14 @@ Satır tıklama → `/transfers/:id`.
    - `passengerPhone`: varsayılan kullanıcının telefonu
    - `flightNumber`
    - `note` (çok satırlı)
-5. **Ara duraklar (opsiyonel, katlanır bölüm)**
-   - "Ara durak ekle" ile `legs` listesine satır eklenir.
-   - Her satır: başlangıç adresi, bitiş adresi (`AddressField`), başlangıç zamanı, bitiş zamanı, sil butonu.
-   - Satır sırası `order` olarak gönderilir.
+5. **`legs` üretimi (kullanıcı ayrıca girmez):** ara durak varsa `buildLegs` (`features/booking/values.ts`) rota bölümlerinden `legs` listesi üretir: pickup → 1. durak, 1. → 2. durak, …, son durak → dropoff (N durak = N+1 leg).
+   - `startTime` = `pickupTime` + önceki bölümlerin OSRM süreleri, `endTime` = `startTime` + bu bölümün süresi (en az 1 dk). Böylece her zaman `endTime > startTime` olur.
+   - `order` bölüm sırasıdır (0'dan), `route` gönderilmez.
+   - Ara durak yoksa `legs` gönderilmez.
 
 **Create Transfer butonu ne zaman aktif:**
 - **Pickup ve dropoff ikisi de seçilmeden (koordinat + districtName dolu) asla aktif olmaz.**
+- Eklenmiş her ara durağın adresi seçilmiş olmalı (boş durak ya doldurulur ya kaldırılır).
 - Ayrıca rota hesaplanmış (`distance > 0`, `duration > 0`), `pickupTime` gelecekte, `passengerName` dolu ve form validasyonu (zod) geçerli olmalı.
 - İstek sürerken `loading`.
 
@@ -703,7 +715,7 @@ Satır tıklama → `/transfers/:id`.
 - Başarılı → `/transfers/:id/vehicle`'a gidilir. `vehicleOptions` route state ile taşınır, cache'de de bulunur.
 - `ERR035` → "Seçilen adreslerin bölgesi hizmet alanımızda bulunamadı", adres alanlarına hata yazılır.
 - `ERR016` → zaman alanına, `ERR030` → genel form hatası. Bu mutation'lar `skipErrorToast` kullanır, diğer hatalar formun üstünde `Alert` olarak gösterilir.
-- Varsayılan alış zamanı: şimdi + 15 dk'dan sonraki ilk tam saat. `flightNumber` büyük harfe çevrilerek gönderilir. Leg'lerde `order` listedeki sıradır, `route` gönderilmez, bitiş > başlangıç istemcide de kontrol edilir.
+- Varsayılan alış zamanı: şimdi + 15 dk'dan sonraki ilk tam saat. `flightNumber` büyük harfe çevrilerek gönderilir. Leg'ler ara duraklardan otomatik üretilir (yukarıda 5. madde).
 - Oluşturma ve düzenleme aynı `features/booking/TransferForm` component'ini kullanır.
 
 `CreateTransfer`:
@@ -741,7 +753,7 @@ Satır tıklama → `/transfers/:id`.
 | `endLatitude`, `endLongitude` | R | |
 | `endAddress` | R | |
 | `endTime` | R | `startTime`'dan sonra, değilse `ERR030` |
-| `order` | O | gönderilmezse listedeki sırası (0'dan) |
+| `order` | O | gönderilmezse listedeki sırası (0'dan). Frontend bölüm sırasını gönderir |
 | `route` | O | OSRM encoded polyline (isteğe bağlı) |
 
 ### 8.4 Araç seçimi ve ödeme (`/transfers/:id/vehicle`), CUSTOMER
@@ -1028,10 +1040,9 @@ Toplu seçimle "Bildirim gönder" de yapılabilir.
 #### Profile sekmesi
 Veri: `user` query'si (`id firstName lastName email phone language role profileImage createdAt`).
 
-- **Profil kartı:** avatar yükleme (tıklayınca dosya seç, önizleme), ad, soyad, telefon, dil. E-posta ve rol salt okunurdur.
+- **Profil kartı:** avatar yükleme (`AvatarPicker`: ayrı buton yok, avatarın üzerine gelince yarı saydam "Fotoğrafı değiştir" katmanı çıkar, tıklanınca dosya seçilir. Dokunmatik cihazlarda hover olmadığı için köşede kamera rozeti görünür. Seçilen görsel kaydedilene kadar avatarda önizlenir), ad, soyad, telefon. E-posta salt okunurdur. Formda **dil ve rol alanı yoktur**: dil header'daki dil menüsünden değişir (§6.5, `updateUser({ language })` orada çağrılır), rol sadece ADMIN tarafından Kullanıcılar sayfasından değiştirilir (§8.11).
   - "Kaydet" sadece değişiklik varsa aktif olur. **Sadece değişen alanlar** gönderilir.
-  - `updateUser(data: UpdateUser!) → User`. Başarılı olunca `AuthProvider` güncellenir. Dil değiştiyse §6.5 uygulanır.
-- **Görünüm kartı:** tema seçici Açık / Koyu / Sistem (§5.2).
+  - `updateUser(data: UpdateUser!) → User`. Başarılı olunca `AuthProvider` güncellenir.
 - **Güvenlik kartı:** "Şifre değiştir" → `/forgot-password?email=<email>` akışı.
 - **Tehlikeli bölge:** "Hesabımı sil" → yazarak onaylatılan `ConfirmDialog` → `deleteUser` → logout.
 
@@ -1042,7 +1053,7 @@ Veri: `user` query'si (`id firstName lastName email phone language role profileI
 | `firstName` | O | max 50 |
 | `lastName` | O | max 50 |
 | `phone` | O | max 20 |
-| `language` | O | `EN \| TR` |
+| `language` | O | `EN \| TR`. Profil formu göndermez, sadece header dil menüsü gönderir |
 | `profileImage` | O | Upload (görsel) |
 
 #### Statement sekmesi
@@ -1191,7 +1202,7 @@ Yeni kod backend `errors.txt`'ye eklendikçe bu tabloya ve i18n dosyalarına ekl
 | Ödeme dönüş URL'i | Ödeme mikroservisi başarılı/başarısız ödeme sonrası kullanıcıyı hangi URL'e yönlendiriyor belli değil. Öneri: `<frontend>/transfers/:id?payment=done`. Sonuç her durumda WebSocket/poll ile doğrulanır, URL parametresine güvenilmez |
 | OPERATOR sürücü listesi | `createVehicle` OPERATOR'e açık, ama sürücü seçmek için gereken `users` query'si sadece ADMIN/STAFF'a açık. Backend'e OPERATOR için bir `drivers` query'si eklenmeli, o zamana kadar OPERATOR'ün araç formunda sürücü seçimi yapılamaz |
 | İlçe adı eşleştirme | Photon'un hangi alanının (`county`/`city`/`district`) backend `District.name` ile eşleştiği seed verisiyle test edilmeli. Aynı isimli ilçeler (ör. "Merkez") yanlış eşleşebilir |
-| Leg düzenleme | `updateTransfer` leg'leri değiştirmiyor, düzenleme ekranında salt okunur |
+| Leg düzenleme | `updateTransfer` leg'leri değiştirmiyor. Düzenleme ekranında ara duraklar salt okunur ("Add stop" yok), rota sadece pickup → dropoff üzerinden hesaplanır |
 | Web push | §8.13 uygulanmadı, Firebase config verilince eklenecek |
 | Mesaj konum formatı | Backend `location`'ı serbest metin saklar. Frontend standardı `"lat,lng"` |
 | Prod harita servisleri | OSM tile, Photon ve OSRM public sunucuları yoğun kullanım için değil. Prod'da self-host veya ücretli sağlayıcı URL'i `.env.production`'a yazılmalı |
