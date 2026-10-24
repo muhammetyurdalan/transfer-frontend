@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
+import { matchPath } from 'react-router';
 import {
+  AddRounded,
   CategoryRounded,
   DirectionsCarRounded,
   GroupRounded,
@@ -18,7 +20,11 @@ export function navItemsFor(role: Role | null | undefined): NavItem[] {
   const vehicles = { to: '/vehicles', label: 'nav.vehicles', icon: <DirectionsCarRounded /> };
   switch (role) {
     case 'CUSTOMER':
-      return [{ ...transfers, label: 'nav.myTransfers' }];
+      // createTransfer sadece CUSTOMER'a açık
+      return [
+        { to: '/transfers/new', label: 'nav.createTransfer', icon: <AddRounded /> },
+        { ...transfers, label: 'nav.myTransfers' },
+      ];
     case 'OPERATOR':
       return [dispatch, transfers, vehicles];
     case 'DRIVER':
@@ -38,6 +44,16 @@ export function navItemsFor(role: Role | null | undefined): NavItem[] {
     default:
       return [];
   }
+}
+
+/**
+ * O anki adrese en uzun eşleşen linki döner. `/transfers/new`'de sadece "Create Transfer",
+ * `/transfers/12`'de "Transfers" aktif görünür.
+ */
+export function activeNavPath(items: NavItem[], pathname: string) {
+  return items
+    .filter((item) => matchPath({ path: item.to, end: false }, pathname))
+    .sort((a, b) => b.to.length - a.to.length)[0]?.to;
 }
 
 /** `/` yönlendirmesi */

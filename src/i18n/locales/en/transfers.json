@@ -1,7 +1,7 @@
 {
   "list": {
     "title": "Transfers",
-    "customerTitle": "My transfers",
+    "customerTitle": "Transfers",
     "subtitle": "All transfers you have access to",
     "empty": "No transfers found",
     "emptyCustomer": "You have no transfers yet",

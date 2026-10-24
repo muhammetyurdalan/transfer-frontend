@@ -51,14 +51,18 @@ export const lightPalette = {
   warning: { main: '#C77700' },
   error: { main: '#C62828' },
   info: { main: '#2F6DB5' },
-  /** Koyu yüzeyler: header, nav drawer, auth hero paneli, öne çıkan kartlar */
+  /**
+   * Vurgu yüzeyleri: header, nav drawer, auth paneli, sabit aksiyon bar'ı, öne çıkan kartlar.
+   * Açık temada şampanya tonu (açık), koyu temada siyah.
+   */
   inverse: {
-    main: ink[900],
-    light: ink[700],
-    contrastText: '#F5F2EA',
-    accent: gold[400],
-    /** Koyu yüzeyde seçili/aktif öğe zemini */
-    accentSoft: 'rgba(212, 175, 55, 0.14)',
+    main: '#F4EEDF',
+    light: '#E9E0C8',
+    contrastText: ink[900],
+    /** Vurgu yüzeyinde altın: alt çizgi, aktif link, ikon, tutar */
+    accent: gold[600],
+    /** Vurgu yüzeyinde seçili/aktif öğe zemini */
+    accentSoft: 'rgba(184, 144, 31, 0.16)',
   },
   /** Hafif altın tonlu yüzey: seçili kart, vurgulu satır, kendi mesaj balonu */
   highlight: { main: gold[50], border: gold[200], contrastText: ink[900] },
@@ -98,5 +102,5 @@ export const shape = {
   cardRadius: 16,
 } as const;
 
-/** Tarayıcı çubuğu (`<meta name="theme-color">`) için header rengi */
-export const metaThemeColor = ink[900];
+/** Tarayıcı çubuğu için header rengi. `index.html`'deki `<meta name="theme-color">` ile aynı tutulur. */
+export const metaThemeColor = lightPalette.inverse.main;

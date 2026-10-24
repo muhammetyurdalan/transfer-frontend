@@ -299,9 +299,11 @@ transfers(filters: TransferFilter, ordering: [TransferOrder!], pagination: Offse
 - **Varsayılan tema açık (light).** Kullanıcı Açık / Koyu / Sistem arasında seçim yapar.
 - **MUI v9'da system prop'lar kaldırıldı:** `Stack`/`Box`/`Typography` üzerinde `alignItems`, `justifyContent`, `flexWrap`, `fontWeight`, `textAlign`, `mt`… prop olarak yazılmaz, `sx` içine yazılır. `Grid` v2 kullanılır (`size={{ xs: 12, md: 6 }}`), `InputProps`/`PaperProps` yerine `slotProps`.
 
-### 5.2 Tema: açık zemin, altın sarısı ve koyu siyah
+### 5.2 Tema: açık zemin, altın sarısı, şampanya vurgu yüzeyleri
 
-**Görsel dil:** zemin açık (fildişi `#FAF8F3`, kartlar beyaz). Marka rengi **altın sarısı** (birincil butonlar, seçili öğeler, vurgu çizgileri, badge). **Koyu siyah** aralarda vurgu yüzeyi olarak kullanılır: header, nav drawer, giriş sayfalarının marka paneli, sabit alt aksiyon bar'ı, popover başlıkları, tooltip'ler, rota haritasında B pini.
+**Görsel dil:** zemin açık (fildişi `#FAF8F3`, kartlar beyaz). Marka rengi **altın sarısı** (birincil butonlar, seçili öğeler, vurgu çizgileri, badge). Yazılar koyu siyah (`#0B0B0C`).
+
+**Vurgu yüzeyleri (`inverse`)** açık temada **şampanya tonudur** (`#F4EEDF`, açık), koyu temada siyahtır: header (alt kenarda altın çizgi), nav drawer, giriş sayfalarının marka paneli, sabit alt aksiyon bar'ı, popover/dialog başlıkları, öne çıkan kartlar (fiyat, özet), tooltip'ler, rota haritasında B pini. Bu yüzeylerin rengi değişecekse sadece `inverse` token'ı değiştirilir.
 
 **Tek kaynak: `src/app/theme/tokens.ts`.** Renk, font, köşe yarıçapı sadece bu dosyada değiştirilir.
 - `scales.gold` (50–900) ve `scales.ink` (50–900, sıcak siyah/gri) ham skalalardır.
@@ -316,8 +318,8 @@ transfers(filters: TransferFilter, ordering: [TransferOrder!], pagination: Offse
 | `background.default` | `#FAF8F3` (fildişi) | `#0B0B0C` | Sayfa zemini |
 | `background.paper` | `#FFFFFF` | `#16161A` | Kart, tablo, dialog |
 | `text.primary` / `secondary` | `#0B0B0C` / `#5F5C57` | `#F2EFE8` / `#BDB8AD` | |
-| `inverse.main` / `contrastText` | `#0B0B0C` / `#F5F2EA` | `#050506` / `#F5F2EA` | Koyu yüzeyler (header, drawer, auth paneli, StickyActionBar) |
-| `inverse.accent` / `accentSoft` | `#D4AF37` / altın %14 | aynı | Koyu yüzeyde altın vurgu: header alt çizgisi, aktif nav linki, ikonlar |
+| `inverse.main` / `light` / `contrastText` | `#F4EEDF` / `#E9E0C8` / `#0B0B0C` | `#050506` / `#16161A` / `#F5F2EA` | Vurgu yüzeyleri (header, drawer, auth paneli, StickyActionBar, öne çıkan kartlar, tooltip) |
+| `inverse.accent` / `accentSoft` | `#9A7615` (gold 600) / altın %16 | `#D4AF37` / altın %14 | Vurgu yüzeyinde altın: header alt çizgisi, aktif nav linki, ikonlar, tutarlar |
 | `highlight.main` / `border` | `#FDF9EC` / `#F2DE96` | altın %12 / %35 | Seçili kart, tablo satır hover'ı, boş durum ikonu, kendi mesaj balonu |
 | `success` / `warning` / `error` / `info` | `#2E7D4F` / `#C77700` / `#C62828` / `#2F6DB5` | açık tonlar | Durum renkleri |
 
@@ -374,14 +376,13 @@ transfers(filters: TransferFilter, ordering: [TransferOrder!], pagination: Offse
 ## 6. Ortak componentler
 
 ### 6.1 Header (`components/layout/Header.tsx`)
-`AppBar position="sticky"`, `elevation={0}`. Zemin `inverse.main` (koyu siyah), alt kenarda 2px altın (`inverse.accent`) çizgi. Aktif nav linki altın yazı + `inverse.accentSoft` zemin. `< md`'de aynı koyu stildeki `NavDrawer` açılır (nav linkleri + Ayarlar). Soldan sağa:
+`AppBar position="sticky"`, `elevation={0}`. Zemin `inverse.main` (açık temada şampanya, koyu temada siyah), alt kenarda 2px altın (`inverse.accent`) çizgi. Aktif nav linki altın yazı + `inverse.accentSoft` zemin. `< md`'de aynı stildeki `NavDrawer` açılır (nav linkleri + Ayarlar). Soldan sağa:
 
 | Öğe | Davranış | Görünürlük |
 |---|---|---|
 | Hamburger | `NavDrawer`'ı açar | sadece `< md` |
 | Logo | `/`'a gider | herkes |
-| Nav linkleri | Role göre (§7) | `>= md` |
-| **Create Transfer** butonu | `/transfers/new`'e gider. `>= sm`: `Button variant="contained" startIcon={<Add/>}`, `< sm`: sadece ikon (`IconButton`) | `CUSTOMER` (backend `createTransfer` sadece CUSTOMER'a açık) |
+| Nav linkleri | Role göre (§7). CUSTOMER'da ilk link **Create Transfer** (`/transfers/new`), diğer sekmelerle aynı stilde ve "Transferlerim"in solunda. `< md`'de drawer'da aynı sırayla | `>= md` |
 | **Notification** (zil) | `Badge` + `NotificationMenu` (§6.4) | giriş yapmış herkes |
 | **Language** | `Menu`: English / Türkçe (§6.5) | herkes |
 | **Profile** | `Avatar` (profileImage veya baş harfler). Tıklanınca `Menu`: kullanıcı adı ve rolü (başlık), **Settings** (`/settings/profile`), **Logout** | giriş yapmış herkes |
@@ -448,8 +449,8 @@ type DataTableProps<T> = {
 - `ConfirmDialog`: başlık, açıklama, onay butonu (yıkıcıysa `color="error"`), `loading`.
 - `StatusChip`, `Money`, `UserAvatar`, `EmptyState`, `ErrorState` (tekrar dene butonlu), `PageHeader` (başlık + sağda aksiyonlar, mobilde alt alta).
 - `FileInput`: `accept`, maksimum boyut kontrolü (istemci tarafında). Görsel için önizleme yapar, `currentUrl` ile mevcut görseli gösterir.
-- `StickyActionBar`: form/sayfa aksiyonları için alta yapışan koyu siyah bar (altın üst çizgi, safe-area padding).
-- `RouteMap` (`components/map`): salt okunur harita, A (altın) / B (siyah) pin'leri ve OSRM rotası, sınırlara otomatik sığar.
+- `StickyActionBar`: form/sayfa aksiyonları için alta yapışan `inverse` bar (altın üst çizgi, safe-area padding).
+- `RouteMap` (`components/map`): salt okunur harita, A (altın) / B (`inverse`) pin'leri ve OSRM rotası, sınırlara otomatik sığar.
 - `ThemeModeToggle` / `ThemeModeMenu`: tema seçiciler (§5.2).
 - Hook'lar: `useIsMobile` (`< sm`), `useIsCompact` (`< md`), `useDebouncedValue`, `useAppEvent` (§9).
 
@@ -552,10 +553,12 @@ type SelectedAddress = {
 | `*` | 404 | |
 
 **Nav linkleri (header / drawer):**
-- CUSTOMER: Transferlerim.
+- CUSTOMER: Create Transfer (`/transfers/new`), Transferlerim. Create Transfer ayrı bir buton değil, nav sekmesidir (backend `createTransfer` sadece CUSTOMER'a açık).
 - OPERATOR: Dispatch, Transferler, Araçlar.
 - DRIVER: İşlerim, Araçlarım.
 - ADMIN/STAFF: Transferler, Dispatch, Araçlar, Kategoriler, Kullanıcılar.
+
+- **Aktif link:** adrese en uzun eşleşen link aktif sayılır (`activeNavPath`). `/transfers/new`'de sadece Create Transfer, `/transfers/12`'de Transferlerim vurgulanır.
 
 **Yetki dışı route:** 403 sayfası. Giriş yapmamış kullanıcı `/login?next=...`'e gider.
 
@@ -623,7 +626,7 @@ Hatalar: `ERR010` (kullanıcı yok/pasif), `ERR012` (şifre yanlış).
 ### 8.2 Transfer listesi (`/transfers`)
 `PageHeader`:
 - Başlık.
-- CUSTOMER için "Create Transfer" butonu (mobilde gizli, header'dakini kullan).
+- CUSTOMER için "Create Transfer" butonu (mobilde gizli, drawer'daki Create Transfer linki kullanılır).
 
 Filtre toolbar'ı:
 - Durum (çoklu `Select` → `status: { inList }`).
@@ -1052,7 +1055,7 @@ Veri: `user` query'si (`id firstName lastName email phone language role profileI
 
 Filtreler: kategori (`category: { inList }`), tarih aralığı (`orderTime: { range }`).
 
-Üstte özet kartları (`>= sm`): bu sayfadaki toplam ödeme / bahşiş / iade, para birimine göre gruplu (ödeme kartı siyah zemin + altın tutar). Filtreler URL'de: `?category=PAYMENT,TIP&from=YYYY-MM-DD&to=YYYY-MM-DD`.
+Üstte özet kartları (`>= sm`): bu sayfadaki toplam ödeme / bahşiş / iade, para birimine göre gruplu (ödeme kartı `inverse` zemin + altın tutar). Filtreler URL'de: `?category=PAYMENT,TIP&from=YYYY-MM-DD&to=YYYY-MM-DD`.
 
 | Sütun | Alan |
 |---|---|

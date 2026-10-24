@@ -1,22 +1,23 @@
-import { AppBar, Box, Button, IconButton, Stack, Toolbar, Tooltip } from '@mui/material';
-import { AddRounded, MenuRounded } from '@mui/icons-material';
-import { NavLink, Link as RouterLink } from 'react-router';
+import { AppBar, Box, Button, IconButton, Stack, Toolbar } from '@mui/material';
+import { MenuRounded } from '@mui/icons-material';
+import { Link as RouterLink, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { NotificationMenu } from '@/features/notifications/NotificationMenu';
-import { useIsCompact, useIsMobile } from '@/hooks/useIsMobile';
+import { useIsCompact } from '@/hooks/useIsMobile';
 import { BrandLogo } from './BrandLogo';
 import { LanguageMenu } from './LanguageMenu';
 import { ProfileMenu } from './ProfileMenu';
-import { navItemsFor } from './navItems';
+import { activeNavPath, navItemsFor } from './navItems';
 
-/** Koyu siyah, alt kenarı altın çizgili sticky header (§6.1). */
+/** Alt kenarı altın çizgili sticky header (§6.1). Renkler `inverse` token'ından. */
 export function Header({ onOpenDrawer }: { onOpenDrawer: () => void }) {
   const { t } = useTranslation();
-  const { user, hasRole } = useAuth();
+  const { user } = useAuth();
+  const { pathname } = useLocation();
   const compact = useIsCompact();
-  const mobile = useIsMobile();
   const items = navItemsFor(user?.role);
+  const active = activeNavPath(items, pathname);
 
   return (
     <AppBar position="sticky" sx={{ pt: 'env(safe-area-inset-top)' }}>
@@ -32,9 +33,11 @@ export function Header({ onOpenDrawer }: { onOpenDrawer: () => void }) {
             {items.map((item) => (
               <Button
                 key={item.to}
-                component={NavLink}
+                component={RouterLink}
                 to={item.to}
                 color="inherit"
+                className={item.to === active ? 'active' : undefined}
+                aria-current={item.to === active ? 'page' : undefined}
                 sx={{
                   px: 1.75,
                   opacity: 0.8,
@@ -49,30 +52,6 @@ export function Header({ onOpenDrawer }: { onOpenDrawer: () => void }) {
           </Stack>
         )}
         <Box sx={{ flexGrow: 1 }} />
-        {hasRole('CUSTOMER') &&
-          (mobile ? (
-            <Tooltip title={t('nav.createTransfer')}>
-              <IconButton
-                component={RouterLink}
-                to="/transfers/new"
-                size="large"
-                aria-label={t('nav.createTransfer')}
-                sx={{ color: 'inverse.accent' }}
-              >
-                <AddRounded />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            <Button
-              component={RouterLink}
-              to="/transfers/new"
-              variant="contained"
-              startIcon={<AddRounded />}
-              sx={{ mr: 1 }}
-            >
-              {t('nav.createTransfer')}
-            </Button>
-          ))}
         <NotificationMenu />
         <LanguageMenu />
         <ProfileMenu />

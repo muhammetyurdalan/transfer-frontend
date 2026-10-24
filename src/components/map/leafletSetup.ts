@@ -10,7 +10,7 @@ L.Icon.Default.mergeOptions({ iconUrl, iconRetinaUrl, shadowUrl });
 export function pinIcon(label: string, variant: 'primary' | 'inverse' = 'primary') {
   const bg = variant === 'primary' ? 'var(--mui-palette-primary-main)' : 'var(--mui-palette-inverse-main)';
   const fg = variant === 'primary' ? 'var(--mui-palette-primary-contrastText)' : 'var(--mui-palette-inverse-accent)';
-  const border = 'var(--mui-palette-inverse-main)';
+  const border = 'var(--mui-palette-primary-dark)';
   return L.divIcon({
     className: '',
     iconSize: [32, 40],

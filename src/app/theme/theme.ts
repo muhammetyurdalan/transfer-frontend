@@ -1,4 +1,4 @@
-import { alpha, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { enUS, trTR } from '@mui/material/locale';
 import { enUS as pickersEnUS, trTR as pickersTrTR } from '@mui/x-date-pickers/locales';
 import type {} from '@mui/x-date-pickers/themeAugmentation';
@@ -170,8 +170,10 @@ const options: Parameters<typeof createTheme>[0] = {
     MuiTooltip: {
       styleOverrides: {
         tooltip: ({ theme }) => ({
-          backgroundColor: alpha(darkPalette.inverse.main, 0.95),
+          backgroundColor: theme.vars.palette.inverse.main,
           color: theme.vars.palette.inverse.contrastText,
+          border: `1px solid ${theme.vars.palette.divider}`,
+          boxShadow: theme.shadows[2],
         }),
       },
     },

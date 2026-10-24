@@ -8,20 +8,22 @@ import {
   ListItemText,
 } from '@mui/material';
 import { SettingsRounded } from '@mui/icons-material';
-import { NavLink } from 'react-router';
+import { Link as RouterLink, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { BrandLogo } from './BrandLogo';
-import { navItemsFor } from './navItems';
+import { activeNavPath, navItemsFor } from './navItems';
 
 /** `< md` ekranlarda nav linklerini taşıyan koyu drawer. */
 export function NavDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { pathname } = useLocation();
   const items = [
     ...navItemsFor(user?.role),
     { to: '/settings/profile', label: 'nav.settings', icon: <SettingsRounded /> },
   ];
+  const active = activeNavPath(items, pathname);
 
   return (
     <Drawer
@@ -47,8 +49,11 @@ export function NavDrawer({ open, onClose }: { open: boolean; onClose: () => voi
         {items.map((item) => (
           <ListItemButton
             key={item.to}
-            component={NavLink}
+            component={RouterLink}
             to={item.to}
+            selected={item.to === active}
+            className={item.to === active ? 'active' : undefined}
+            aria-current={item.to === active ? 'page' : undefined}
             onClick={onClose}
             sx={{
               borderRadius: 2,
