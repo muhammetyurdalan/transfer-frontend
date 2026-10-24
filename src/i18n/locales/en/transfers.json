@@ -1,0 +1,137 @@
+{
+  "list": {
+    "title": "Transfers",
+    "customerTitle": "My transfers",
+    "subtitle": "All transfers you have access to",
+    "empty": "No transfers found",
+    "emptyCustomer": "You have no transfers yet",
+    "createFirst": "Create your first transfer"
+  },
+  "filters": {
+    "status": "Status",
+    "passenger": "Passenger name",
+    "region": "Region ID",
+    "from": "From",
+    "to": "To"
+  },
+  "columns": {
+    "id": "#",
+    "pickupTime": "Pickup time",
+    "route": "Route",
+    "passenger": "Passenger",
+    "vehicle": "Vehicle",
+    "price": "Price",
+    "status": "Status",
+    "driver": "Driver",
+    "timeToPickup": "Time to pickup"
+  },
+  "passengers_one": "{{count}} passenger",
+  "passengers_other": "{{count}} passengers",
+  "actions": {
+    "details": "Details",
+    "selectVehicle": "Select vehicle / Pay",
+    "edit": "Edit",
+    "assignDriver": "Assign driver",
+    "changeDriver": "Change driver",
+    "messages": "Messages",
+    "tip": "Tip driver",
+    "cancel": "Cancel transfer",
+    "start": "Start trip",
+    "complete": "Complete trip",
+    "directions": "Directions"
+  },
+  "detail": {
+    "title": "Transfer #{{id}}",
+    "back": "Back to transfers",
+    "tabDetails": "Details",
+    "tabMessages": "Messages",
+    "notFound": "Transfer not found or you don't have access to it.",
+    "cancelled": "This transfer was cancelled.",
+    "route": "Route",
+    "pickup": "Pickup",
+    "dropoff": "Dropoff",
+    "stops": "Stops",
+    "trip": "Trip",
+    "time": "Pickup time",
+    "endTime": "Estimated arrival",
+    "distance": "Distance",
+    "duration": "Duration",
+    "passengers": "Passengers",
+    "luggage": "Luggage",
+    "childSeats": "Child seats",
+    "wheelchair": "Wheelchair",
+    "flight": "Flight no.",
+    "note": "Note",
+    "passengerName": "Passenger",
+    "passengerPhone": "Phone",
+    "vehicleDriver": "Vehicle & driver",
+    "noDriver": "No driver assigned yet",
+    "plate": "Plate",
+    "category": "Category",
+    "customer": "Customer",
+    "operator": "Operator",
+    "payment": "Payment",
+    "price": "Price",
+    "noTransactions": "No payment transactions yet",
+    "region": "Region",
+    "statusUpdated": "Transfer status updated"
+  },
+  "timeline": {
+    "PENDING": "Created",
+    "PAID": "Paid",
+    "ASSIGNED": "Driver assigned",
+    "STARTED": "On the way",
+    "COMPLETED": "Completed"
+  },
+  "cancel": {
+    "title": "Cancel transfer #{{id}}?",
+    "pending": "The payment link will be cancelled.",
+    "paid": "Your payment will be refunded.",
+    "customerFee": "A cancellation fee may apply for customer cancellations.",
+    "confirm": "Cancel transfer",
+    "done": "Transfer cancelled"
+  },
+  "tip": {
+    "title": "Tip your driver",
+    "amount": "Amount",
+    "custom": "Custom amount",
+    "submit": "Continue to payment",
+    "invalid": "Enter an amount greater than 0"
+  },
+  "payment": {
+    "checking": "We are checking your payment…",
+    "checkingTip": "We are checking your tip payment…",
+    "success": "Payment successful",
+    "failed": "Payment failed",
+    "tipSuccess": "Thanks! Your tip was received",
+    "tipFailed": "Tip payment failed",
+    "payAgain": "Pay again",
+    "timeout": "We couldn't confirm the payment yet. Refresh this page in a moment."
+  },
+  "assign": {
+    "title": "Assign driver",
+    "search": "Search driver",
+    "noDrivers": "No driver is available for this time",
+    "vehicle": "Vehicle",
+    "vehicleOptional": "Optional – if not selected, the first suitable vehicle is assigned",
+    "submit": "Assign",
+    "done": "Driver assigned"
+  },
+  "dispatch": {
+    "title": "Dispatch",
+    "subtitle": "Assign drivers to paid transfers",
+    "waiting": "Awaiting assignment",
+    "assigned": "Assigned",
+    "newPaid": "New paid transfer #{{id}}",
+    "empty": "No transfers waiting",
+    "overdue": "Overdue"
+  },
+  "jobs": {
+    "title": "My jobs",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "empty": "No jobs here",
+    "assignedEvent": "You have a new job",
+    "cancelledEvent": "A job was cancelled or reassigned"
+  }
+}

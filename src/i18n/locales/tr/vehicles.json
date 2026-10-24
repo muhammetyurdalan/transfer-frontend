@@ -1,0 +1,100 @@
+{
+  "title": "Araçlar",
+  "myTitle": "Araçlarım",
+  "add": "Araç ekle",
+  "editTitle": "Aracı düzenle",
+  "createTitle": "Yeni araç",
+  "searchPlate": "Plaka ara",
+  "allCategories": "Tüm kategoriler",
+  "status": "Durum",
+  "columns": {
+    "plate": "Plaka",
+    "vehicle": "Araç",
+    "category": "Kategori",
+    "driver": "Sürücü",
+    "status": "Durum"
+  },
+  "fields": {
+    "driver": "Sürücü",
+    "category": "Kategori",
+    "plate": "Plaka",
+    "brand": "Marka",
+    "model": "Model",
+    "year": "Yıl",
+    "color": "Renk",
+    "image": "Araç görseli",
+    "isActive": "Aktif"
+  },
+  "driverUnavailable": "Operatörler için sürücü seçimi henüz kullanılamıyor. Sürücü atamasını bir yöneticiye yaptırın.",
+  "actions": {
+    "edit": "Düzenle",
+    "activate": "Aktif yap",
+    "deactivate": "Pasif yap",
+    "delete": "Sil"
+  },
+  "deleteTitle": "Araç silinsin mi?",
+  "deleteBody": "{{plate}} plakalı araç kalıcı olarak silinecek.",
+  "inUse": "Araç transferlerde kullanılmış, pasif yapın.",
+  "empty": "Henüz araç yok",
+  "emptyBody": "Transfer atamaya başlamak için ilk aracı ekleyin.",
+  "saved": "Araç kaydedildi",
+  "deleted": "Araç silindi",
+  "validation": {
+    "required": "Zorunlu",
+    "max": "En fazla {{count}} karakter",
+    "year": "Geçersiz yıl"
+  },
+  "categories": {
+    "title": "Araç kategorileri",
+    "add": "Kategori ekle",
+    "createTitle": "Yeni kategori",
+    "editTitle": "Kategoriyi düzenle",
+    "columns": {
+      "name": "Kategori",
+      "capacity": "Kapasite",
+      "pricing": "Fiyatlandırma",
+      "order": "Sıra",
+      "status": "Durum"
+    },
+    "capacity": "{{passengers}} yolcu · {{luggage}} bagaj",
+    "childSeats": "{{count}} çocuk koltuğu",
+    "wheelchair": "Tekerlekli sandalyeye uygun",
+    "pricing": "Açılış {{base}} · {{perKm}}/km · {{perMin}}/dk · min {{min}}",
+    "fields": {
+      "nameEn": "Ad (İngilizce)",
+      "nameTr": "Ad (Türkçe)",
+      "descriptionEn": "Açıklama (İngilizce)",
+      "descriptionTr": "Açıklama (Türkçe)",
+      "image": "Kategori görseli",
+      "maxPassengers": "Maks. yolcu",
+      "maxLuggage": "Maks. bagaj",
+      "childSeatCapacity": "Çocuk koltuğu kapasitesi",
+      "isWheelchairAccessible": "Tekerlekli sandalyeye uygun",
+      "baseFare": "Açılış ücreti",
+      "perKmPrice": "Km başı",
+      "perMinutePrice": "Dakika başı",
+      "minimumFare": "Minimum ücret",
+      "currency": "Para birimi",
+      "order": "Liste sırası",
+      "isActive": "Aktif"
+    },
+    "sections": {
+      "content": "Ad ve açıklama",
+      "capacity": "Kapasite",
+      "pricing": "Fiyatlandırma"
+    },
+    "trFallback": "Boş bırakılırsa İngilizce ad gösterilir.",
+    "preview": "Fiyat önizleme",
+    "previewBody": "Örnek 30 km / 40 dk yolculuk",
+    "deleteTitle": "Kategori silinsin mi?",
+    "deleteBody": "{{name}} kalıcı olarak silinecek.",
+    "inUse": "Kategori kullanımda, pasif yapın.",
+    "empty": "Henüz kategori yok",
+    "saved": "Kategori kaydedildi",
+    "deleted": "Kategori silindi",
+    "validation": {
+      "min": "En az {{min}} olmalı",
+      "number": "Geçerli bir tutar girin"
+    }
+  }
+}

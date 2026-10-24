@@ -1,0 +1,41 @@
+{
+  "title": "Users",
+  "search": "Search name or e-mail",
+  "allRoles": "All roles",
+  "status": "Status",
+  "columns": {
+    "name": "User",
+    "email": "E-mail",
+    "phone": "Phone",
+    "role": "Role",
+    "status": "Status",
+    "createdAt": "Registered"
+  },
+  "actions": {
+    "changeRole": "Change role",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "notify": "Send notification",
+    "transfers": "View transfers"
+  },
+  "bulkNotify": "Notify selected",
+  "roleDialog": {
+    "title": "Change role",
+    "body": "Select a new role for {{name}}.",
+    "role": "Role"
+  },
+  "notifyDialog": {
+    "title": "Send notification",
+    "recipients_one": "{{count}} recipient",
+    "recipients_other": "{{count}} recipients",
+    "titleField": "Title",
+    "body": "Message",
+    "sent": "Notification sent"
+  },
+  "updated": "User updated",
+  "empty": "No users found",
+  "validation": {
+    "required": "Required",
+    "max": "Max {{count}} characters"
+  }
+}

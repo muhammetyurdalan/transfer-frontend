@@ -1,0 +1,86 @@
+{
+  "title": "Settings",
+  "tabs": {
+    "profile": "Profile",
+    "statement": "Statement",
+    "notifications": "Notifications"
+  },
+  "profile": {
+    "cardTitle": "Profile",
+    "avatar": "Change photo",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone",
+    "language": "Language",
+    "email": "E-mail",
+    "role": "Role",
+    "saved": "Profile updated",
+    "appearance": "Appearance",
+    "appearanceBody": "Choose how the app looks on this device.",
+    "security": "Security",
+    "securityBody": "We will send a verification code to your e-mail to set a new password.",
+    "changePassword": "Change password",
+    "danger": "Danger zone",
+    "dangerBody": "Deleting your account is permanent and cannot be undone.",
+    "deleteAccount": "Delete my account",
+    "deleteTitle": "Delete your account?",
+    "deleteDescription": "All your data will be removed. This cannot be undone.",
+    "deleteWord": "DELETE",
+    "validation": {
+      "required": "Required",
+      "max": "Max {{count}} characters"
+    }
+  },
+  "statement": {
+    "title": "Statement",
+    "category": "Type",
+    "summaryPayment": "Payments on this page",
+    "summaryTip": "Tips on this page",
+    "summaryRefund": "Refunds on this page",
+    "columns": {
+      "date": "Date",
+      "type": "Type",
+      "amount": "Amount",
+      "transfer": "Transfer",
+      "note": "Note",
+      "orderId": "Order no",
+      "parent": "Refunded record"
+    },
+    "actions": {
+      "viewTransfer": "View transfer",
+      "refund": "Refund"
+    },
+    "empty": "No transactions yet",
+    "refund": {
+      "title": "Refund transaction",
+      "body": "Original amount: {{amount}}",
+      "amount": "Amount",
+      "amountHelp": "Leave empty to refund the full remaining amount.",
+      "note": "Note",
+      "submit": "Refund",
+      "done": "Refund completed",
+      "invalidAmount": "Enter a valid amount"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "filterAll": "All",
+    "filterUnread": "Unread",
+    "filterRead": "Read",
+    "columns": {
+      "title": "Title",
+      "body": "Content",
+      "time": "Time"
+    },
+    "actions": {
+      "markRead": "Mark as read",
+      "delete": "Delete"
+    },
+    "markAllRead": "Mark all as read",
+    "deleteSelected": "Delete selected",
+    "deleteAll": "Delete all",
+    "deleteAllTitle": "Delete all notifications?",
+    "deleteAllBody": "All of your notifications will be permanently deleted.",
+    "empty": "No notifications"
+  }
+}

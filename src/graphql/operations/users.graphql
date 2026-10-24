@@ -1,0 +1,33 @@
+fragment UserItem on User {
+  id
+  role
+  name
+  firstName
+  lastName
+  email
+  phone
+  profileImage
+  isActive
+  createdAt
+}
+
+query Users($filters: UserFilter, $ordering: [UserOrder!], $pagination: OffsetPaginationInput) {
+  users(filters: $filters, ordering: $ordering, pagination: $pagination) {
+    count
+    users {
+      ...UserItem
+    }
+  }
+}
+
+mutation UpdateAdminUser($data: UpdateAdminUser!) {
+  updateAdminUser(data: $data) {
+    ...UserItem
+  }
+}
+
+mutation SendNotification($data: SendNotification!) {
+  sendNotification(data: $data) {
+    success
+  }
+}

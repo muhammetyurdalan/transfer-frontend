@@ -1,0 +1,86 @@
+{
+  "title": "Ayarlar",
+  "tabs": {
+    "profile": "Profil",
+    "statement": "Ödeme hareketleri",
+    "notifications": "Bildirimler"
+  },
+  "profile": {
+    "cardTitle": "Profil",
+    "avatar": "Fotoğrafı değiştir",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "phone": "Telefon",
+    "language": "Dil",
+    "email": "E-posta",
+    "role": "Rol",
+    "saved": "Profil güncellendi",
+    "appearance": "Görünüm",
+    "appearanceBody": "Uygulamanın bu cihazdaki görünümünü seçin.",
+    "security": "Güvenlik",
+    "securityBody": "Yeni şifre belirlemek için e-postanıza doğrulama kodu göndereceğiz.",
+    "changePassword": "Şifre değiştir",
+    "danger": "Tehlikeli bölge",
+    "dangerBody": "Hesabınızı silmek kalıcıdır ve geri alınamaz.",
+    "deleteAccount": "Hesabımı sil",
+    "deleteTitle": "Hesabınız silinsin mi?",
+    "deleteDescription": "Tüm verileriniz kaldırılacak. Bu işlem geri alınamaz.",
+    "deleteWord": "SİL",
+    "validation": {
+      "required": "Zorunlu",
+      "max": "En fazla {{count}} karakter"
+    }
+  },
+  "statement": {
+    "title": "Ödeme hareketleri",
+    "category": "Tür",
+    "summaryPayment": "Bu sayfadaki ödemeler",
+    "summaryTip": "Bu sayfadaki bahşişler",
+    "summaryRefund": "Bu sayfadaki iadeler",
+    "columns": {
+      "date": "Tarih",
+      "type": "Tür",
+      "amount": "Tutar",
+      "transfer": "Transfer",
+      "note": "Not",
+      "orderId": "Sipariş no",
+      "parent": "İade edilen kayıt"
+    },
+    "actions": {
+      "viewTransfer": "Transferi gör",
+      "refund": "İade et"
+    },
+    "empty": "Henüz hareket yok",
+    "refund": {
+      "title": "İade et",
+      "body": "Orijinal tutar: {{amount}}",
+      "amount": "Tutar",
+      "amountHelp": "Boş bırakılırsa kalan tutarın tamamı iade edilir.",
+      "note": "Not",
+      "submit": "İade et",
+      "done": "İade tamamlandı",
+      "invalidAmount": "Geçerli bir tutar girin"
+    }
+  },
+  "notifications": {
+    "title": "Bildirimler",
+    "filterAll": "Tümü",
+    "filterUnread": "Okunmamış",
+    "filterRead": "Okunmuş",
+    "columns": {
+      "title": "Başlık",
+      "body": "İçerik",
+      "time": "Zaman"
+    },
+    "actions": {
+      "markRead": "Okundu işaretle",
+      "delete": "Sil"
+    },
+    "markAllRead": "Tümünü okundu yap",
+    "deleteSelected": "Seçilenleri sil",
+    "deleteAll": "Tümünü sil",
+    "deleteAllTitle": "Tüm bildirimler silinsin mi?",
+    "deleteAllBody": "Tüm bildirimleriniz kalıcı olarak silinecek.",
+    "empty": "Bildirim yok"
+  }
+}

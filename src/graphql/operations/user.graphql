@@ -1,0 +1,42 @@
+fragment CurrentUser on User {
+  id
+  role
+  language
+  firstName
+  lastName
+  name
+  email
+  phone
+  profileImage
+  createdAt
+}
+
+query CurrentUser {
+  user {
+    ...CurrentUser
+  }
+}
+
+mutation UpdateUser($data: UpdateUser!) {
+  updateUser(data: $data) {
+    ...CurrentUser
+  }
+}
+
+mutation DeleteUser {
+  deleteUser {
+    success
+  }
+}
+
+mutation UpdateFcmToken($data: UpdateFcmToken!) {
+  updateFcmToken(data: $data) {
+    success
+  }
+}
+
+mutation DeleteFcmToken($registrationId: String!) {
+  deleteFcmToken(registrationId: $registrationId) {
+    success
+  }
+}

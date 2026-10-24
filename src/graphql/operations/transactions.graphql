@@ -1,0 +1,27 @@
+fragment TransactionItem on Transaction {
+  id
+  transferId
+  userId
+  parentId
+  category
+  currency
+  orderAmount
+  orderId
+  orderTime
+  note
+}
+
+query Transactions($filters: TransactionFilter, $ordering: [TransactionOrder!], $pagination: OffsetPaginationInput) {
+  transactions(filters: $filters, ordering: $ordering, pagination: $pagination) {
+    count
+    transactions {
+      ...TransactionItem
+    }
+  }
+}
+
+mutation RefundTransaction($data: RefundTransaction!) {
+  refundTransaction(data: $data) {
+    ...TransactionItem
+  }
+}

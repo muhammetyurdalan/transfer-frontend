@@ -1,0 +1,95 @@
+fragment VehicleOptionItem on VehicleOption {
+  distance
+  duration
+  price
+  currency
+  vehicleCategory {
+    id
+    name
+    description
+    image
+    maxPassengers
+    maxLuggage
+    childSeatCapacity
+    isWheelchairAccessible
+  }
+}
+
+fragment BookingTransferFields on Transfer {
+  id
+  status
+  pickupAddress
+  pickupLatitude
+  pickupLongitude
+  pickupDistrict {
+    id
+    name
+  }
+  dropoffAddress
+  dropoffLatitude
+  dropoffLongitude
+  dropoffDistrict {
+    id
+    name
+  }
+  pickupTime
+  distance
+  duration
+  passengerCount
+  luggageCount
+  childSeatCount
+  needsWheelchair
+  passengerName
+  passengerPhone
+  flightNumber
+  note
+  legs {
+    id
+    order
+    startAddress
+    endAddress
+    startTime
+    endTime
+  }
+}
+
+query BookingTransfer($id: ID!) {
+  transfer(id: $id) {
+    ...BookingTransferFields
+  }
+}
+
+query VehicleOptions($transferId: ID!) {
+  vehicleOptions(transferId: $transferId) {
+    ...VehicleOptionItem
+  }
+}
+
+mutation CreateTransfer($data: CreateTransfer!) {
+  createTransfer(data: $data) {
+    transfer {
+      ...BookingTransferFields
+    }
+    vehicleOptions {
+      ...VehicleOptionItem
+    }
+  }
+}
+
+mutation UpdateTransfer($data: UpdateTransfer!) {
+  updateTransfer(data: $data) {
+    transfer {
+      ...BookingTransferFields
+    }
+    vehicleOptions {
+      ...VehicleOptionItem
+    }
+  }
+}
+
+mutation PayTransfer($data: PayTransfer!) {
+  payTransfer(data: $data) {
+    paymentLink
+    linkExpireTime
+  }
+}

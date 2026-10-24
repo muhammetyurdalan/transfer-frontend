@@ -1,0 +1,173 @@
+fragment TransferRow on Transfer {
+  id
+  status
+  pickupTime
+  pickupAddress
+  dropoffAddress
+  pickupLatitude
+  pickupLongitude
+  passengerName
+  passengerCount
+  price
+  currency
+  distance
+  duration
+  customerId
+  driverId
+  operatorId
+  vehicleCategory {
+    id
+    name
+  }
+  driver {
+    id
+    name
+  }
+}
+
+query Transfers($filters: TransferFilter, $ordering: [TransferOrder!], $pagination: OffsetPaginationInput) {
+  transfers(filters: $filters, ordering: $ordering, pagination: $pagination) {
+    count
+    transfers {
+      ...TransferRow
+    }
+  }
+}
+
+fragment TransferDetail on Transfer {
+  ...TransferRow
+  endTime
+  dropoffLatitude
+  dropoffLongitude
+  passengerPhone
+  luggageCount
+  childSeatCount
+  needsWheelchair
+  flightNumber
+  note
+  vehicleCategory {
+    id
+    name
+    image
+  }
+  vehicle {
+    id
+    plate
+    brand
+    model
+    color
+  }
+  driver {
+    id
+    name
+    firstName
+    lastName
+    profileImage
+    phone
+  }
+  customer {
+    id
+    name
+  }
+  operator {
+    id
+    name
+  }
+  pickupDistrict {
+    id
+    name
+    city {
+      id
+      name
+    }
+  }
+  dropoffDistrict {
+    id
+    name
+  }
+  state {
+    id
+    name
+  }
+  legs {
+    id
+    order
+    startAddress
+    endAddress
+    startTime
+    endTime
+  }
+}
+
+query Transfer($id: ID!) {
+  transfer(id: $id) {
+    ...TransferDetail
+  }
+}
+
+query TransferTransactions($transferId: ID!) {
+  transactions(filters: { transferId: { exact: $transferId } }, ordering: [{ orderTime: DESC }]) {
+    count
+    transactions {
+      id
+      category
+      orderAmount
+      currency
+      orderTime
+      note
+    }
+  }
+}
+
+mutation UpdateTransferStatus($data: UpdateTransferStatus!) {
+  updateTransferStatus(data: $data) {
+    id
+    status
+  }
+}
+
+mutation CancelTransfer($id: ID!) {
+  cancelTransfer(id: $id) {
+    id
+    status
+  }
+}
+
+mutation AssignDriver($data: AssignDriver!) {
+  assignDriver(data: $data) {
+    ...TransferDetail
+  }
+}
+
+query AvailableDrivers($transferId: ID!, $filters: UserFilter, $pagination: OffsetPaginationInput) {
+  availableDrivers(transferId: $transferId, filters: $filters, pagination: $pagination) {
+    count
+    users {
+      id
+      name
+      firstName
+      lastName
+      phone
+      profileImage
+    }
+  }
+}
+
+query AvailableVehicles($transferId: ID!) {
+  availableVehicles(transferId: $transferId) {
+    id
+    driverId
+    plate
+    brand
+    model
+    color
+    year
+  }
+}
+
+mutation TipDriver($data: TipDriver!) {
+  tipDriver(data: $data) {
+    paymentLink
+    linkExpireTime
+  }
+}

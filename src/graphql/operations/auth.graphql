@@ -1,0 +1,37 @@
+mutation SignIn($data: SignIn!) {
+  signIn(data: $data) {
+    token
+    user {
+      ...CurrentUser
+    }
+  }
+}
+
+mutation GetCode($data: GetCode!) {
+  getCode(data: $data) {
+    secret
+    expireSeconds
+  }
+}
+
+mutation ValidateCode($data: ValidateCode!) {
+  validateCode(data: $data) {
+    secret
+    expireSeconds
+  }
+}
+
+mutation CreateUser($data: CreateUser!) {
+  createUser(data: $data) {
+    token
+    user {
+      ...CurrentUser
+    }
+  }
+}
+
+mutation ResetPassword($data: ResetPassword!) {
+  resetPassword(data: $data) {
+    success
+  }
+}

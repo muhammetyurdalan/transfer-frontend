@@ -1,0 +1,103 @@
+{
+  "address": {
+    "search": "Search an address",
+    "noResults": "No results",
+    "typeMore": "Type at least 3 characters",
+    "myLocation": "My location",
+    "pickOnMap": "Pick on map",
+    "clear": "Clear address",
+    "notSelected": "Select an address from the list",
+    "locationDenied": "Location permission denied. Allow location access in your browser settings.",
+    "locationFailed": "Could not get your location.",
+    "outOfArea": "This address is outside our service area"
+  },
+  "map": {
+    "title": "Pick a location",
+    "resolving": "Finding address…",
+    "unresolved": "No address found at this point",
+    "confirm": "Use this location",
+    "myLocation": "My location"
+  },
+  "create": {
+    "title": "Create Transfer",
+    "subtitle": "Plan your ride, then choose a vehicle.",
+    "submit": "Create Transfer"
+  },
+  "edit": {
+    "title": "Edit transfer #{{id}}",
+    "submit": "Save changes",
+    "notEditable": "Only pending transfers can be edited.",
+    "noChanges": "No changes to save",
+    "saved": "Transfer updated"
+  },
+  "sections": {
+    "route": "Route",
+    "time": "Time",
+    "passengers": "Passengers & needs",
+    "passenger": "Passenger details",
+    "legs": "Intermediate stops (optional)"
+  },
+  "fields": {
+    "pickup": "Pickup",
+    "dropoff": "Dropoff",
+    "swap": "Swap pickup and dropoff",
+    "pickupTime": "Pickup time",
+    "passengerCount": "Passengers",
+    "luggageCount": "Luggage",
+    "childSeatCount": "Child seats",
+    "needsWheelchair": "Wheelchair accessible vehicle needed",
+    "passengerName": "Passenger name",
+    "passengerPhone": "Passenger phone",
+    "flightNumber": "Flight number",
+    "note": "Note for the driver",
+    "increase": "Increase {{field}}",
+    "decrease": "Decrease {{field}}"
+  },
+  "route": {
+    "calculating": "Calculating route…",
+    "failed": "Route could not be calculated.",
+    "summary": "{{route}}",
+    "selectBoth": "Select pickup and dropoff to see the route"
+  },
+  "legs": {
+    "add": "Add stop",
+    "remove": "Remove stop",
+    "item": "Stop {{n}}",
+    "start": "Start address",
+    "end": "End address",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "readOnly": "Intermediate stops can’t be changed after creation.",
+    "none": "No intermediate stops"
+  },
+  "validation": {
+    "required": "Required",
+    "max": "Max {{max}} characters",
+    "min": "Must be at least {{min}}",
+    "future": "Pick a time at least 15 minutes from now",
+    "address": "Select an address",
+    "legOrder": "End time must be after start time",
+    "integer": "Must be a whole number"
+  },
+  "vehicle": {
+    "title": "Choose your vehicle",
+    "subtitle": "Prices include the full route.",
+    "empty": "No vehicle matches these needs",
+    "emptyBody": "Try changing passenger, luggage or accessibility needs.",
+    "editTransfer": "Edit transfer",
+    "pay": "Pay",
+    "selectFirst": "Select a vehicle",
+    "passengers": "{{count}} passengers",
+    "luggage": "{{count}} luggage",
+    "childSeats": "{{count}} child seats",
+    "wheelchair": "Wheelchair accessible",
+    "selected": "Selected",
+    "summary": "Trip summary",
+    "refreshed": "Vehicle options were refreshed",
+    "notPending": "This transfer is no longer pending."
+  },
+  "summary": {
+    "passengers": "{{count}} pax",
+    "luggage": "{{count}} bags"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "appName": "Transfer",
+  "tagline": "Özel ve VIP transfer, tam zamanında.",
+  "actions": {
+    "save": "Kaydet",
+    "cancel": "Vazgeç",
+    "confirm": "Onayla",
+    "close": "Kapat",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "back": "Geri",
+    "next": "İleri",
+    "retry": "Tekrar dene",
+    "search": "Ara",
+    "clear": "Temizle",
+    "more": "Diğer işlemler",
+    "details": "Detay",
+    "add": "Ekle",
+    "viewAll": "Tümünü gör",
+    "refresh": "Yenile",
+    "open": "Aç",
+    "filters": "Filtreler"
+  },
+  "nav": {
+    "transfers": "Transferler",
+    "myTransfers": "Transferlerim",
+    "dispatch": "Dispatch",
+    "jobs": "İşlerim",
+    "vehicles": "Araçlar",
+    "myVehicles": "Araçlarım",
+    "categories": "Kategoriler",
+    "users": "Kullanıcılar",
+    "settings": "Ayarlar",
+    "logout": "Çıkış yap",
+    "createTransfer": "Transfer Oluştur",
+    "openMenu": "Menüyü aç",
+    "notifications": "Bildirimler",
+    "language": "Dil",
+    "profile": "Profil",
+    "theme": "Tema"
+  },
+  "roles": {
+    "ADMIN": "Yönetici",
+    "STAFF": "Personel",
+    "OPERATOR": "Operatör",
+    "DRIVER": "Sürücü",
+    "CUSTOMER": "Müşteri"
+  },
+  "languages": {
+    "en": "English",
+    "tr": "Türkçe"
+  },
+  "theme": {
+    "light": "Açık",
+    "dark": "Koyu",
+    "system": "Sistem"
+  },
+  "status": {
+    "PENDING": "Beklemede",
+    "PAID": "Ödendi",
+    "ASSIGNED": "Atandı",
+    "STARTED": "Başladı",
+    "COMPLETED": "Tamamlandı",
+    "CANCELLED": "İptal edildi"
+  },
+  "transactionCategory": {
+    "PAYMENT": "Ödeme",
+    "TIP": "Bahşiş",
+    "REFUND": "İade"
+  },
+  "active": "Aktif",
+  "inactive": "Pasif",
+  "yes": "Evet",
+  "no": "Hayır",
+  "all": "Tümü",
+  "none": "Yok",
+  "loading": "Yükleniyor…",
+  "noResults": "Sonuç yok",
+  "duration": {
+    "minutes_one": "{{count}} dk",
+    "minutes_other": "{{count}} dk",
+    "hours_one": "{{count}} sa",
+    "hours_other": "{{count}} sa",
+    "hoursMinutes": "{{h}} sa {{m}} dk"
+  },
+  "table": {
+    "rowsPerPage": "Sayfa başına",
+    "displayedRows": "{{from}}–{{to}} / {{count}}",
+    "empty": "Henüz gösterilecek kayıt yok",
+    "selected_one": "{{count}} seçili",
+    "selected_other": "{{count}} seçili"
+  },
+  "pages": {
+    "notFoundTitle": "Sayfa bulunamadı",
+    "notFoundBody": "Aradığınız sayfa yok veya taşınmış.",
+    "forbiddenTitle": "Erişim yok",
+    "forbiddenBody": "Bu sayfayı görüntüleme yetkiniz yok.",
+    "goHome": "Ana sayfaya dön"
+  },
+  "error": {
+    "title": "Bir şeyler ters gitti",
+    "body": "Bu içerik yüklenemedi."
+  },
+  "file": {
+    "choose": "Dosya seç",
+    "tooLarge": "Dosya {{size}} sınırını aşıyor",
+    "remove": "Dosyayı kaldır"
+  },
+  "dateRange": {
+    "from": "Başlangıç",
+    "to": "Bitiş"
+  },
+  "confirmTyping": "Onaylamak için {{word}} yazın"
+}

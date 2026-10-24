@@ -1,0 +1,114 @@
+{
+  "appName": "Transfer",
+  "tagline": "Private & VIP transfers, on time.",
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "retry": "Try again",
+    "search": "Search",
+    "clear": "Clear",
+    "more": "More actions",
+    "details": "Details",
+    "add": "Add",
+    "viewAll": "View all",
+    "refresh": "Refresh",
+    "open": "Open",
+    "filters": "Filters"
+  },
+  "nav": {
+    "transfers": "Transfers",
+    "myTransfers": "My transfers",
+    "dispatch": "Dispatch",
+    "jobs": "My jobs",
+    "vehicles": "Vehicles",
+    "myVehicles": "My vehicles",
+    "categories": "Categories",
+    "users": "Users",
+    "settings": "Settings",
+    "logout": "Log out",
+    "createTransfer": "Create Transfer",
+    "openMenu": "Open menu",
+    "notifications": "Notifications",
+    "language": "Language",
+    "profile": "Profile",
+    "theme": "Theme"
+  },
+  "roles": {
+    "ADMIN": "Admin",
+    "STAFF": "Staff",
+    "OPERATOR": "Operator",
+    "DRIVER": "Driver",
+    "CUSTOMER": "Customer"
+  },
+  "languages": {
+    "en": "English",
+    "tr": "Türkçe"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "status": {
+    "PENDING": "Pending",
+    "PAID": "Paid",
+    "ASSIGNED": "Assigned",
+    "STARTED": "Started",
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled"
+  },
+  "transactionCategory": {
+    "PAYMENT": "Payment",
+    "TIP": "Tip",
+    "REFUND": "Refund"
+  },
+  "active": "Active",
+  "inactive": "Inactive",
+  "yes": "Yes",
+  "no": "No",
+  "all": "All",
+  "none": "None",
+  "loading": "Loading…",
+  "noResults": "No results",
+  "duration": {
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "hours_one": "{{count}} h",
+    "hours_other": "{{count}} h",
+    "hoursMinutes": "{{h}} h {{m}} min"
+  },
+  "table": {
+    "rowsPerPage": "Rows per page",
+    "displayedRows": "{{from}}–{{to}} of {{count}}",
+    "empty": "Nothing to show yet",
+    "selected_one": "{{count}} selected",
+    "selected_other": "{{count}} selected"
+  },
+  "pages": {
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "The page you are looking for does not exist or was moved.",
+    "forbiddenTitle": "No access",
+    "forbiddenBody": "You don't have permission to view this page.",
+    "goHome": "Go to home"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "We couldn't load this content."
+  },
+  "file": {
+    "choose": "Choose file",
+    "tooLarge": "File is larger than {{size}}",
+    "remove": "Remove file"
+  },
+  "dateRange": {
+    "from": "From",
+    "to": "To"
+  },
+  "confirmTyping": "Type {{word}} to confirm"
+}

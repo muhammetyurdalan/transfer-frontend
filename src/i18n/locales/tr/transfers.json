@@ -1,0 +1,137 @@
+{
+  "list": {
+    "title": "Transferler",
+    "customerTitle": "Transferlerim",
+    "subtitle": "Erişiminiz olan tüm transferler",
+    "empty": "Transfer bulunamadı",
+    "emptyCustomer": "Henüz transferiniz yok",
+    "createFirst": "İlk transferinizi oluşturun"
+  },
+  "filters": {
+    "status": "Durum",
+    "passenger": "Yolcu adı",
+    "region": "Bölge ID",
+    "from": "Başlangıç",
+    "to": "Bitiş"
+  },
+  "columns": {
+    "id": "#",
+    "pickupTime": "Alış zamanı",
+    "route": "Güzergah",
+    "passenger": "Yolcu",
+    "vehicle": "Araç",
+    "price": "Fiyat",
+    "status": "Durum",
+    "driver": "Sürücü",
+    "timeToPickup": "Alışa kalan süre"
+  },
+  "passengers_one": "{{count}} yolcu",
+  "passengers_other": "{{count}} yolcu",
+  "actions": {
+    "details": "Detay",
+    "selectVehicle": "Araç seç / Öde",
+    "edit": "Düzenle",
+    "assignDriver": "Sürücü ata",
+    "changeDriver": "Sürücü değiştir",
+    "messages": "Mesajlar",
+    "tip": "Bahşiş ver",
+    "cancel": "İptal et",
+    "start": "Yolculuğu başlat",
+    "complete": "Yolculuğu tamamla",
+    "directions": "Yol tarifi"
+  },
+  "detail": {
+    "title": "Transfer #{{id}}",
+    "back": "Transferlere dön",
+    "tabDetails": "Detay",
+    "tabMessages": "Mesajlar",
+    "notFound": "Transfer bulunamadı veya erişim yetkiniz yok.",
+    "cancelled": "Bu transfer iptal edildi.",
+    "route": "Güzergah",
+    "pickup": "Alış",
+    "dropoff": "Bırakış",
+    "stops": "Ara duraklar",
+    "trip": "Yolculuk",
+    "time": "Alış zamanı",
+    "endTime": "Tahmini varış",
+    "distance": "Mesafe",
+    "duration": "Süre",
+    "passengers": "Yolcu",
+    "luggage": "Bagaj",
+    "childSeats": "Çocuk koltuğu",
+    "wheelchair": "Tekerlekli sandalye",
+    "flight": "Uçuş no",
+    "note": "Not",
+    "passengerName": "Yolcu",
+    "passengerPhone": "Telefon",
+    "vehicleDriver": "Araç ve sürücü",
+    "noDriver": "Henüz sürücü atanmadı",
+    "plate": "Plaka",
+    "category": "Kategori",
+    "customer": "Müşteri",
+    "operator": "Operatör",
+    "payment": "Ödeme",
+    "price": "Fiyat",
+    "noTransactions": "Henüz ödeme hareketi yok",
+    "region": "Bölge",
+    "statusUpdated": "Transfer durumu güncellendi"
+  },
+  "timeline": {
+    "PENDING": "Oluşturuldu",
+    "PAID": "Ödendi",
+    "ASSIGNED": "Sürücü atandı",
+    "STARTED": "Yolda",
+    "COMPLETED": "Tamamlandı"
+  },
+  "cancel": {
+    "title": "Transfer #{{id}} iptal edilsin mi?",
+    "pending": "Ödeme linki iptal edilecek.",
+    "paid": "Ödemeniz iade edilecek.",
+    "customerFee": "Müşteri iptallerinde kesinti uygulanabilir.",
+    "confirm": "Transferi iptal et",
+    "done": "Transfer iptal edildi"
+  },
+  "tip": {
+    "title": "Sürücünüze bahşiş verin",
+    "amount": "Tutar",
+    "custom": "Farklı tutar",
+    "submit": "Ödemeye geç",
+    "invalid": "0'dan büyük bir tutar girin"
+  },
+  "payment": {
+    "checking": "Ödemeniz kontrol ediliyor…",
+    "checkingTip": "Bahşiş ödemeniz kontrol ediliyor…",
+    "success": "Ödeme başarılı",
+    "failed": "Ödeme başarısız",
+    "tipSuccess": "Teşekkürler! Bahşişiniz alındı",
+    "tipFailed": "Bahşiş ödemesi başarısız",
+    "payAgain": "Tekrar öde",
+    "timeout": "Ödeme henüz doğrulanamadı. Birazdan sayfayı yenileyin."
+  },
+  "assign": {
+    "title": "Sürücü ata",
+    "search": "Sürücü ara",
+    "noDrivers": "Bu saat için uygun sürücü yok",
+    "vehicle": "Araç",
+    "vehicleOptional": "Opsiyonel – seçilmezse ilk uygun araç atanır",
+    "submit": "Ata",
+    "done": "Sürücü atandı"
+  },
+  "dispatch": {
+    "title": "Dispatch",
+    "subtitle": "Ödenmiş transferlere sürücü atayın",
+    "waiting": "Atama bekleyen",
+    "assigned": "Atanmış",
+    "newPaid": "Yeni ödenmiş transfer #{{id}}",
+    "empty": "Bekleyen transfer yok",
+    "overdue": "Gecikti"
+  },
+  "jobs": {
+    "title": "İşlerim",
+    "upcoming": "Yaklaşan",
+    "past": "Geçmiş",
+    "empty": "Burada iş yok",
+    "assignedEvent": "Yeni bir işiniz var",
+    "cancelledEvent": "Bir iş iptal edildi veya başka sürücüye atandı"
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "title": "Vehicles",
+  "myTitle": "My vehicles",
+  "add": "Add vehicle",
+  "editTitle": "Edit vehicle",
+  "createTitle": "New vehicle",
+  "searchPlate": "Search plate",
+  "allCategories": "All categories",
+  "status": "Status",
+  "columns": {
+    "plate": "Plate",
+    "vehicle": "Vehicle",
+    "category": "Category",
+    "driver": "Driver",
+    "status": "Status"
+  },
+  "fields": {
+    "driver": "Driver",
+    "category": "Category",
+    "plate": "Plate",
+    "brand": "Brand",
+    "model": "Model",
+    "year": "Year",
+    "color": "Color",
+    "image": "Vehicle image",
+    "isActive": "Active"
+  },
+  "driverUnavailable": "Driver selection is not available for operators yet. Ask an admin to assign the driver.",
+  "actions": {
+    "edit": "Edit",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "delete": "Delete"
+  },
+  "deleteTitle": "Delete vehicle?",
+  "deleteBody": "Vehicle {{plate}} will be permanently deleted.",
+  "inUse": "Vehicle has been used in transfers. Deactivate it instead.",
+  "empty": "No vehicles yet",
+  "emptyBody": "Add the first vehicle to start assigning transfers.",
+  "saved": "Vehicle saved",
+  "deleted": "Vehicle deleted",
+  "validation": {
+    "required": "Required",
+    "max": "Max {{count}} characters",
+    "year": "Invalid year"
+  },
+  "categories": {
+    "title": "Vehicle categories",
+    "add": "Add category",
+    "createTitle": "New category",
+    "editTitle": "Edit category",
+    "columns": {
+      "name": "Category",
+      "capacity": "Capacity",
+      "pricing": "Pricing",
+      "order": "Order",
+      "status": "Status"
+    },
+    "capacity": "{{passengers}} pax · {{luggage}} bags",
+    "childSeats": "{{count}} child seats",
+    "wheelchair": "Wheelchair accessible",
+    "pricing": "Base {{base}} · {{perKm}}/km · {{perMin}}/min · min {{min}}",
+    "fields": {
+      "nameEn": "Name (English)",
+      "nameTr": "Name (Turkish)",
+      "descriptionEn": "Description (English)",
+      "descriptionTr": "Description (Turkish)",
+      "image": "Category image",
+      "maxPassengers": "Max passengers",
+      "maxLuggage": "Max luggage",
+      "childSeatCapacity": "Child seat capacity",
+      "isWheelchairAccessible": "Wheelchair accessible",
+      "baseFare": "Base fare",
+      "perKmPrice": "Per km",
+      "perMinutePrice": "Per minute",
+      "minimumFare": "Minimum fare",
+      "currency": "Currency",
+      "order": "List order",
+      "isActive": "Active"
+    },
+    "sections": {
+      "content": "Name & description",
+      "capacity": "Capacity",
+      "pricing": "Pricing"
+    },
+    "trFallback": "Leave empty to show the English name.",
+    "preview": "Price preview",
+    "previewBody": "Sample 30 km / 40 min trip",
+    "deleteTitle": "Delete category?",
+    "deleteBody": "{{name}} will be permanently deleted.",
+    "inUse": "Category is in use. Deactivate it instead.",
+    "empty": "No categories yet",
+    "saved": "Category saved",
+    "deleted": "Category deleted",
+    "validation": {
+      "min": "Must be at least {{min}}",
+      "number": "Enter a valid amount"
+    }
+  }
+}

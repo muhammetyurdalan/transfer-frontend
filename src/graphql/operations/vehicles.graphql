@@ -1,0 +1,105 @@
+fragment VehicleCategoryItem on VehicleCategory {
+  id
+  name
+  description
+  nameEn
+  nameTr
+  descriptionEn
+  descriptionTr
+  image
+  maxPassengers
+  maxLuggage
+  childSeatCapacity
+  isWheelchairAccessible
+  baseFare
+  perKmPrice
+  perMinutePrice
+  minimumFare
+  currency
+  order
+  isActive
+}
+
+fragment VehicleItem on Vehicle {
+  id
+  driverId
+  categoryId
+  plate
+  brand
+  model
+  year
+  color
+  image
+  isActive
+  createdAt
+  category {
+    id
+    name
+  }
+  driver {
+    id
+    name
+    firstName
+    lastName
+    profileImage
+  }
+}
+
+query Vehicles($filters: VehicleFilter, $ordering: [VehicleOrder!], $pagination: OffsetPaginationInput) {
+  vehicles(filters: $filters, ordering: $ordering, pagination: $pagination) {
+    count
+    vehicles {
+      ...VehicleItem
+    }
+  }
+}
+
+mutation CreateVehicle($data: CreateVehicle!) {
+  createVehicle(data: $data) {
+    ...VehicleItem
+  }
+}
+
+mutation UpdateVehicle($data: UpdateVehicle!) {
+  updateVehicle(data: $data) {
+    ...VehicleItem
+  }
+}
+
+mutation DeleteVehicle($id: ID!) {
+  deleteVehicle(id: $id) {
+    success
+  }
+}
+
+query VehicleCategories(
+  $language: Language
+  $filters: VehicleCategoryFilter
+  $ordering: [VehicleCategoryOrder!]
+  $pagination: OffsetPaginationInput
+) {
+  vehicleCategories(language: $language, filters: $filters, ordering: $ordering, pagination: $pagination) {
+    count
+    vehicleCategories {
+      ...VehicleCategoryItem
+    }
+  }
+}
+
+mutation CreateVehicleCategory($data: CreateVehicleCategory!) {
+  createVehicleCategory(data: $data) {
+    ...VehicleCategoryItem
+  }
+}
+
+mutation UpdateVehicleCategory($data: UpdateVehicleCategory!) {
+  updateVehicleCategory(data: $data) {
+    ...VehicleCategoryItem
+  }
+}
+
+mutation DeleteVehicleCategory($id: ID!) {
+  deleteVehicleCategory(id: $id) {
+    success
+  }
+}

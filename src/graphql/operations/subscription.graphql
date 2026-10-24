@@ -1,0 +1,13 @@
+subscription Events {
+  subscribe {
+    action
+    senderId
+    message
+    notificationId
+    transferId
+    messageId
+    parentId
+    location
+    file
+  }
+}

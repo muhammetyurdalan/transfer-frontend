@@ -1,0 +1,56 @@
+fragment MessageItem on Message {
+  id
+  transferId
+  senderId
+  parentId
+  isDeleted
+  message
+  location
+  file
+  time
+  sender {
+    id
+    name
+    firstName
+    lastName
+    profileImage
+  }
+  parent {
+    id
+    senderId
+    isDeleted
+    message
+    location
+    file
+  }
+}
+
+query Messages($transferId: ID!) {
+  messages(transferId: $transferId, ordering: [{ time: ASC }]) {
+    ...MessageItem
+  }
+}
+
+mutation SendMessage($data: SendMessage!) {
+  sendMessage(data: $data) {
+    ...MessageItem
+  }
+}
+
+mutation UpdateMessage($data: UpdateMessage!) {
+  updateMessage(data: $data) {
+    ...MessageItem
+  }
+}
+
+mutation DeleteMessage($id: ID!) {
+  deleteMessage(id: $id) {
+    ...MessageItem
+  }
+}
+
+mutation SeeMessages($transferId: ID!) {
+  seeMessages(transferId: $transferId) {
+    success
+  }
+}

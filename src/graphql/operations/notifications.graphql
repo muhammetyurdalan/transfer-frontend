@@ -1,0 +1,38 @@
+fragment NotificationItem on Notification {
+  id
+  title
+  body
+  action
+  data
+  isSeen
+  createdAt
+}
+
+query UnseenNotificationCount {
+  unseenNotificationCount
+}
+
+query Notifications(
+  $filters: NotificationFilter
+  $ordering: [NotificationOrder!]
+  $pagination: OffsetPaginationInput
+) {
+  notifications(filters: $filters, ordering: $ordering, pagination: $pagination) {
+    count
+    notifications {
+      ...NotificationItem
+    }
+  }
+}
+
+mutation SeeNotifications($ids: [ID!]) {
+  seeNotifications(ids: $ids) {
+    success
+  }
+}
+
+mutation DeleteNotifications($ids: [ID!]) {
+  deleteNotifications(ids: $ids) {
+    success
+  }
+}

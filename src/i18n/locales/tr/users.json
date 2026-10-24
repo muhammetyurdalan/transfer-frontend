@@ -1,0 +1,41 @@
+{
+  "title": "Kullanıcılar",
+  "search": "Ad veya e-posta ara",
+  "allRoles": "Tüm roller",
+  "status": "Durum",
+  "columns": {
+    "name": "Kullanıcı",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "role": "Rol",
+    "status": "Durum",
+    "createdAt": "Kayıt tarihi"
+  },
+  "actions": {
+    "changeRole": "Rol değiştir",
+    "activate": "Aktif yap",
+    "deactivate": "Pasif yap",
+    "notify": "Bildirim gönder",
+    "transfers": "Transferlerini gör"
+  },
+  "bulkNotify": "Seçilenlere bildir",
+  "roleDialog": {
+    "title": "Rol değiştir",
+    "body": "{{name}} için yeni rolü seçin.",
+    "role": "Rol"
+  },
+  "notifyDialog": {
+    "title": "Bildirim gönder",
+    "recipients_one": "{{count}} alıcı",
+    "recipients_other": "{{count}} alıcı",
+    "titleField": "Başlık",
+    "body": "Mesaj",
+    "sent": "Bildirim gönderildi"
+  },
+  "updated": "Kullanıcı güncellendi",
+  "empty": "Kullanıcı bulunamadı",
+  "validation": {
+    "required": "Zorunlu",
+    "max": "En fazla {{count}} karakter"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "address": {
+    "search": "Adres arayın",
+    "noResults": "Sonuç yok",
+    "typeMore": "En az 3 karakter yazın",
+    "myLocation": "Konumum",
+    "pickOnMap": "Haritadan seç",
+    "clear": "Adresi sil",
+    "notSelected": "Listeden bir adres seçin",
+    "locationDenied": "Konum izni reddedildi. Tarayıcı ayarlarından konum erişimine izin verin.",
+    "locationFailed": "Konumunuz alınamadı.",
+    "outOfArea": "Bu adres hizmet bölgemizin dışında"
+  },
+  "map": {
+    "title": "Konum seçin",
+    "resolving": "Adres bulunuyor…",
+    "unresolved": "Bu noktada adres bulunamadı",
+    "confirm": "Bu konumu seç",
+    "myLocation": "Konumum"
+  },
+  "create": {
+    "title": "Transfer Oluştur",
+    "subtitle": "Yolculuğunuzu planlayın, ardından aracınızı seçin.",
+    "submit": "Transfer Oluştur"
+  },
+  "edit": {
+    "title": "Transfer #{{id}} düzenle",
+    "submit": "Değişiklikleri kaydet",
+    "notEditable": "Sadece bekleyen transferler düzenlenebilir.",
+    "noChanges": "Kaydedilecek değişiklik yok",
+    "saved": "Transfer güncellendi"
+  },
+  "sections": {
+    "route": "Güzergah",
+    "time": "Zaman",
+    "passengers": "Yolcu ve ihtiyaçlar",
+    "passenger": "Yolcu bilgisi",
+    "legs": "Ara duraklar (opsiyonel)"
+  },
+  "fields": {
+    "pickup": "Alış noktası",
+    "dropoff": "Bırakış noktası",
+    "swap": "Alış ve bırakışı yer değiştir",
+    "pickupTime": "Alış zamanı",
+    "passengerCount": "Yolcu",
+    "luggageCount": "Bagaj",
+    "childSeatCount": "Çocuk koltuğu",
+    "needsWheelchair": "Tekerlekli sandalyeye uygun araç gerekli",
+    "passengerName": "Yolcu adı",
+    "passengerPhone": "Yolcu telefonu",
+    "flightNumber": "Uçuş numarası",
+    "note": "Sürücüye not",
+    "increase": "{{field}} artır",
+    "decrease": "{{field}} azalt"
+  },
+  "route": {
+    "calculating": "Rota hesaplanıyor…",
+    "failed": "Rota hesaplanamadı.",
+    "summary": "{{route}}",
+    "selectBoth": "Rotayı görmek için alış ve bırakış noktası seçin"
+  },
+  "legs": {
+    "add": "Ara durak ekle",
+    "remove": "Durağı sil",
+    "item": "Durak {{n}}",
+    "start": "Başlangıç adresi",
+    "end": "Bitiş adresi",
+    "startTime": "Başlangıç zamanı",
+    "endTime": "Bitiş zamanı",
+    "readOnly": "Ara duraklar oluşturulduktan sonra değiştirilemez.",
+    "none": "Ara durak yok"
+  },
+  "validation": {
+    "required": "Zorunlu",
+    "max": "En fazla {{max}} karakter",
+    "min": "En az {{min}} olmalı",
+    "future": "Şu andan en az 15 dakika sonrasını seçin",
+    "address": "Bir adres seçin",
+    "legOrder": "Bitiş zamanı başlangıçtan sonra olmalı",
+    "integer": "Tam sayı olmalı"
+  },
+  "vehicle": {
+    "title": "Aracınızı seçin",
+    "subtitle": "Fiyatlar tüm güzergahı kapsar.",
+    "empty": "Bu ihtiyaçlara uygun araç yok",
+    "emptyBody": "Yolcu, bagaj veya erişilebilirlik ihtiyaçlarını değiştirmeyi deneyin.",
+    "editTransfer": "Transferi düzenle",
+    "pay": "Öde",
+    "selectFirst": "Bir araç seçin",
+    "passengers": "{{count}} yolcu",
+    "luggage": "{{count}} bagaj",
+    "childSeats": "{{count}} çocuk koltuğu",
+    "wheelchair": "Tekerlekli sandalyeye uygun",
+    "selected": "Seçili",
+    "summary": "Yolculuk özeti",
+    "refreshed": "Araç seçenekleri yenilendi",
+    "notPending": "Bu transfer artık beklemede değil."
+  },
+  "summary": {
+    "passengers": "{{count}} yolcu",
+    "luggage": "{{count}} bagaj"
+  }
+}
