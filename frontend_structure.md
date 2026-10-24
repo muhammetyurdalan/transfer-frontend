@@ -190,39 +190,54 @@ export default config;
 ## 3. Klasör yapısı
 
 ```
+index.html                 # viewport-fit=cover, tema flash'ını önleyen inline script (§5.2)
+codegen.ts, vite.config.ts, eslint.config.js, tsconfig*.json
 src/
-  main.tsx                 # Providers: Theme, Apollo, Router, i18n, Snackbar, LocalizationProvider
+  main.tsx                 # Providers: Theme (dile göre locale), LocalizationProvider, Snackbar, Apollo, Router
   app/
-    router.tsx             # Route tanımları ve rol guard'ları
-    theme.ts               # MUI tema (light/dark colorSchemes)
-    providers/             # AuthProvider, SubscriptionProvider
+    router.tsx             # Route tablosu (§7), lazy sayfalar, kök route'ta Auth + Subscription provider
+    guards.tsx             # RequireAuth (rol), GuestOnly, HomeRedirect
+    theme/
+      tokens.ts            # TEK renk/tipografi/şekil kaynağı (§5.2)
+      theme.ts             # createAppTheme(lang): MUI tema + component override'ları + palet tip augmentation
+    providers/             # AuthProvider (useAuth, useCurrentUser), SubscriptionProvider (useAppEvent)
   lib/
     env.ts                 # import.meta.env okuma ve doğrulama
-    apollo.ts              # ApolloClient (upload + auth + ws + error link)
-    errors.ts              # ERR kodu → i18n anahtarı
-    geo/                   # geocoder.ts (Photon), routing.ts (OSRM), district.ts
-    format.ts              # para, tarih, mesafe/süre formatlayıcıları
-    media.ts               # dosya URL'i çözümleme
+    apollo.ts              # ApolloClient (upload + auth + ws + error link), apolloEvents, resetWsClient
+    errors.ts              # parseErrorCode, getErrorCode, errorKey
+    storage.ts             # localStorage/sessionStorage anahtarları, tokenStore, pendingPaymentStore
+    format.ts              # para, tarih, mesafe/süre, toCoord/toDecimal, initials
+    media.ts               # mediaUrl, isImagePath, fileName
+    geo/                   # geocoder.ts (Photon), routing.ts (OSRM + decodePolyline), district.ts, location.ts, types.ts
   graphql/
-    operations/            # *.graphql (query/mutation/subscription dokümanları)
+    operations/            # auth, user, notifications, subscription, booking, transfers, messages, vehicles, users, transactions (.graphql)
     generated/             # codegen çıktısı (commit edilir)
+  hooks/                   # useIsMobile / useIsCompact, useDebouncedValue
+  types/                   # paket tip bildirimleri (apollo-upload-client)
   components/
-    layout/                # AppLayout, Header, NavDrawer, AuthLayout
-    data-table/            # DataTable, RowActions, TableFilters
+    layout/                # AppLayout, AuthLayout, Header, NavDrawer, BrandLogo, LanguageMenu, ProfileMenu, ThemeModeMenu, navItems
+    data-table/            # DataTable, RowActions, TableFilters, useTableState (URL durumu)
     address/               # AddressField, MapPickerDialog
+    map/                   # RouteMap (A/B pin + rota), leafletSetup (ikon düzeltmesi, pinIcon)
     feedback/              # ConfirmDialog, EmptyState, ErrorState, LoadingSkeleton
-    StatusChip.tsx, Money.tsx, UserAvatar.tsx
+    StatusChip.tsx (+TransactionChip), Money.tsx, UserAvatar.tsx, PageHeader.tsx, FileInput.tsx,
+    StickyActionBar.tsx, ThemeModeToggle.tsx, themeModeOptions.tsx
   features/
-    auth/                  # Login, Register, ForgotPassword
-    transfers/             # List, Create, Detail, SelectVehicle, Edit, Dispatch
-    messages/              # MessagePanel
-    vehicles/              # Vehicles, VehicleCategories
-    users/                 # Users (admin)
-    settings/              # Profile, Statement, Notifications
-    notifications/         # NotificationMenu
+    auth/                  # LoginPage, RegisterPage, ForgotPasswordPage, EmailVerification (ortak 1-2. adım)
+    booking/               # TransferForm (oluştur + düzenle), LegsSection, VehicleOptionCard, TripSummaryCard, schema, useRoute
+    transfers/             # List, Create, Edit, SelectVehicle, Detail, Dispatch, Jobs sayfaları, dialog'lar, transferPermissions
+    messages/              # MessagePanel, MessageBubble, MessageComposer, messageRules
+    vehicles/              # VehiclesPage, VehicleDialog, VehicleCategoriesPage, VehicleCategoryDialog
+    users/                 # UsersPage, UpdateRoleDialog, SendNotificationDialog
+    settings/              # SettingsPage, ProfileTab, StatementTab (+RefundDialog), NotificationsTab
+    notifications/         # NotificationMenu (header zili)
+    errors/                # NotFoundPage, ForbiddenPage
   i18n/
-    index.ts, en.json, tr.json
+    index.ts               # i18next + dayjs kurulumu, dil yardımcıları
+    locales/<en|tr>/<namespace>.json
 ```
+
+**Komutlar:** `yarn dev`, `yarn build` (tsc + vite), `yarn lint`, `yarn codegen` (§2.3).
 
 ## 4. Backend ile iletişim
 
@@ -240,6 +255,7 @@ src/
   - JSON olmayan mesajlar (şema/validasyon hataları) için genel "Beklenmeyen hata" (`errors:unknown`), ağ hataları için `errors:network`.
   - **Hatayı form alanında kendisi gösteren** çağrılar `context: { skipErrorToast: true }` verir, global snackbar atlanır. Kod `getErrorCode(error)` ile alınır.
   - `apollo.ts` React'e bağımlı değildir. Logout/snackbar/reconnect tepkileri `apolloEvents` üzerinden `AuthProvider` tarafından bağlanır.
+- **Apollo 4 tipleri:** `useQuery` `data`'yı (defer/streaming ihtimali yüzünden) kısmi tipler. Tam veri gerektiren yerde `dataState === 'complete'` ile daraltılır veya `?.` kullanılır.
 - **Cache:** `InMemoryCache`. Varsayılan `watchQuery` `fetchPolicy: 'cache-and-network'`. Id'siz sayfalı sonuç tipleri (`*Paginated`, `VehicleOption`) `keyFields: false`. Mutation'lardan sonra ilgili sorgular `refetchQueries` ile tazelenir.
 
 ### 4.2 Oturum
@@ -358,7 +374,7 @@ transfers(filters: TransferFilter, ordering: [TransferOrder!], pagination: Offse
 ## 6. Ortak componentler
 
 ### 6.1 Header (`components/layout/Header.tsx`)
-`AppBar position="sticky"`, `elevation={0}`, alt kenarlıklı. Soldan sağa:
+`AppBar position="sticky"`, `elevation={0}`. Zemin `inverse.main` (koyu siyah), alt kenarda 2px altın (`inverse.accent`) çizgi. Aktif nav linki altın yazı + `inverse.accentSoft` zemin. `< md`'de aynı koyu stildeki `NavDrawer` açılır (nav linkleri + Ayarlar). Soldan sağa:
 
 | Öğe | Davranış | Görünürlük |
 |---|---|---|
@@ -423,16 +439,22 @@ type DataTableProps<T> = {
   - Her satır bir `Card` olur: `mobilePrimary` sütun başlık, diğerleri `etiket: değer` satırları.
   - ⋮ butonu kartın sağ üstündedir. Sayfalama kartların altındadır.
 - Yükleniyor: `pageSize` kadar `Skeleton` satırı/kartı. Boş: `emptyState`.
-- **Sayfa durumu URL'de tutulur** (`?page=2&pageSize=20&ordering=-createdAt&status=PAID`), geri tuşu ve paylaşım çalışır.
+- **Sayfa durumu URL'de tutulur** (`?page=2&pageSize=20&ordering=-createdAt&status=PAID`), geri tuşu ve paylaşım çalışır. `useTableState(defaultOrdering?, prefix?)` bunu yönetir: `pagination`, `orderingInput`, `get/getAll/set` (filtre değişince sayfa sıfırlanır). Aynı sayfada birden fazla tablo `prefix` ile ayrışır (`waiting.page`, `assigned.page`). `orderingInput` genel tiplidir, sayfada ilgili `*Order[]` tipine cast edilir.
+- Seçim (`selectable`) ait olduğu `rows` ile saklanır, sayfa/veri değişince sıfırlanır.
+- Mobil kartlarda sol kenar altın şerittir. Başlık satırı alt kenarı `primary`, hover `highlight.main`.
 - Sıralama → `ordering: [{ [field]: direction }]`, sayfa → `pagination: { offset, limit }`.
 
 ### 6.3 Genel component'ler
 - `ConfirmDialog`: başlık, açıklama, onay butonu (yıkıcıysa `color="error"`), `loading`.
 - `StatusChip`, `Money`, `UserAvatar`, `EmptyState`, `ErrorState` (tekrar dene butonlu), `PageHeader` (başlık + sağda aksiyonlar, mobilde alt alta).
-- `FileInput`: `accept`, maksimum boyut kontrolü (istemci tarafında). Görsel için önizleme yapar.
+- `FileInput`: `accept`, maksimum boyut kontrolü (istemci tarafında). Görsel için önizleme yapar, `currentUrl` ile mevcut görseli gösterir.
+- `StickyActionBar`: form/sayfa aksiyonları için alta yapışan koyu siyah bar (altın üst çizgi, safe-area padding).
+- `RouteMap` (`components/map`): salt okunur harita, A (altın) / B (siyah) pin'leri ve OSRM rotası, sınırlara otomatik sığar.
+- `ThemeModeToggle` / `ThemeModeMenu`: tema seçiciler (§5.2).
+- Hook'lar: `useIsMobile` (`< sm`), `useIsCompact` (`< md`), `useDebouncedValue`, `useAppEvent` (§9).
 
 ### 6.4 NotificationMenu (`features/notifications/NotificationMenu.tsx`)
-- **Badge:** `unseenNotificationCount` query'si. Uygulama açılışında ve her `NOTIFICATION` WebSocket olayında tazelenir (§9). 99'dan büyükse `99+`.
+- **Badge:** `unseenNotificationCount` query'si (altın badge). Uygulama açılışında ve her `NOTIFICATION` WebSocket olayında tazelenir (§9). 99'dan büyükse `99+`.
 - **Zile tıklanınca** `Popover` açılır (mobilde `Drawer anchor="bottom"`, tam genişlik):
   - Liste: **sadece görülmemiş** bildirimler.
     ```graphql
@@ -607,7 +629,7 @@ Filtre toolbar'ı:
 - Durum (çoklu `Select` → `status: { inList }`).
 - Tarih aralığı (`pickupTime: { range }`).
 - Yolcu adı araması (`passengerName: { iContains }`, 400ms debounce).
-- ADMIN/STAFF/OPERATOR için bölge filtresi (`stateId: { exact }`).
+- ADMIN/STAFF/OPERATOR için bölge filtresi (`stateId: { exact }`). Backend'de State sorgusu olmadığı için sayısal id alanıdır.
 
 `DataTable` → `transfers(filters, ordering: [{ pickupTime: DESC }], pagination)`.
 
@@ -677,7 +699,9 @@ Satır tıklama → `/transfers/:id`.
 **Gönderim:** `createTransfer(data: CreateTransfer!) → TransferResponse { transfer, vehicleOptions }`.
 - Başarılı → `/transfers/:id/vehicle`'a gidilir. `vehicleOptions` route state ile taşınır, cache'de de bulunur.
 - `ERR035` → "Seçilen adreslerin bölgesi hizmet alanımızda bulunamadı", adres alanlarına hata yazılır.
-- `ERR016` → zaman alanına, `ERR030` → genel form hatası.
+- `ERR016` → zaman alanına, `ERR030` → genel form hatası. Bu mutation'lar `skipErrorToast` kullanır, diğer hatalar formun üstünde `Alert` olarak gösterilir.
+- Varsayılan alış zamanı: şimdi + 15 dk'dan sonraki ilk tam saat. `flightNumber` büyük harfe çevrilerek gönderilir. Leg'lerde `order` listedeki sıradır, `route` gönderilmez, bitiş > başlangıç istemcide de kontrol edilir.
+- Oluşturma ve düzenleme aynı `features/booking/TransferForm` component'ini kullanır.
 
 `CreateTransfer`:
 
@@ -722,7 +746,7 @@ Satır tıklama → `/transfers/:id`.
 Transfer oluşturulduktan sonra **her zaman** bu ekran açılır.
 
 - **Veri:**
-  - Route state'te `vehicleOptions` varsa o kullanılır, yoksa `vehicleOptions(transferId: $id)` çağrılır.
+  - Route state'te `vehicleOptions` varsa Apollo cache'ine yazılır ve `VehicleOptions` query'si cache'ten okur, yoksa `vehicleOptions(transferId: $id)` çağrılır. Böylece dil değişimindeki `VehicleOptions` refetch'i çalışır.
   - Üst özet kartı için `transfer(id)` çağrılır (güzergah, zaman, yolcu/bagaj).
   - Transfer `PENDING` değilse detay sayfasına yönlendirilir.
 - **`VehicleOptionCard` listesi:** masaüstünde grid (`md: 2-3 sütun`), mobilde dikey liste. Her kartta:
@@ -735,7 +759,8 @@ Transfer oluşturulduktan sonra **her zaman** bu ekran açılır.
   1. `payTransfer(data: { id, vehicleCategoryId })` → `PaymentResponse { paymentLink, linkExpireTime }`.
   2. `sessionStorage`'a `pendingPayment = { transferId }` yazılır.
   3. `window.location.assign(paymentLink)` ile ödeme sayfasına gidilir.
-- Hata: `ERR025` (kategori uygun değil, listeyi tazele), `ERR031` (ödeme servisi hatası, tekrar dene).
+- Hata: `ERR025` (kategori uygun değil: seçim temizlenir, liste tazelenir), `ERR031` (ödeme servisi hatası, tekrar dene).
+- `pendingPayment` değeri `{ transferId, kind: 'payment' | 'tip' }`'tir.
 
 `PayTransfer`:
 
@@ -748,6 +773,7 @@ Transfer oluşturulduktan sonra **her zaman** bu ekran açılır.
 - Kullanıcı ödeme sayfasından `/transfers/:id`'ye döner (dönüş URL'i §11'de açık konu).
 - Detay sayfası `pendingPayment` görürse "Ödemeniz kontrol ediliyor" banner'ı gösterir.
 - `PAYMENT_SUCCESS` / `PAYMENT_FAILED` olayını (aynı `transferId`) bekler. Yedek olarak status `PENDING` kaldığı sürece `transfer` query'sini 5 sn aralıkla en fazla 2 dk poll eder.
+- Durum `PENDING`'den çıkarsa ödeme başarılı sayılır. Bahşişte status değişmediği için poll yapılmaz, sadece `TIP_*` olayı 2 dk beklenir, sonra zaman aşımı uyarısı gösterilir.
 - Sonuç:
   - Başarılıysa success snackbar, status `PAID`.
   - Başarısızsa error banner + "Tekrar öde" (`/transfers/:id/vehicle`).
@@ -758,6 +784,7 @@ Transfer oluşturulduktan sonra **her zaman** bu ekran açılır.
 - `updateTransfer(data: UpdateTransfer!) → TransferResponse`.
   - Rota/ihtiyaç alanları değiştiyse (`pickupTime, distance, duration, passengerCount, luggageCount, childSeatCount, needsWheelchair`) backend araç seçimini ve fiyatı sıfırlar → `/transfers/:id/vehicle`'a gidilir.
   - Diğer alanlarda detay sayfasına dönülür.
+- Adres değişmediyse kayıtlı `distance`/`duration` korunur, OSRM sadece çizgi için çağrılır. "Kaydet" bir şey değişene kadar disabled.
 - `legs` bu mutation'la **değiştirilemez** (alan yok), düzenleme ekranında leg bölümü salt okunur gösterilir.
 
 `UpdateTransfer` (hepsi **O**, sadece `id` **R**):
@@ -840,7 +867,7 @@ Alanlar: `status, pickup*/dropoff*, pickupTime, endTime, distance, duration, pas
   - Silinmiş mesaj "Bu mesaj silindi" olarak görünür.
   - Dosya: görselse küçük önizleme, değilse indirme çipi. Konum: haritaya link.
 - **Açılınca** `seeMessages(transferId)` çağrılır.
-- **Yeni `MESSAGE` olayında:** panel açıksa listeye eklenir ve `seeMessages` çağrılır. Kapalıysa sekmede okunmamış badge'i artar.
+- **Yeni `MESSAGE` olayında:** panel açıksa `Messages` tazelenir (olay göndereni taşımaz) ve `seeMessages` çağrılır. `UPDATE_MESSAGE` / `DELETE_MESSAGE` cache'teki mesajı doğrudan günceller. Kapalıysa sekmede okunmamış badge'i artar.
 - **Gönderim kutusu (alt sabit):**
   - Çok satırlı input, ataç (dosya, istemcide **2MB** sınırı), konum paylaş (`navigator.geolocation` → `location: "lat,lng"`) ve gönder butonları.
   - Reply modundayken üstte iptal edilebilir alıntı çubuğu durur.
@@ -861,6 +888,7 @@ Alanlar: `status, pickup*/dropoff*, pickupTime, endTime, distance, duration, pas
   - **Atama bekleyen:** `status: { exact: PAID }`, `ordering: [{ pickupTime: ASC }]`.
   - **Atanmış:** `status: { inList: [ASSIGNED, STARTED] }`.
 - `DataTable` sütunları transfer listesiyle aynı, ek olarak "Alışa kalan süre" sütunu var (1 saatten azsa `warning` rengi).
+- Aktif sekme URL'de (`?tab=assigned`), her sekmenin tablo durumu kendi prefix'iyle tutulur.
 - `TRANSFER_PAID` olayı gelince "Atama bekleyen" listesi tazelenir ve snackbar gösterilir ("Yeni ödenmiş transfer #id").
 - ⋮: Detay, **Sürücü ata**, İptal et.
 
@@ -887,14 +915,14 @@ Alanlar: `status, pickup*/dropoff*, pickupTime, endTime, distance, duration, pas
   - **Yaklaşan:** `status: { inList: [ASSIGNED, STARTED] }`, `pickupTime ASC`.
   - **Geçmiş:** `status: { inList: [COMPLETED, CANCELLED] }`, `pickupTime DESC`.
 - Backend DRIVER'a sadece kendine atanmış transferleri döner.
-- Mobilde kart görünümü öne çıkar. Kartta büyük "Başlat" / "Tamamla" butonu doğrudan bulunur (`updateTransferStatus`).
+- Mobilde kart görünümü öne çıkar. Kartta büyük "Başlat" / "Tamamla" butonu doğrudan bulunur (`updateTransferStatus`). Kart içinde buton olduğu için mobilde kart tıklanamaz, detay ⋮ menüsündedir. Sekmeler `upcoming` / `past` prefix'leriyle URL'de.
 - ⋮: Detay, Mesajlar, Yol tarifi (pickup koordinatına `geo:` / Google Maps linki).
 - `TRANSFER_ASSIGNED` gelince "Yaklaşan" listesi tazelenir. `TRANSFER_CANCELLED` (atama geri alındı veya iptal) gelince de tazelenir ve uyarı gösterilir.
 
 ### 8.9 Araçlar (`/vehicles`)
 `vehicles(filters, ordering, pagination)`. DRIVER sadece kendi araçlarını görür ve sadece okur.
 
-Filtreler: plaka (`plate: { iContains }`), kategori (`categoryId`), aktiflik (`isActive`).
+Filtreler: plaka (`plate: { iContains }`, URL `?plate=`, 400ms debounce), kategori (`categoryId`), aktiflik (`isActive`). Düzenleme formları sadece değişen alanları gönderir. OPERATOR için sürücü alanı disabled ve açıklamalıdır (§11).
 
 | Sütun | Alan |
 |---|---|
@@ -964,7 +992,7 @@ Sütunlar: görsel + ad (`mobilePrimary`), kapasite (yolcu/bagaj/çocuk koltuğu
 `UpdateVehicleCategory`: `id` **R**, diğer tüm alanlar **O**. Geçersiz değer `ERR030`.
 
 ### 8.11 Kullanıcılar (`/users`), ADMIN, STAFF
-`users(filters, ordering, pagination)`. Filtreler: rol, aktiflik, ad/e-posta araması (`OR` ile `email/firstName/lastName: { iContains }`).
+`users(filters, ordering, pagination)`. Filtreler: rol, aktiflik, ad/e-posta araması (`OR` ile `email/firstName/lastName: { iContains }`, URL `?q=`, 400ms debounce).
 
 Sütunlar: avatar + ad (`mobilePrimary`), e-posta, telefon, rol (chip), aktif, kayıt tarihi.
 
@@ -1024,7 +1052,7 @@ Veri: `user` query'si (`id firstName lastName email phone language role profileI
 
 Filtreler: kategori (`category: { inList }`), tarih aralığı (`orderTime: { range }`).
 
-Üstte özet kartları (`>= sm`): bu sayfadaki toplam ödeme / bahşiş / iade.
+Üstte özet kartları (`>= sm`): bu sayfadaki toplam ödeme / bahşiş / iade, para birimine göre gruplu (ödeme kartı siyah zemin + altın tutar). Filtreler URL'de: `?category=PAYMENT,TIP&from=YYYY-MM-DD&to=YYYY-MM-DD`.
 
 | Sütun | Alan |
 |---|---|
@@ -1052,7 +1080,7 @@ Filtreler: kategori (`category: { inList }`), tarih aralığı (`orderTime: { ra
 | `note` | O | |
 
 #### Notifications sekmesi
-`notifications(filters, ordering: [{ createdAt: DESC }], pagination)`. Filtre: Tümü / Okunmamış (`isSeen: false`) / Okunmuş (`isSeen: true`) segmentli butonu.
+`notifications(filters, ordering: [{ createdAt: DESC }], pagination)`. Filtre: Tümü / Okunmamış (`isSeen: false`) / Okunmuş (`isSeen: true`) segmentli butonu (URL `?seen=unread|read`).
 
 | Sütun | Alan |
 |---|---|
@@ -1078,7 +1106,7 @@ Filtreler: kategori (`category: { inList }`), tarih aralığı (`orderTime: { ra
 - `VITE_FIREBASE_*` doluysa giriş sonrası Firebase Messaging token'ı alınır ve `updateFcmToken(data: { registrationId, type: WEB })` çağrılır.
 - Token `localStorage`'da saklanır. Logout'ta `deleteFcmToken(registrationId)` çağrılır.
 - Firebase env'i boşsa bu adım tamamen atlanır.
-- Firebase paketleri ancak bu özellik açılacaksa eklenir.
+- Firebase paketleri ancak bu özellik açılacaksa eklenir. **Henüz uygulanmadı** (Firebase paketi yok). Logout akışındaki `deleteFcmToken` çağrısı hazırdır (`transfer.fcmToken` anahtarı).
 
 | Mutation | Alan | R/O |
 |---|---|---|
@@ -1093,7 +1121,7 @@ Giriş yapıldığında tek bir subscription açılır:
 subscription { subscribe { action senderId message notificationId transferId messageId parentId location file } }
 ```
 
-Olaylar `action`'a göre dağıtılır:
+Olaylar `action`'a göre dağıtılır. Genel tepkiler (bildirim sayısı, `CurrentUser`, `Transfers`/`Transfer` refetch, devre dışı logout) `SubscriptionProvider`'dadır. Sayfaya özel tepkiler `useAppEvent(['MESSAGE', ...], handler)` ile component'te yazılır. Refetch operasyon **adıyla** yapıldığı için liste ve detay query'leri `Transfers` / `Transfer` adını korumalıdır.
 
 | `action` | Frontend tepkisi |
 |---|---|
@@ -1161,5 +1189,6 @@ Yeni kod backend `errors.txt`'ye eklendikçe bu tabloya ve i18n dosyalarına ekl
 | OPERATOR sürücü listesi | `createVehicle` OPERATOR'e açık, ama sürücü seçmek için gereken `users` query'si sadece ADMIN/STAFF'a açık. Backend'e OPERATOR için bir `drivers` query'si eklenmeli, o zamana kadar OPERATOR'ün araç formunda sürücü seçimi yapılamaz |
 | İlçe adı eşleştirme | Photon'un hangi alanının (`county`/`city`/`district`) backend `District.name` ile eşleştiği seed verisiyle test edilmeli. Aynı isimli ilçeler (ör. "Merkez") yanlış eşleşebilir |
 | Leg düzenleme | `updateTransfer` leg'leri değiştirmiyor, düzenleme ekranında salt okunur |
+| Web push | §8.13 uygulanmadı, Firebase config verilince eklenecek |
 | Mesaj konum formatı | Backend `location`'ı serbest metin saklar. Frontend standardı `"lat,lng"` |
 | Prod harita servisleri | OSM tile, Photon ve OSRM public sunucuları yoğun kullanım için değil. Prod'da self-host veya ücretli sağlayıcı URL'i `.env.production`'a yazılmalı |
