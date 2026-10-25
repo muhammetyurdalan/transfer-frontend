@@ -71,7 +71,7 @@ export function MessagePanel({ transferId, canWrite, readOnlyStaff, height = 560
     if (e.action === 'UPDATE_MESSAGE') {
       client.cache.modify<MessageItemFragment>({
         id,
-        fields: { message: () => e.message ?? null },
+        fields: { message: () => e.message ?? null, isEdited: () => true },
       });
     } else {
       client.cache.modify<MessageItemFragment>({ id, fields: { isDeleted: () => true } });

@@ -1199,7 +1199,7 @@ Olaylar `action`'a göre dağıtılır. Genel tepkiler (bildirim sayısı, `Curr
 |---|---|
 | `NOTIFICATION` | `unseenNotificationCount` ve açık bildirim listesi tazelenir |
 | `MESSAGE` | `transferId` paneli açıksa mesaj listeye eklenir (`messageId`, `message`, `file`, `location`, `parentId`) ve `seeMessages` çağrılır. Değilse okunmamış badge'i artar |
-| `UPDATE_MESSAGE` | ilgili mesaj metni güncellenir |
+| `UPDATE_MESSAGE` | cache'teki mesajın metni güncellenir ve `isEdited: true` yapılır ("düzenlendi" etiketi anında görünür) |
 | `DELETE_MESSAGE` | ilgili mesaj "silindi" olarak işaretlenir |
 | `PAYMENT_SUCCESS` / `PAYMENT_FAILED` | `transferId` detay sayfası tazelenir, ödeme banner'ı kapanır, snackbar gösterilir |
 | `TIP_PAYMENT_SUCCESS` / `TIP_PAYMENT_FAILED` | aynı, bahşiş için |
