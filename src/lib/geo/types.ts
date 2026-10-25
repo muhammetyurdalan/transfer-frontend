@@ -22,6 +22,8 @@ export type PhotonProperties = {
   countrycode?: string;
   osm_key?: string;
   osm_value?: string;
+  /** Photon nesne tipi: house, street, locality, district, city, county, state, country */
+  type?: string;
 };
 
 export type GeocodeResult = {

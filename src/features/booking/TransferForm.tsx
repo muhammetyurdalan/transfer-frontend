@@ -97,6 +97,11 @@ export function TransferForm({
   // İki adres de koordinat + ilçe adıyla seçilmeden asla aktif olmaz (düzenlemede değişmeyen adres hariç).
   const addressReady = (a: SelectedAddress | null, initial: SelectedAddress | null) =>
     !!a && !!a.latitude && !!a.longitude && (!!a.districtName || (mode === 'edit' && sameAddress(a, initial)));
+  // Seçilmiş ama ilçesi çözülemeyen adres (ör. sadece il seçildi): buton sessizce pasif kalmasın, alanda söylenir
+  const districtMissing = (a: SelectedAddress | null, initial: SelectedAddress | null) =>
+    !!a && !!a.latitude && !!a.longitude && !addressReady(a, initial)
+      ? t('booking:address.noDistrict')
+      : undefined;
   const ready =
     addressReady(pickup, defaultValues.pickup) &&
     addressReady(dropoff, defaultValues.dropoff) &&
@@ -201,7 +206,7 @@ export function TransferForm({
                       label={t('booking:fields.pickup')}
                       value={field.value}
                       onChange={field.onChange}
-                      error={fieldState.error?.message}
+                      error={fieldState.error?.message ?? districtMissing(field.value, defaultValues.pickup)}
                     />
                   )}
                 />
@@ -219,7 +224,7 @@ export function TransferForm({
                       value={field.value}
                       onChange={field.onChange}
                       near={positionOf(pickup)}
-                      error={fieldState.error?.message}
+                      error={fieldState.error?.message ?? districtMissing(field.value, defaultValues.dropoff)}
                     />
                   )}
                 />

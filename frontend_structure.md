@@ -517,7 +517,7 @@ type SelectedAddress = {
 ```
 
 **`districtName` çıkarımı (`lib/geo/district.ts`, tek fonksiyon):**
-- Photon `properties` alanlarından ilçe adı seçilir. Türkiye için öncelik `county → city → district`.
+- Photon `properties` alanlarından ilçe adı seçilir. Türkiye için öncelik `county → city → (ilçenin kendisi seçildiyse name) → district → locality`. İlçe seçildiğinde (`type: city`/`county`, ör. "Kemer", "Alanya") Photon `county`/`city` alanlarını boş döner, ilçe adı `name`'dedir. Sadece il seçilirse (`type: state`) ilçe çıkarılamaz.
 - Bu sıra seed edilen `District` verisine göre **gerçek adreslerle doğrulanmalıdır** (§11).
 - Backend en az bir noktanın ilçesini bulamazsa `ERR035` döner.
 
@@ -736,6 +736,8 @@ Satır tıklama → `/transfers/:id`.
 
 **Create Transfer butonu ne zaman aktif:**
 - **Pickup ve dropoff ikisi de seçilmeden (koordinat + districtName dolu) asla aktif olmaz.**
+  - Adres seçilmiş ama ilçesi çözülemediyse (sadece il seçildi) buton sessizce pasif kalmaz: adres alanının altında "Bu adresin ilçesi bulunamadı, daha belirli bir adres seçin" uyarısı gösterilir.
+  - Önceden dolu gelen telefon (profilden) geçersizse `PhoneField` hatayı alana dokunulmadan hemen gösterir.
 - Eklenmiş her ara durağın adresi seçilmiş olmalı (boş durak ya doldurulur ya kaldırılır).
 - Ayrıca rota hesaplanmış (`distance > 0`, `duration > 0`), `pickupTime` gelecekte, `passengerName` dolu ve form validasyonu (zod) geçerli olmalı.
 - İstek sürerken `loading`.

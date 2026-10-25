@@ -99,8 +99,9 @@ export function PhoneField({
   // Seçili ülkenin adı arama kutusunda kalmasın: kutu her açılışta boş gelir
   const [search, setSearch] = useState('');
   const localInput = useRef<HTMLInputElement | null>(null);
-  // Form gönderilmeden de geri bildirim: alandan bir kez çıkıldıktan sonra numara seçili ülkeye göre kontrol edilir
-  const [touched, setTouched] = useState(false);
+  // Form gönderilmeden de geri bildirim: alandan bir kez çıkıldıktan sonra numara seçili ülkeye göre kontrol edilir.
+  // Önceden dolu gelen numara (profil, kayıtlı transfer) hemen kontrol edilir: geçersizse formu sessizce kilitlemesin.
+  const [touched, setTouched] = useState(() => !!value.number);
 
   // Dışarıdan gelen değişiklik (form reset vb.): input'u yeniden doldur
   if (value.number !== state.number || value.country !== state.country) {

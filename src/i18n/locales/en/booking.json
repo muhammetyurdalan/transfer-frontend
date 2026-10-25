@@ -9,7 +9,8 @@
     "notSelected": "Select an address from the list",
     "locationDenied": "Location permission denied. Allow location access in your browser settings.",
     "locationFailed": "Could not get your location.",
-    "outOfArea": "This address is outside our service area"
+    "outOfArea": "This address is outside our service area",
+    "noDistrict": "Couldn't find the district for this address. Pick a more specific one (district, neighbourhood, street, hotel or airport)."
   },
   "map": {
     "title": "Pick a location",
