@@ -9,6 +9,7 @@ import { RefundTransactionDocument, type TransactionItemFragment } from '@/graph
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { errorKey, getErrorCode } from '@/lib/errors';
 import { formatMoney, toDecimal } from '@/lib/format';
+import { STATEMENT_CURRENCY } from './statement';
 
 const schema = z.object({
   amount: z
@@ -64,7 +65,7 @@ function Inner({ transaction, onClose, onDone }: Props & { transaction: Transact
         <DialogTitle>{t('settings:statement.refund.title')}</DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ mb: 2 }}>
-            {t('settings:statement.refund.body', { amount: formatMoney(transaction.orderAmount, transaction.currency) })}
+            {t('settings:statement.refund.body', { amount: formatMoney(transaction.orderAmount, STATEMENT_CURRENCY) })}
           </DialogContentText>
           <Stack spacing={2}>
             <TextField

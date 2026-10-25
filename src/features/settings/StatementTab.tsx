@@ -22,21 +22,16 @@ import { useAuth } from '@/app/providers/AuthProvider';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { formatDateTime, formatMoney } from '@/lib/format';
 import { RefundDialog } from './RefundDialog';
+import { STATEMENT_CURRENCY } from './statement';
 
 const CATEGORIES: TransactionCategory[] = ['PAYMENT', 'TIP', 'REFUND'];
 const DEFAULT_ORDERING = { field: 'orderTime', direction: 'DESC' as const };
 const EMPTY: never[] = [];
 
-/** Para birimine göre toplamlar: "₺1.200,00 · €40,00" */
-function sumByCurrency(rows: TransactionItemFragment[], category: TransactionCategory) {
-  const totals = new Map<string, number>();
-  for (const r of rows) {
-    if (r.category !== category) continue;
-    const cur = r.currency ?? 'TRY';
-    totals.set(cur, (totals.get(cur) ?? 0) + Number(r.orderAmount ?? 0));
-  }
-  if (totals.size === 0) return formatMoney(0, 'TRY');
-  return [...totals].map(([cur, v]) => formatMoney(v, cur)).join(' · ');
+/** Kategorinin toplamı: "€1.200,00" */
+function sumOf(rows: TransactionItemFragment[], category: TransactionCategory) {
+  const total = rows.reduce((sum, r) => (r.category === category ? sum + Number(r.orderAmount ?? 0) : sum), 0);
+  return formatMoney(total, STATEMENT_CURRENCY);
 }
 
 /** Ödeme hareketleri sekmesi (§8.12). Kapsamı backend role göre belirler. */
@@ -80,7 +75,7 @@ export function StatementTab() {
       render: (r) => (
         <Money
           amount={r.orderAmount}
-          currency={r.currency}
+          currency={STATEMENT_CURRENCY}
           negative={r.category === 'REFUND'}
           sx={{ fontWeight: 700, color: r.category === 'REFUND' ? 'warning.main' : 'text.primary' }}
         />
@@ -159,7 +154,7 @@ export function StatementTab() {
                   noWrap
                 >
                   {s.key === 'REFUND' && rows.some((r) => r.category === 'REFUND') ? '−' : ''}
-                  {sumByCurrency(rows, s.key)}
+                  {sumOf(rows, s.key)}
                 </Typography>
               </CardContent>
             </Card>
