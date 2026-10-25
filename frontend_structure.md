@@ -144,6 +144,8 @@ VITE_FIREBASE_VAPID_KEY=
 
 **Backend tarafı:** frontend origin'i backend `.env`'inde `CORS_ALLOWED_ORIGINS` listesine eklenmelidir.
 
+**Vercel deploy:** ayarlar repodaki `vercel.json`'dadır: `framework: vite`, `buildCommand: yarn build`, `outputDirectory: dist` (Vite çıktısı `build` değil `dist`), ve SPA için tüm yolların `index.html`'e rewrite'ı (`/transfers/12` gibi derin linkler yenilendiğinde 404 vermez; `/assets/*` gibi gerçek dosyalar önce sunulur). Env değişkenleri Vercel Project Settings → Environment Variables'a girilir, build anında gömülür (değişince redeploy gerekir).
+
 ### 2.3 GraphQL codegen
 Tipler elle yazılmaz, `@graphql-codegen/client-preset` ile üretilir.
 
