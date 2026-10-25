@@ -64,6 +64,8 @@ export function activeNavPath(items: NavItem[], pathname: string) {
 /** `/` yönlendirmesi */
 export function homePathFor(role: Role | null | undefined) {
   switch (role) {
+    case 'CUSTOMER':
+      return '/transfers/new';
     case 'OPERATOR':
       return '/dispatch';
     case 'DRIVER':

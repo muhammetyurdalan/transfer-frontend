@@ -19,7 +19,21 @@ export const emailSchema = z
   .max(100, 'validation.max|100')
   .email('validation.email');
 
-export const passwordSchema = z.string().min(8, 'validation.passwordMin').max(128, 'validation.max|128');
+/**
+ * Şifre kuralları: en az 8 karakter (backend `MinimumLengthValidator` varsayılanı), en az bir büyük harf
+ * ve en az bir özel karakter (harf/rakam/boşluk dışı). `passwordSchema` ve `PasswordRules` listesi bunlardan üretilir.
+ */
+export const PASSWORD_RULES = [
+  { key: 'validation.passwordMin', test: (v: string) => v.length >= 8 },
+  { key: 'validation.passwordUpper', test: (v: string) => /\p{Lu}/u.test(v) },
+  { key: 'validation.passwordSpecial', test: (v: string) => /[^\p{L}\p{N}\s]/u.test(v) },
+] as const;
+
+/** Kayıt ve şifre sıfırlamada kullanılır */
+export const passwordSchema = PASSWORD_RULES.reduce(
+  (schema, rule) => schema.refine(rule.test, rule.key),
+  z.string().max(128, 'validation.max|128'),
+);
 
 export const nameSchema = z.string().trim().min(1, 'validation.required').max(50, 'validation.max|50');
 

@@ -548,7 +548,7 @@ type SelectedAddress = {
 | `/login` | Giriş | misafir |
 | `/register` | Kayıt (3 adım) | misafir |
 | `/forgot-password` | Şifre sıfırlama (3 adım) | misafir |
-| `/` | Role göre yönlendirme: CUSTOMER → `/transfers`, OPERATOR → `/dispatch`, DRIVER → `/jobs`, ADMIN/STAFF → `/transfers` | giriş yapmış |
+| `/` | Role göre yönlendirme (girişten sonra açılan ilk sayfa): CUSTOMER → `/transfers/new` (Create Transfer), OPERATOR → `/dispatch`, DRIVER → `/jobs`, ADMIN/STAFF → `/transfers` | giriş yapmış |
 | `/transfers` | Transfer listesi | hepsi (backend kapsamı otomatik) |
 | `/transfers/new` | Transfer oluştur | CUSTOMER |
 | `/transfers/:id/vehicle` | Araç seçimi ve ödeme | CUSTOMER |
@@ -627,12 +627,12 @@ Hatalar: `ERR010` (kullanıcı yok/pasif), `ERR012` (şifre yanlış).
 | Alan | R/O | Kural |
 |---|---|---|
 | `secret` | R | `validateCode` cevabındaki secret |
-| `password` | R | max 128, istemcide min 8 + tekrar alanı |
+| `password` | R | max 128. İstemcide (`passwordSchema`, kayıt ve şifre sıfırlama): en az 8 karakter (backend `MinimumLengthValidator`), en az bir büyük harf, en az bir özel karakter (harf/rakam/boşluk dışı). Tekrar alanının altında kurallar madde madde listelenir (`PasswordRules`, `PASSWORD_RULES`). Liste şifre alanına ilk odaklanılınca (veya form gönderilince) `Collapse` ile açılır ve açık kalır: yazdıkça sağlanan madde yeşil ✓, sağlanmayan kırmızı ✕. Şifre alanının kendisinde sadece hata çerçevesi (ve 128 üst sınır mesajı) gösterilir. Form `mode: 'onTouched'`: alandan çıkınca, sonra her tuşta doğrulanır. Tekrar alanı yazılırken eşleşme anında kontrol edilir ("Şifreler eşleşmiyor") |
 | `firstName` | R | max 50 |
 | `lastName` | R | max 50 |
 | `phone` | O | E.164, seçilen ülkeye göre geçerli olmalı (`PhoneField`, §6.3) |
 | `profileImage` | O | `Upload` (görsel) |
-| `role` | O | `CUSTOMER` (varsayılan) veya `DRIVER`. "Sürücü olarak kaydol" seçeneği |
+| `role` | O | Her zaman sabit `CUSTOMER` gönderilir. Kayıt formunda rol seçimi yoktur; diğer roller yönetim tarafından verilir |
 
 #### Şifre sıfırlama (`/forgot-password`)
 - Kayıtla aynı 3 adım: `getCode(isUser: true)` (`ERR010` kullanıcı yok) → `validateCode` → `resetPassword`. Sonra `/login`'e gidilir.

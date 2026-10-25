@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import {
   Button,
-  Checkbox,
-  FormControlLabel,
+  Collapse,
   Grid,
   Link,
   Stack,
@@ -13,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useMutation } from '@apollo/client/react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link as RouterLink, useNavigate } from 'react-router';
@@ -27,6 +26,7 @@ import { emptyPhone, phoneSchema } from '@/lib/phone';
 import { AuthHeading } from './AuthHeading';
 import { EmailVerification } from './EmailVerification';
 import { PasswordField } from './PasswordField';
+import { PasswordRules } from './PasswordRules';
 import { nameSchema, passwordFields, passwordsMatch, validationText } from './schemas';
 
 const schema = z
@@ -34,7 +34,6 @@ const schema = z
     firstName: nameSchema,
     lastName: nameSchema,
     phone: phoneSchema,
-    asDriver: z.boolean(),
     profileImage: z.instanceof(File).nullable(),
     ...passwordFields,
   })
@@ -46,21 +45,28 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [secret, setSecret] = useState('');
+  // Şifre kuralları şifre alanına ilk odaklanılınca açılır ve açık kalır
+  const [showRules, setShowRules] = useState(false);
   const [createUser, { loading }] = useMutation(CreateUserDocument);
   const { register, control, handleSubmit, setError, formState } = useForm({
     resolver: zodResolver(schema),
+    // Alandan çıkınca doğrulanır, sonra her tuşta yeniden doğrulanır
+    mode: 'onTouched',
     defaultValues: {
       firstName: '',
       lastName: '',
       phone: emptyPhone(),
       password: '',
       passwordRepeat: '',
-      asDriver: false,
       profileImage: null,
     },
   });
   const { errors } = formState;
   const msg = (m?: string) => (m?.startsWith('validation.') ? validationText(t, m) : m);
+  // Şifre tekrarı yazılırken eşleşme anında kontrol edilir (form gönderilmeden)
+  const [password, passwordRepeat] = useWatch({ control, name: ['password', 'passwordRepeat'] });
+  const repeatMismatch =
+    password !== passwordRepeat && (passwordRepeat !== '' || formState.isSubmitted);
 
   const onSubmit = handleSubmit(async (v) => {
     try {
@@ -73,7 +79,8 @@ export default function RegisterPage() {
             lastName: v.lastName,
             phone: v.phone.number || undefined,
             profileImage: v.profileImage ?? undefined,
-            role: v.asDriver ? 'DRIVER' : 'CUSTOMER',
+            // Kayıt her zaman müşteri olarak yapılır; diğer roller yönetim panelinden verilir
+            role: 'CUSTOMER',
           },
         },
         context: { skipErrorToast: true },
@@ -151,18 +158,23 @@ export default function RegisterPage() {
           />
           <PasswordField
             {...register('password')}
+            onFocus={() => setShowRules(true)}
             label={t('fields.password')}
             autoComplete="new-password"
             error={!!errors.password}
-            helperText={msg(errors.password?.message)}
+            // Kural mesajları alttaki maddelerde; burada sadece uzunluk üst sınırı yazılır
+            helperText={errors.password?.message?.startsWith('validation.max') ? msg(errors.password.message) : undefined}
           />
           <PasswordField
             {...register('passwordRepeat')}
             label={t('fields.passwordRepeat')}
             autoComplete="new-password"
-            error={!!errors.passwordRepeat}
-            helperText={msg(errors.passwordRepeat?.message)}
+            error={repeatMismatch}
+            helperText={repeatMismatch ? t('validation.passwordMatch') : undefined}
           />
+          <Collapse in={showRules || formState.isSubmitted} unmountOnExit>
+            <PasswordRules password={password} />
+          </Collapse>
           <Controller
             control={control}
             name="profileImage"
@@ -172,25 +184,6 @@ export default function RegisterPage() {
                 onChange={field.onChange}
                 label={t('fields.profileImage')}
                 maxSize={2 * 1024 * 1024}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="asDriver"
-            render={({ field }) => (
-              <FormControlLabel
-                control={<Checkbox checked={field.value} onChange={(e) => field.onChange(e.target.checked)} />}
-                label={
-                  <>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      {t('register.asDriver')}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {t('register.asDriverHint')}
-                    </Typography>
-                  </>
-                }
               />
             )}
           />
