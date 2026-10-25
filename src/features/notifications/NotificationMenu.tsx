@@ -27,7 +27,7 @@ import {
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { fromNow } from '@/lib/format';
-import { notificationTransferId } from './notificationLink';
+import { notificationLink } from './notificationLink';
 
 const UNSEEN_VARS = {
   filters: { isSeen: false },
@@ -55,8 +55,8 @@ export function NotificationMenu() {
 
   const openItem = (n: NotificationItemFragment) => {
     void see({ variables: { ids: [n.id] } });
-    const transferId = notificationTransferId(n.data);
-    if (transferId) void navigate(`/transfers/${transferId}`);
+    const link = notificationLink(n);
+    if (link) void navigate(link);
     close();
   };
 

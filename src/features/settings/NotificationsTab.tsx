@@ -18,7 +18,7 @@ import { EmptyState } from '@/components/feedback/EmptyState';
 import { ErrorState } from '@/components/feedback/ErrorState';
 import { ConfirmDialog } from '@/components/feedback/ConfirmDialog';
 import { formatDateTime, fromNow } from '@/lib/format';
-import { notificationTransferId } from '@/features/notifications/notificationLink';
+import { notificationLink } from '@/features/notifications/notificationLink';
 
 const DEFAULT_ORDERING = { field: 'createdAt', direction: 'DESC' as const };
 const EMPTY: never[] = [];
@@ -43,8 +43,8 @@ export function NotificationsTab() {
 
   const open = (n: NotificationItemFragment) => {
     if (!n.isSeen) void see({ variables: { ids: [n.id] } });
-    const transferId = notificationTransferId(n.data);
-    if (transferId) void navigate(`/transfers/${transferId}`);
+    const link = notificationLink(n);
+    if (link) void navigate(link);
   };
 
   const columns: Column<NotificationItemFragment>[] = [

@@ -478,7 +478,7 @@ type DataTableProps<T> = {
   - Her öğe: başlık (kalın), gövde (2 satır kısaltılmış), göreli zaman (`dayjs().fromNow()`).
   - Öğeye tıklanınca:
     1. `seeNotifications(ids: [id])` çağrılır.
-    2. `data.transferId` (veya `data.id`) varsa `/transfers/:id`'ye gidilir.
+    2. `data.transferId` (veya `data.id`) varsa gidilir (`notificationLink`): `action: MESSAGE` ise o transferin sohbetine `/messages/:id` (§8.14), diğerlerinde `/transfers/:id`.
     3. Popover kapanır.
   - Liste boşsa: "Yeni bildiriminiz yok" boş durumu.
 - **Alt bar:**
@@ -1139,7 +1139,7 @@ Filtreler: kategori (`category: { inList }`), tarih aralığı (`orderTime: { ra
 | İçerik | `body` |
 | Zaman | `createdAt` (göreli, tooltip'te tam tarih, sıralanabilir) |
 
-- Satır tıklama: `seeNotifications(ids: [id])` çağrılır, `data.transferId` varsa transfere gidilir.
+- Satır tıklama: `seeNotifications(ids: [id])` çağrılır, `data.transferId` varsa header'dakiyle aynı kuralla gidilir (`notificationLink`: `MESSAGE` → `/messages/:id`, diğerleri → `/transfers/:id`).
 - ⋮: **Okundu işaretle** (`isSeen` false iken), **Sil** (`deleteNotifications(ids: [id])`).
 - **Toolbar:**
   - **Tümünü okundu yap:** `seeNotifications` (ids'siz).
