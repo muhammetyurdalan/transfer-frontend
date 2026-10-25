@@ -51,6 +51,7 @@
     "pickup": "Pickup",
     "dropoff": "Dropoff",
     "stops": "Stops",
+    "progress": "Transfer status",
     "trip": "Trip",
     "time": "Pickup time",
     "endTime": "Estimated arrival",

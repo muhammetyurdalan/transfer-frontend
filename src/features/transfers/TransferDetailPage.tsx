@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Badge, Box, Button, Card, CardContent, Grid, Stack, Tab, Tabs } from '@mui/material';
+import { Badge, Box, Button, Grid, Stack, Tab, Tabs } from '@mui/material';
 import { ArrowBackRounded, SearchOffRounded } from '@mui/icons-material';
 import { useMutation, useQuery } from '@apollo/client/react';
 import { Link as RouterLink, useLocation, useNavigate, useParams } from 'react-router';
@@ -22,7 +22,7 @@ import { CancelTransferDialog } from './CancelTransferDialog';
 import { PaymentPendingBanner } from './PaymentPendingBanner';
 import { StatusTimeline } from './StatusTimeline';
 import { TipDialog } from './TipDialog';
-import { PaymentCard, RouteCard, TripCard, VehicleDriverCard } from './TransferDetailCards';
+import { PaymentCard, RouteCard, SectionCard, TripCard, VehicleDriverCard } from './TransferDetailCards';
 import { TransferDetailActions } from './TransferDetailActions';
 import { can } from './transferPermissions';
 
@@ -94,12 +94,12 @@ export default function TransferDetailPage() {
       height={mobile ? 'calc(100dvh - 240px)' : 560}
     />
   );
+  // Durum çizelgesi: diğer kartlarla aynı başlıklı kart. Mobilde en üstte tam genişlik,
+  // masaüstünde sağdaki %25'lik sütunda sticky (sayfa kaydıkça header'ın altında görünür kalır)
   const timeline = (
-    <Card>
-      <CardContent>
-        <StatusTimeline status={transfer.status} />
-      </CardContent>
-    </Card>
+    <SectionCard title={t('detail.progress')} sx={{ position: { md: 'sticky' }, top: { md: 88 } }}>
+      <StatusTimeline status={transfer.status} dense />
+    </SectionCard>
   );
   const infoCards = (
     <Stack spacing={2}>
@@ -174,18 +174,23 @@ export default function TransferDetailPage() {
           <MobileActions {...actionProps} />
         </>
       ) : (
-        <Stack spacing={2}>
-          {timeline}
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 6 }}>{infoCards}</Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Stack spacing={2}>
-                <RouteCard transfer={transfer} />
-                <Box id="messages">{messages}</Box>
-              </Stack>
-            </Grid>
+        // Solda %75: Trip, Route, Vehicle & driver, Payment (+ mesajlar). Sağda %25: durum çizelgesi
+        // Sağ sütun satır yüksekliğine uzar (varsayılan stretch), sticky kart bu alanda kayar
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, md: 9 }}>
+            <Stack spacing={2}>
+              <TripCard transfer={transfer} />
+              <RouteCard transfer={transfer} />
+              <VehicleDriverCard transfer={transfer} />
+              <PaymentCard transfer={transfer} />
+              <Box id="messages">{messages}</Box>
+            </Stack>
           </Grid>
-        </Stack>
+          {/* md altında (tablet) çizelge kartların üstüne geçer */}
+          <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: -1, md: 0 } }}>
+            {timeline}
+          </Grid>
+        </Grid>
       )}
 
       <AssignDriverDialog

@@ -15,7 +15,6 @@ export function ThemeModeMenu() {
       <Tooltip title={t('nav.theme')}>
         <IconButton
           color="inherit"
-          size="large"
           aria-label={t('nav.theme')}
           onClick={(e) => setAnchor(e.currentTarget)}
         >

@@ -21,5 +21,17 @@
   "you": "You",
   "file": "File",
   "locationDenied": "Location permission denied",
-  "fileTooLarge": "File is larger than 2MB"
+  "fileTooLarge": "File is larger than 2MB",
+  "page": {
+    "title": "Messages",
+    "subtitle": "Chats of your active transfers",
+    "empty": "No active chats",
+    "emptyBody": "Chats open when a driver is assigned to your transfer and close when the transfer is completed.",
+    "notActive": "This chat is not active",
+    "notActiveBody": "Messaging is only open for assigned or started transfers. You can see the message history on the transfer page.",
+    "openTransfer": "Open transfer",
+    "transferNo": "Transfer #{{id}}",
+    "noCounterpart": "Not assigned yet",
+    "back": "Back to chats"
+  }
 }

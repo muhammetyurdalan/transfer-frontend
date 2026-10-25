@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { Alert, Box, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { ChatRounded, LockRounded } from '@mui/icons-material';
 import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
@@ -24,10 +24,12 @@ type Props = {
   /** Salt okunur sebebi (ADMIN/STAFF sadece okur) */
   readOnlyStaff?: boolean;
   height?: number | string;
+  /** Başlık bandının içeriği (varsayılan "Mesajlar"). Mesajlar sayfası transfer bilgisini gösterir. */
+  title?: ReactNode;
 };
 
 /** Transfer mesajları (§8.6). Panel açıkken (mount) mesajlar okundu işaretlenir. */
-export function MessagePanel({ transferId, canWrite, readOnlyStaff, height = 560 }: Props) {
+export function MessagePanel({ transferId, canWrite, readOnlyStaff, height = 560, title }: Props) {
   const { t } = useTranslation('messages');
   const { user } = useAuth();
   const client = useApolloClient();
@@ -99,10 +101,14 @@ export function MessagePanel({ transferId, canWrite, readOnlyStaff, height = 560
           borderColor: 'inverse.accent',
         }}
       >
-        <ChatRounded fontSize="small" sx={{ color: 'inverse.accent' }} />
-        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-          {t('title')}
-        </Typography>
+        {title ?? (
+          <>
+            <ChatRounded fontSize="small" sx={{ color: 'inverse.accent' }} />
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+              {t('title')}
+            </Typography>
+          </>
+        )}
       </Stack>
       <Box
         ref={scrollRef}

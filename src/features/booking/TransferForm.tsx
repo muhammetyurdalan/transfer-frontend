@@ -28,6 +28,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { AddressField, positionOf } from '@/components/address';
 import { RouteMap } from '@/components/map/RouteMap';
+import { PhoneField } from '@/components/PhoneField';
 import { StickyActionBar } from '@/components/StickyActionBar';
 import { errorKey } from '@/lib/errors';
 import { formatRoute } from '@/lib/format';
@@ -331,13 +332,13 @@ export function TransferForm({
                     control={control}
                     name="passengerPhone"
                     render={({ field, fieldState }) => (
-                      <TextField
-                        {...field}
-                        type="tel"
+                      <PhoneField
+                        value={field.value}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        inputRef={field.ref}
                         label={t('booking:fields.passengerPhone')}
                         error={!!fieldState.error}
-                        helperText={fieldState.error?.message}
-                        slotProps={{ htmlInput: { maxLength: 20, inputMode: 'tel' } }}
                       />
                     )}
                   />

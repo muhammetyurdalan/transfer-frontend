@@ -23,9 +23,11 @@ const VehiclesPage = lazy(() => import('@/features/vehicles/VehiclesPage'));
 const VehicleCategoriesPage = lazy(() => import('@/features/vehicles/VehicleCategoriesPage'));
 const UsersPage = lazy(() => import('@/features/users/UsersPage'));
 const SettingsPage = lazy(() => import('@/features/settings/SettingsPage'));
+const MessagesPage = lazy(() => import('@/features/messages/MessagesPage'));
 
 const STAFF: Role[] = ['ADMIN', 'STAFF'];
 const OPERATIONS: Role[] = ['OPERATOR', 'ADMIN', 'STAFF'];
+const PARTICIPANTS: Role[] = ['CUSTOMER', 'DRIVER', 'OPERATOR'];
 
 function Root() {
   return (
@@ -74,6 +76,8 @@ export const router = createBrowserRouter([
               { path: '/transfers/:id/edit', element: guard(<EditTransferPage />, ['CUSTOMER']) },
               { path: '/dispatch', element: guard(<DispatchPage />, OPERATIONS) },
               { path: '/jobs', element: guard(<JobsPage />, ['DRIVER']) },
+              { path: '/messages', element: guard(<MessagesPage />, PARTICIPANTS) },
+              { path: '/messages/:transferId', element: guard(<MessagesPage />, PARTICIPANTS) },
               { path: '/vehicles', element: guard(<VehiclesPage />, [...OPERATIONS, 'DRIVER']) },
               { path: '/vehicle-categories', element: guard(<VehicleCategoriesPage />, STAFF) },
               { path: '/users', element: guard(<UsersPage />, STAFF) },

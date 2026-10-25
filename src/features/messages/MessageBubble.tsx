@@ -38,7 +38,7 @@ type Props = {
 
 type Content = Pick<MessageItemFragment, 'isDeleted' | 'message' | 'file' | 'location'>;
 
-function Attachment({ m, mine }: { m: Content; mine: boolean }) {
+function Attachment({ m }: { m: Content }) {
   const { t } = useTranslation('messages');
   const loc = parseLocation(m.location);
   return (
@@ -50,7 +50,14 @@ function Attachment({ m, mine }: { m: Content; mine: boolean }) {
             href={mediaUrl(m.file)}
             target="_blank"
             rel="noopener"
-            sx={{ display: 'block', borderRadius: 2, overflow: 'hidden', maxWidth: 220 }}
+            sx={{
+              display: 'block',
+              borderRadius: 0.5,
+              overflow: 'hidden',
+              maxWidth: 220,
+              border: 1,
+              borderColor: 'divider',
+            }}
           >
             <Box
               component="img"
@@ -68,12 +75,8 @@ function Attachment({ m, mine }: { m: Content; mine: boolean }) {
             clickable
             icon={<InsertDriveFileRounded />}
             label={fileName(m.file)}
-            sx={{
-              maxWidth: 220,
-              bgcolor: mine ? 'inverse.main' : undefined,
-              color: mine ? 'inverse.contrastText' : undefined,
-              '& .MuiChip-icon': { color: 'inherit' },
-            }}
+            variant="outlined"
+            sx={{ maxWidth: 220, borderRadius: 0.5 }}
           />
         ))}
       {loc && (
@@ -85,7 +88,6 @@ function Attachment({ m, mine }: { m: Content; mine: boolean }) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 0.5,
-            color: mine ? 'inherit' : undefined,
             fontWeight: 600,
           }}
         >
@@ -97,7 +99,11 @@ function Attachment({ m, mine }: { m: Content; mine: boolean }) {
   );
 }
 
-/** Kendi mesajı sağda altın (primary), diğerleri solda kâğıt zeminli balon. */
+/**
+ * Mesaj kartı: köşeleri hafif yuvarlatılmış düz dikdörtgen, ince çerçeve ve yan tarafta altın/koyu vurgu çizgisi.
+ * Kendi mesajı sağda (`highlight` zemin, sağda altın çizgi), diğerleri solda (kâğıt zemin, solda koyu çizgi).
+ * Üst satırda gönderen ve saat, altında içerik.
+ */
 export function MessageBubble({
   message: m,
   mine,
@@ -116,40 +122,66 @@ export function MessageBubble({
     <Stack
       direction={mine ? 'row-reverse' : 'row'}
       spacing={0.5}
-      sx={{ alignItems: 'flex-end', maxWidth: '100%' }}
+      sx={{ alignItems: 'flex-start', maxWidth: '100%' }}
     >
       <Box
         sx={{
-          maxWidth: { xs: '82%', sm: '70%' },
+          maxWidth: { xs: '86%', sm: '72%' },
+          minWidth: 140,
           px: 1.5,
-          py: 1,
-          borderRadius: 3,
+          pt: 0.75,
+          pb: 1,
+          borderRadius: 0.5,
+          border: 1,
+          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
           ...(mine
-            ? { bgcolor: 'primary.main', color: 'primary.contrastText', borderBottomRightRadius: 4 }
+            ? {
+                bgcolor: 'highlight.main',
+                color: 'highlight.contrastText',
+                borderColor: 'highlight.border',
+                borderRight: 3,
+                borderRightColor: 'primary.main',
+              }
             : {
                 bgcolor: 'background.paper',
-                border: 1,
                 borderColor: 'divider',
-                borderBottomLeftRadius: 4,
+                borderLeft: 3,
+                borderLeftColor: 'text.primary',
               }),
         }}
       >
-        {!mine && (
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+            pb: 0.5,
+            mb: 0.75,
+            borderBottom: 1,
+            borderColor: 'divider',
+          }}
+        >
           <Typography
             variant="caption"
-            sx={{ display: 'block', fontWeight: 700, color: 'primary.dark' }}
+            noWrap
+            sx={{ fontWeight: 700, letterSpacing: '0.04em', color: mine ? 'primary.dark' : 'text.primary' }}
           >
-            {m.sender?.name}
+            {mine ? t('you') : m.sender?.name}
           </Typography>
-        )}
+          <Typography variant="caption" color="text.secondary" sx={{ flexShrink: 0 }}>
+            {formatTime(m.time)}
+          </Typography>
+        </Stack>
         {m.parent && !m.isDeleted && (
           <Box
             sx={{
-              borderLeft: 3,
-              borderColor: mine ? 'inverse.main' : 'primary.main',
-              pl: 1,
+              borderLeft: 2,
+              borderColor: 'primary.main',
+              bgcolor: 'action.hover',
+              px: 1,
+              py: 0.5,
               mb: 0.75,
-              opacity: 0.85,
             }}
           >
             {parentSender && (
@@ -184,15 +216,9 @@ export function MessageBubble({
                 {m.message}
               </Typography>
             )}
-            <Attachment m={m} mine={mine} />
+            <Attachment m={m} />
           </Stack>
         )}
-        <Typography
-          variant="caption"
-          sx={{ display: 'block', textAlign: 'right', opacity: 0.7, mt: 0.25 }}
-        >
-          {formatTime(m.time)}
-        </Typography>
       </Box>
       {hasMenu && (
         <>

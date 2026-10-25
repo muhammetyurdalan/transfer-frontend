@@ -22,6 +22,7 @@
     "filters": "Filters"
   },
   "nav": {
+    "messages": "Messages",
     "transfers": "Transfers",
     "myTransfers": "Transfers",
     "dispatch": "Dispatch",
@@ -89,6 +90,13 @@
     "empty": "Nothing to show yet",
     "selected_one": "{{count}} selected",
     "selected_other": "{{count}} selected"
+  },
+  "phone": {
+    "country": "Country code",
+    "search": "Type a country name or code",
+    "noCountry": "No country found",
+    "typeMore": "Type at least {{count}} characters to search",
+    "invalid": "Enter a valid phone number for {{country}} (e.g. {{example}})"
   },
   "pages": {
     "notFoundTitle": "Page not found",

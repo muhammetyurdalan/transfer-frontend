@@ -34,6 +34,7 @@ import { UserAvatar } from '@/components/UserAvatar';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { errorKey, getErrorCode } from '@/lib/errors';
+import { formatPhone } from '@/lib/phone';
 
 type Props = { transferId: string | null; onClose: () => void };
 
@@ -155,7 +156,7 @@ function AssignDriverContent({ transferId, onClose }: { transferId: string; onCl
                     <ListItemAvatar>
                       <UserAvatar user={d} />
                     </ListItemAvatar>
-                    <ListItemText primary={d.name} secondary={d.phone} />
+                    <ListItemText primary={d.name} secondary={formatPhone(d.phone)} />
                     {selected && <CheckCircleRounded color="primary" />}
                   </ListItemButton>
                 );

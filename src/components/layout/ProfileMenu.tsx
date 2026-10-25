@@ -16,12 +16,11 @@ export function ProfileMenu() {
   return (
     <>
       <IconButton
-        size="large"
         aria-label={t('nav.profile')}
         onClick={(e) => setAnchor(e.currentTarget)}
-        sx={{ p: 0.75 }}
+        sx={{ p: 0.5, ml: 0.5 }}
       >
-        <UserAvatar user={user} size={34} ring />
+        <UserAvatar user={user} size={28} ring />
       </IconButton>
       <Menu
         anchorEl={anchor}

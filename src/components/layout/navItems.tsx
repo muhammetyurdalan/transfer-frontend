@@ -3,6 +3,7 @@ import { matchPath } from 'react-router';
 import {
   AddRounded,
   CategoryRounded,
+  ChatRounded,
   DirectionsCarRounded,
   GroupRounded,
   HeadsetMicRounded,
@@ -18,18 +19,22 @@ export function navItemsFor(role: Role | null | undefined): NavItem[] {
   const transfers = { to: '/transfers', label: 'nav.transfers', icon: <ListAltRounded /> };
   const dispatch = { to: '/dispatch', label: 'nav.dispatch', icon: <HeadsetMicRounded /> };
   const vehicles = { to: '/vehicles', label: 'nav.vehicles', icon: <DirectionsCarRounded /> };
+  // Mesajlaşma katılımcıları (customer, driver, operator). ADMIN/STAFF mesajları transfer detayında okur.
+  const messages = { to: '/messages', label: 'nav.messages', icon: <ChatRounded /> };
   switch (role) {
     case 'CUSTOMER':
       // createTransfer sadece CUSTOMER'a açık
       return [
         { to: '/transfers/new', label: 'nav.createTransfer', icon: <AddRounded /> },
         { ...transfers, label: 'nav.myTransfers' },
+        messages,
       ];
     case 'OPERATOR':
-      return [dispatch, transfers, vehicles];
+      return [dispatch, transfers, messages, vehicles];
     case 'DRIVER':
       return [
         { to: '/jobs', label: 'nav.jobs', icon: <WorkRounded /> },
+        messages,
         { ...vehicles, label: 'nav.myVehicles' },
       ];
     case 'ADMIN':

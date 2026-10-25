@@ -22,6 +22,7 @@
     "filters": "Filtreler"
   },
   "nav": {
+    "messages": "Mesajlar",
     "transfers": "Transferler",
     "myTransfers": "Transferlerim",
     "dispatch": "Dispatch",
@@ -89,6 +90,13 @@
     "empty": "Henüz gösterilecek kayıt yok",
     "selected_one": "{{count}} seçili",
     "selected_other": "{{count}} seçili"
+  },
+  "phone": {
+    "country": "Ülke kodu",
+    "search": "Ülke adı veya kodu yazın",
+    "noCountry": "Ülke bulunamadı",
+    "typeMore": "Aramak için en az {{count}} karakter yazın",
+    "invalid": "{{country}} için geçerli bir telefon numarası girin (örn. {{example}})"
   },
   "pages": {
     "notFoundTitle": "Sayfa bulunamadı",

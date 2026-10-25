@@ -30,11 +30,10 @@ export function LanguageMenu() {
       <Tooltip title={t('nav.language')}>
         <IconButton
           color="inherit"
-          size="large"
           aria-label={t('nav.language')}
           onClick={(e) => setAnchor(e.currentTarget)}
         >
-          <TranslateRounded />
+          <TranslateRounded fontSize="small" />
         </IconButton>
       </Tooltip>
       <Menu anchorEl={anchor} open={!!anchor} onClose={() => setAnchor(null)}>

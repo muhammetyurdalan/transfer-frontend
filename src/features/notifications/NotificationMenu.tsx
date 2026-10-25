@@ -129,7 +129,6 @@ export function NotificationMenu() {
       <Tooltip title={t('nav.notifications')}>
         <IconButton
           color="inherit"
-          size="large"
           aria-label={t('nav.notifications')}
           onClick={(e) => setAnchor(e.currentTarget)}
         >
@@ -139,7 +138,7 @@ export function NotificationMenu() {
             color="primary"
             sx={{ '& .MuiBadge-badge': { fontWeight: 700 } }}
           >
-            <NotificationsRounded />
+            <NotificationsRounded fontSize="small" />
           </Badge>
         </IconButton>
       </Tooltip>

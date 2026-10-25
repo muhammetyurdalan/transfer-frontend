@@ -30,6 +30,7 @@ import { useAuth } from '@/app/providers/AuthProvider';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { formatDate } from '@/lib/format';
 import { ActiveChip } from '@/features/vehicles/ActiveChip';
+import { formatPhone } from '@/lib/phone';
 import { nameOrEmailFilter } from './filters';
 import { SendNotificationDialog } from './SendNotificationDialog';
 import { UpdateRoleDialog } from './UpdateRoleDialog';
@@ -105,7 +106,7 @@ export default function UsersPage() {
         </Typography>
       ),
     },
-    { key: 'phone', header: 'users:columns.phone', hideBelow: 'lg', render: (u) => u.phone || '—' },
+    { key: 'phone', header: 'users:columns.phone', hideBelow: 'lg', render: (u) => formatPhone(u.phone) || '—' },
     {
       key: 'role',
       header: 'users:columns.role',

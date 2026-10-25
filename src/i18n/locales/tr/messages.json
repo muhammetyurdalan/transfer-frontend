@@ -21,5 +21,17 @@
   "you": "Siz",
   "file": "Dosya",
   "locationDenied": "Konum izni reddedildi",
-  "fileTooLarge": "Dosya 2MB sınırını aşıyor"
+  "fileTooLarge": "Dosya 2MB sınırını aşıyor",
+  "page": {
+    "title": "Mesajlar",
+    "subtitle": "Aktif transferlerinizin sohbetleri",
+    "empty": "Aktif sohbet yok",
+    "emptyBody": "Sohbetler transferinize sürücü atanınca açılır, transfer tamamlanınca kapanır.",
+    "notActive": "Bu sohbet aktif değil",
+    "notActiveBody": "Mesajlaşma sadece sürücü atanmış veya başlamış transferlerde açık. Mesaj geçmişini transfer sayfasında görebilirsiniz.",
+    "openTransfer": "Transferi aç",
+    "transferNo": "Transfer #{{id}}",
+    "noCounterpart": "Henüz atanmadı",
+    "back": "Sohbetlere dön"
+  }
 }

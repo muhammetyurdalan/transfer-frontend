@@ -1,5 +1,6 @@
 import type { Dayjs } from 'dayjs';
 import type { RouteSegment, SelectedAddress } from '@/lib/geo';
+import type { PhoneValue } from '@/lib/phone';
 
 /** Pickup ile dropoff arasındaki ara durak (useFieldArray nesne ister). */
 export type StopValue = { address: SelectedAddress | null };
@@ -13,7 +14,8 @@ export type TransferFormValues = {
   childSeatCount: number;
   needsWheelchair: boolean;
   passengerName: string;
-  passengerPhone: string;
+  /** Seçili ülke + E.164 numara */
+  passengerPhone: PhoneValue;
   flightNumber: string;
   note: string;
   /** Ara duraklar, sırayla ziyaret edilir. En fazla `MAX_STOPS` */

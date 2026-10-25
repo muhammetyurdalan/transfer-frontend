@@ -51,6 +51,7 @@
     "pickup": "Alış",
     "dropoff": "Bırakış",
     "stops": "Ara duraklar",
+    "progress": "Transfer durumu",
     "trip": "Yolculuk",
     "time": "Alış zamanı",
     "endTime": "Tahmini varış",

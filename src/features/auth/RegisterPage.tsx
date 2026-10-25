@@ -21,7 +21,9 @@ import { useTranslation } from 'react-i18next';
 import { CreateUserDocument } from '@/graphql/generated/graphql';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { FileInput } from '@/components/FileInput';
+import { PhoneField } from '@/components/PhoneField';
 import { errorKey, getErrorCode } from '@/lib/errors';
+import { emptyPhone, phoneSchema } from '@/lib/phone';
 import { AuthHeading } from './AuthHeading';
 import { EmailVerification } from './EmailVerification';
 import { PasswordField } from './PasswordField';
@@ -31,7 +33,7 @@ const schema = z
   .object({
     firstName: nameSchema,
     lastName: nameSchema,
-    phone: z.string().trim().max(20, 'validation.max|20'),
+    phone: phoneSchema,
     asDriver: z.boolean(),
     profileImage: z.instanceof(File).nullable(),
     ...passwordFields,
@@ -50,7 +52,7 @@ export default function RegisterPage() {
     defaultValues: {
       firstName: '',
       lastName: '',
-      phone: '',
+      phone: emptyPhone(),
       password: '',
       passwordRepeat: '',
       asDriver: false,
@@ -69,7 +71,7 @@ export default function RegisterPage() {
             password: v.password,
             firstName: v.firstName,
             lastName: v.lastName,
-            phone: v.phone || undefined,
+            phone: v.phone.number || undefined,
             profileImage: v.profileImage ?? undefined,
             role: v.asDriver ? 'DRIVER' : 'CUSTOMER',
           },
@@ -133,13 +135,19 @@ export default function RegisterPage() {
               />
             </Grid>
           </Grid>
-          <TextField
-            {...register('phone')}
-            label={t('fields.phone')}
-            type="tel"
-            autoComplete="tel"
-            error={!!errors.phone}
-            helperText={msg(errors.phone?.message)}
+          <Controller
+            control={control}
+            name="phone"
+            render={({ field }) => (
+              <PhoneField
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                inputRef={field.ref}
+                label={t('fields.phone')}
+                error={!!errors.phone}
+              />
+            )}
           />
           <PasswordField
             {...register('password')}

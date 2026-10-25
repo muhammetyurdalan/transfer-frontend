@@ -48,7 +48,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         case 'PAYMENT_FAILED':
         case 'TIP_PAYMENT_SUCCESS':
         case 'TIP_PAYMENT_FAILED':
-          void client.refetchQueries({ include: ['Transfers', 'Transfer'] });
+          void client.refetchQueries({ include: ['Transfers', 'Transfer', 'MessageThreads'] });
           break;
         default:
           break;

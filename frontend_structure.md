@@ -193,7 +193,7 @@ export default config;
 index.html                 # viewport-fit=cover, tema flash'ını önleyen inline script (§5.2)
 codegen.ts, vite.config.ts, eslint.config.js, tsconfig*.json
 src/
-  main.tsx                 # Providers: Theme (dile göre locale), LocalizationProvider, Snackbar, Apollo, Router
+  main.tsx                 # Providers: Theme (dile göre locale), LocalizationProvider, Snackbar (2 sn, kapatma butonlu, en fazla 3), Apollo, Router
   app/
     router.tsx             # Route tablosu (§7), lazy sayfalar, kök route'ta Auth + Subscription provider
     guards.tsx             # RequireAuth (rol), GuestOnly, HomeRedirect
@@ -208,6 +208,7 @@ src/
     storage.ts             # localStorage/sessionStorage anahtarları, tokenStore, pendingPaymentStore
     format.ts              # para, tarih, mesafe/süre, toCoord/toDecimal, initials
     media.ts               # mediaUrl, isImagePath, fileName
+    phone.ts               # libphonenumber-js: tarayıcı ülkesi, ülke listesi, PhoneValue, phoneSchema, normalizePhone, formatPhone
     geo/                   # geocoder.ts (Photon), routing.ts (OSRM + decodePolyline), district.ts, location.ts, types.ts
   graphql/
     operations/            # auth, user, notifications, subscription, booking, transfers, messages, vehicles, users, transactions (.graphql)
@@ -221,12 +222,12 @@ src/
     map/                   # RouteMap (A/B pin + rota), leafletSetup (ikon düzeltmesi, pinIcon)
     feedback/              # ConfirmDialog, EmptyState, ErrorState, LoadingSkeleton
     StatusChip.tsx (+TransactionChip), Money.tsx, UserAvatar.tsx, PageHeader.tsx, FileInput.tsx,
-    StickyActionBar.tsx, themeModeOptions.tsx
+    StickyActionBar.tsx, PhoneField.tsx (ülke kodlu telefon input'u), themeModeOptions.tsx
   features/
     auth/                  # LoginPage, RegisterPage, ForgotPasswordPage, EmailVerification (ortak 1-2. adım)
     booking/               # TransferForm (oluştur + düzenle), StopsEditor (ara duraklar), LegsSection (salt okunur), VehicleOptionCard, TripSummaryCard, schema, useRoute
     transfers/             # List, Create, Edit, SelectVehicle, Detail, Dispatch, Jobs sayfaları, dialog'lar, transferPermissions
-    messages/              # MessagePanel, MessageBubble, MessageComposer, messageRules
+    messages/              # MessagesPage (/messages), MessagePanel, MessageBubble, MessageComposer, messageRules
     vehicles/              # VehiclesPage, VehicleDialog, VehicleCategoriesPage, VehicleCategoryDialog
     users/                 # UsersPage, UpdateRoleDialog, SendNotificationDialog
     settings/              # SettingsPage, ProfileTab (+AvatarPicker), StatementTab (+RefundDialog), NotificationsTab
@@ -320,7 +321,7 @@ transfers(filters: TransferFilter, ordering: [TransferOrder!], pagination: Offse
 | `text.primary` / `secondary` | `#0B0B0C` / `#5F5C57` | `#F2EFE8` / `#BDB8AD` | |
 | `inverse.main` / `light` / `contrastText` | `#F4EEDF` / `#E9E0C8` / `#0B0B0C` | `#050506` / `#16161A` / `#F5F2EA` | Vurgu yüzeyleri (header, drawer, auth paneli, StickyActionBar, öne çıkan kartlar, tooltip) |
 | `inverse.accent` / `accentSoft` | `#9A7615` (gold 600) / altın %16 | `#D4AF37` / altın %14 | Vurgu yüzeyinde altın: header alt çizgisi, aktif nav linki, ikonlar, tutarlar |
-| `highlight.main` / `border` | `#FDF9EC` / `#F2DE96` | altın %12 / %35 | Seçili kart, tablo satır hover'ı, boş durum ikonu, kendi mesaj balonu |
+| `highlight.main` / `border` | `#FDF9EC` / `#F2DE96` | altın %12 / %35 | Seçili kart, tablo satır hover'ı, boş durum ikonu, kendi mesaj kartı |
 | `success` / `warning` / `error` / `info` | `#2E7D4F` / `#C77700` / `#C62828` / `#2F6DB5` | açık tonlar | Durum renkleri |
 
 Özel palet anahtarları (`inverse`, `highlight`) `theme.ts`'te `Palette` tipine module augmentation ile eklenmiştir. Yeni anahtar eklenirse hem `tokens.ts` (iki palet) hem bu tip güncellenir.
@@ -388,6 +389,8 @@ transfers(filters: TransferFilter, ordering: [TransferOrder!], pagination: Offse
 | **Language** | `Menu`: English / Türkçe (§6.5) | herkes |
 | **Profile** | `Avatar` (profileImage veya baş harfler). Tıklanınca `Menu`: kullanıcı adı ve rolü (başlık), **Settings** (`/settings/profile`), **Logout** | giriş yapmış herkes |
 
+**İkon boyutu:** header ikonları küçüktür: 20px ikon (`fontSize="small"`), varsayılan (medium) `IconButton`, avatar 28px. Sağdaki Notification, Theme, Language ve Profile aralıksız tek bir grup (`Stack`) olarak yan yana durur. Auth ekranlarındaki tema/dil butonları da aynı boyuttadır.
+
 **Logout akışı:**
 1. Web push kayıtlıysa `deleteFcmToken(registrationId)` çağrılır.
 2. Token silinir, `client.clearStore()` çalışır, WS client kapatılır.
@@ -453,6 +456,14 @@ type DataTableProps<T> = {
 - `StickyActionBar`: form/sayfa aksiyonları için alta yapışan `inverse` bar (altın üst çizgi, safe-area padding).
 - `RouteMap` (`components/map`): salt okunur harita, A (altın) / B (`inverse`) pin'leri ve OSRM rotası, sınırlara otomatik sığar.
 - `ThemeModeMenu`: tema seçici açılır menü (§5.2).
+- `PhoneField`: ülke kodu seçicili telefon input'u. Tüm telefon alanlarında kullanılır (kayıt, profil, yolcu telefonu).
+  - Solda bayrak + `+90` butonu. Tıklanınca arama kutusu açılır. **En az 2 karakter** yazılınca ülke kodu (ISO `TR`, alan kodu `90` / `+90`) veya ülke adı eşleşen ülkeler kutunun altında kaydırılabilir bir liste olarak gösterilir. Açılır kutu `Popper` ile input'un altına sabitlenir, **yer değiştirmez** (flip yok): sonuç sayısı artınca yukarı kayıp üstteki alanların üzerine binmez. Liste yüksekliği açılışta altta kalan alana göre belirlenir (160–280px), fazla sonuç listenin içinde kaydırılır. Dışarı tıklanınca veya Esc ile kapanır. Sıra: ISO kodu tam eşleşen, adı aramayla başlayan, alan kodu eşleşen, adın içinde geçen. 2 karakterden önce "en az 2 karakter yazın" ipucu görünür. Ülke adları `Intl.DisplayNames` ile seçili dilde gösterilir.
+  - Varsayılan ülke `DEFAULT_PHONE_COUNTRY` (`lib/phone.ts`): **tarayıcının ülkesi**. `navigator.languages` sırasıyla dil etiketinin bölgesi alınır (`tr-TR` → TR, `en-GB` → GB). Bölgesiz etiketlerde en olası bölge kullanılır (`Intl.Locale.maximize()`: `de` → DE, `en` → US). Çıkarılamazsa `TR`. Kayıtlı numara varsa ülke numaradan çıkarılır. `+` ile başlayan bir numara yazılır/yapıştırılırsa ülke otomatik seçilir.
+  - Placeholder seçilen ülkenin örnek numarasıdır. Odaktan çıkınca numara ülkenin biçimine göre düzenlenir (`532 123 45 67`).
+  - Form değeri `PhoneValue = { country, number }`'dır: seçili ülke + **E.164** numara (`+905321234567`). Backend'e sadece `number` gider, boşsa gönderilmez. Kayıtlı değerden `toPhoneValue(phone)`, boş değer `emptyPhone()` ile oluşturulur.
+  - Doğrulama: `phoneSchema` (`isValidPhoneFor(number, country)`). `libphonenumber-js/max` metadata'sı ile **seçili ülkenin numara kurallarına** (uzunluk, alan/operatör kodu) göre yapılır. Numara başka bir ülkeye aitse geçerli olsa bile reddedilir (alan kodu paylaşılan ülkeler: +1 US/CA, +44 GB/GG, +7 RU/KZ…). Boş değer geçerlidir (alanlar opsiyonel).
+  - Hata mesajı ülke adı ve örnek numarayla `PhoneField` tarafından gösterilir: "Almanya için geçerli bir telefon numarası girin (örn. 1512 3456789)". Form gönderilmeden de, alandan bir kez çıkıldıktan sonra kontrol edilir. Ülke değişince mesaj ve kontrol yeni ülkeye göre güncellenir.
+  - Eski/serbest biçimli kayıtlı numaralar (`0532…`) form açılırken `normalizePhone` ile E.164'e çevrilir. Ülke kodu olmayan eski numaralar tarayıcının ülkesine göre değil `TR`'ye göre yorumlanır. Listelerde ve detayda numaralar `formatPhone` ile `+90 532 123 45 67` biçiminde gösterilir.
 - Hook'lar: `useIsMobile` (`< sm`), `useIsCompact` (`< md`), `useDebouncedValue`, `useAppEvent` (§9).
 
 ### 6.4 NotificationMenu (`features/notifications/NotificationMenu.tsx`)
@@ -545,6 +556,7 @@ type SelectedAddress = {
 | `/transfers/:id/edit` | Transfer düzenle (sadece `PENDING`) | CUSTOMER |
 | `/dispatch` | Atama bekleyen işler | OPERATOR, ADMIN, STAFF |
 | `/jobs` | Sürücünün işleri | DRIVER |
+| `/messages`, `/messages/:transferId` | Mesajlar: aktif transfer sohbetleri (§8.14) | CUSTOMER, DRIVER, OPERATOR |
 | `/vehicles` | Araçlar | ADMIN, STAFF, OPERATOR, DRIVER (DRIVER sadece okur, sadece kendi araçları) |
 | `/vehicle-categories` | Araç kategorileri | ADMIN, STAFF |
 | `/users` | Kullanıcılar | ADMIN, STAFF |
@@ -554,9 +566,10 @@ type SelectedAddress = {
 | `*` | 404 | |
 
 **Nav linkleri (header / drawer):**
-- CUSTOMER: Create Transfer (`/transfers/new`), Transferlerim. Create Transfer ayrı bir buton değil, nav sekmesidir (backend `createTransfer` sadece CUSTOMER'a açık).
-- OPERATOR: Dispatch, Transferler, Araçlar.
-- DRIVER: İşlerim, Araçlarım.
+- CUSTOMER: Create Transfer (`/transfers/new`), Transferlerim, Mesajlar. Create Transfer ayrı bir buton değil, nav sekmesidir (backend `createTransfer` sadece CUSTOMER'a açık).
+- OPERATOR: Dispatch, Transferler, Mesajlar, Araçlar.
+- DRIVER: İşlerim, Mesajlar, Araçlarım.
+- Mesajlar sadece mesajlaşma katılımcılarına (customer, driver, operator) açıktır. ADMIN/STAFF mesajları transfer detayında salt okunur görür.
 - ADMIN/STAFF: Transferler, Dispatch, Araçlar, Kategoriler, Kullanıcılar.
 
 - **Aktif link:** adrese en uzun eşleşen link aktif sayılır (`activeNavPath`). `/transfers/new`'de sadece Create Transfer, `/transfers/12`'de Transferlerim vurgulanır.
@@ -617,7 +630,7 @@ Hatalar: `ERR010` (kullanıcı yok/pasif), `ERR012` (şifre yanlış).
 | `password` | R | max 128, istemcide min 8 + tekrar alanı |
 | `firstName` | R | max 50 |
 | `lastName` | R | max 50 |
-| `phone` | O | max 20 |
+| `phone` | O | E.164, seçilen ülkeye göre geçerli olmalı (`PhoneField`, §6.3) |
 | `profileImage` | O | `Upload` (görsel) |
 | `role` | O | `CUSTOMER` (varsayılan) veya `DRIVER`. "Sürücü olarak kaydol" seçeneği |
 
@@ -697,7 +710,7 @@ Satır tıklama → `/transfers/:id`.
    - `needsWheelchair`: `Switch`
 4. **Yolcu bilgisi**
    - `passengerName`: varsayılan kullanıcının adı soyadı
-   - `passengerPhone`: varsayılan kullanıcının telefonu
+   - `passengerPhone`: varsayılan kullanıcının telefonu, ülke kodu seçicili (`PhoneField`, §6.3)
    - `flightNumber`
    - `note` (çok satırlı)
 5. **`legs` üretimi (kullanıcı ayrıca girmez):** ara durak varsa `buildLegs` (`features/booking/values.ts`) rota bölümlerinden `legs` listesi üretir: pickup → 1. durak, 1. → 2. durak, …, son durak → dropoff (N durak = N+1 leg).
@@ -738,7 +751,7 @@ Satır tıklama → `/transfers/:id`.
 | `childSeatCount` | O | varsayılan 0 |
 | `needsWheelchair` | O | varsayılan false |
 | `passengerName` | R | max 100 |
-| `passengerPhone` | O | max 20 |
+| `passengerPhone` | O | E.164, seçilen ülkeye göre geçerli olmalı (`PhoneField`, §6.3) |
 | `flightNumber` | O | max 10 |
 | `note` | O | |
 | `legs` | O | `[CreateLeg!]`, boşsa gönderilmez |
@@ -818,7 +831,7 @@ Transfer oluşturulduktan sonra **her zaman** bu ekran açılır.
 | `luggageCount`, `childSeatCount` | O | >= 0 |
 | `needsWheelchair` | O | |
 | `passengerName` | O | max 100 |
-| `passengerPhone` | O | max 20 |
+| `passengerPhone` | O | E.164, seçilen ülkeye göre geçerli olmalı (`PhoneField`, §6.3) |
 | `flightNumber` | O | max 10 |
 | `note` | O | |
 
@@ -831,7 +844,7 @@ Alanlar: `status, pickup*/dropoff*, pickupTime, endTime, distance, duration, pas
 - Mobil: kartlar alt alta. Mesajlar ayrı bir sekmede (`Tabs`: Detay / Mesajlar) veya tam ekran `Drawer`'da.
 
 **Kartlar:**
-- **Durum çizelgesi:** `Stepper`, PENDING → PAID → ASSIGNED → STARTED → COMPLETED. CANCELLED ise kırmızı uyarı kartı gösterilir.
+- **Durum çizelgesi:** dikey `Stepper` (tüm ekran boyutlarında `orientation="vertical"`), diğer bölümler gibi başlıklı `SectionCard` içinde ("Transfer durumu" / "Transfer status", `transfers:detail.progress`), `dense` (küçük ikon, sıkı aralık). **Masaüstü (md+) yerleşimi:** solda sayfanın %75'i (`Grid md=9`) alt alta Trip, Route, Vehicle & driver, Payment kartları ve mesajlar; sağda %25 (`md=3`) durum kartı. Durum kartı sticky'dir (`top: 88`): sayfa aşağı kaydıkça header'ın altında görünür kalarak sayfayla birlikte iner (sağ sütun satır yüksekliğine uzadığı için). Tablet ve mobilde durum kartı **en üstte**, diğer kartlarla aynı tam genişliktedir. PENDING → PAID → ASSIGNED → STARTED → COMPLETED. CANCELLED ise kırmızı uyarı kartı gösterilir.
 - **Güzergah:** harita (iki pin + polyline), adresler, ilçe/il, ara duraklar listesi.
 - **Yolculuk:** zaman, mesafe, süre, yolcu/bagaj/çocuk koltuğu/tekerlekli sandalye, uçuş no, not.
 - **Araç ve sürücü:** atanmışsa sürücü avatarı, adı, telefonu (sadece yetkili görür, null olabilir), plaka ve araç.
@@ -877,8 +890,9 @@ Alanlar: `status, pickup*/dropoff*, pickupTime, endTime, distance, duration, pas
 **Mesajlar (`MessagePanel`):**
 - **Görünürlük:** `status` `ASSIGNED`/`STARTED` iken ve kullanıcı katılımcıysa (customer, driver, operator) yazma açıktır. Diğer durumlarda geçmiş salt okunur gösterilir ("Mesajlaşma sadece aktif transferlerde açık"). ADMIN/STAFF sadece okur.
 - **Liste:** `messages(transferId, ordering: [{ time: ASC }])`.
-  - Balon görünümü: kendi mesajı sağda, `primary` renkte. Gönderen adı ve saati var.
-  - Reply'da üstte alıntı (`parent`) gösterilir.
+  - Kart görünümü (balon değil): köşeleri hafif yuvarlatılmış (4px) düz dikdörtgen, 1px ince çerçeve ve hafif gölge. Kendi mesajı sağda `highlight` zeminde, sağ kenarında 3px altın (`primary`) çizgi. Diğerleri solda kâğıt zeminde, sol kenarında 3px koyu (`text.primary`) çizgi.
+  - Kartın üst satırında gönderen adı (kendi mesajında "Siz") ve saat, altında ince ayraç çizgisi ve içerik.
+  - Reply'da içerikten önce alıntı (`parent`): solda 2px altın çizgili, hafif gri zeminli kutu.
   - Silinmiş mesaj "Bu mesaj silindi" olarak görünür.
   - Dosya: görselse küçük önizleme, değilse indirme çipi. Konum: haritaya link.
 - **Açılınca** `seeMessages(transferId)` çağrılır.
@@ -1052,7 +1066,7 @@ Veri: `user` query'si (`id firstName lastName email phone language role profileI
 |---|---|---|
 | `firstName` | O | max 50 |
 | `lastName` | O | max 50 |
-| `phone` | O | max 20 |
+| `phone` | O | E.164, seçilen ülkeye göre geçerli olmalı (`PhoneField`, §6.3) |
 | `language` | O | `EN \| TR`. Profil formu göndermez, sadece header dil menüsü gönderir |
 | `profileImage` | O | Upload (görsel) |
 
@@ -1128,6 +1142,28 @@ Filtreler: kategori (`category: { inList }`), tarih aralığı (`orderTime: { ra
 | | `type` | R (`WEB`) |
 | `deleteFcmToken` | `registrationId` | R |
 
+### 8.14 Mesajlar (`/messages`, `/messages/:transferId`), CUSTOMER, DRIVER, OPERATOR
+Header'daki **Mesajlar** sekmesi. Sohbetler **aktif transferlere** göre açılır: her aktif transfer bir sohbettir, `:transferId` seçili sohbettir.
+
+```graphql
+query MessageThreads($filters: TransferFilter) {
+  transfers(filters: $filters, ordering: [{ pickupTime: ASC }], pagination: { offset: 0, limit: 100 }) {
+    count
+    transfers { id status pickupTime pickupAddress dropoffAddress customerId driverId operatorId
+                customer { id name firstName lastName profileImage } driver { id name firstName lastName profileImage } }
+  }
+}
+```
+- **Aktif:** `status: { inList: [ASSIGNED, STARTED] }` (mesaj yazılabilen durumlar, `can.message`). Backend CUSTOMER'a kendi, DRIVER'a kendine atanmış transferleri döner. OPERATOR tüm transferleri gördüğü için ek olarak `operatorId: { exact: <kendi id> }` filtresi gönderilir.
+- **Masaüstü:** solda sohbet listesi (%33, `md=4`), sağda seçili sohbet (`MessagePanel`, %67). Seçim yoksa ilk sohbete yönlendirilir. Liste kendi içinde kayar.
+- **Mobil:** `/messages` sadece listeyi, `/messages/:transferId` sadece sohbeti gösterir. Sohbet başlığında listeye dönüş butonu vardır.
+- **Liste öğesi:** karşı tarafın avatarı ve adı (CUSTOMER'a sürücü, DRIVER/OPERATOR'a müşteri), `#id`, alış → bırakış, durum chip'i, alış zamanı. Seçili öğe altın sol çizgi + `highlight` zemin.
+- **Sohbet başlığı:** `MessagePanel`'in `title` prop'u ile karşı taraf, "Transfer #id · alış zamanı", durum chip'i ve transfer detayına link.
+- **Okunmamış:** backend sohbet başına okunmamış sayısı vermediği için oturum içinde sayılır. Açık olmayan bir sohbete başkasından `MESSAGE` olayı gelince avatarda altın badge artar, sohbet açılınca sıfırlanır (`seeMessages` `MessagePanel` açılınca çağrılır). Listede olmayan bir transferden mesaj gelirse liste tazelenir.
+- **Liste tazeleme:** `TRANSFER_ASSIGNED` / `TRANSFER_STATUS_UPDATED` / `TRANSFER_CANCELLED` olaylarında `MessageThreads` de refetch edilir (yeni atanan transfer listeye girer, tamamlanan çıkar).
+- **Aktif olmayan sohbet** (ör. adres çubuğundan tamamlanmış bir transfer): "Bu sohbet aktif değil" boş durumu ve **Transferi aç** butonu. Mesaj geçmişi transfer detayında okunur.
+- **Boş liste:** "Aktif sohbet yok", sohbetlerin sürücü atanınca açılıp transfer tamamlanınca kapandığı açıklanır.
+
 ## 9. WebSocket olayları (`SubscriptionProvider`)
 
 Giriş yapıldığında tek bir subscription açılır:
@@ -1135,7 +1171,7 @@ Giriş yapıldığında tek bir subscription açılır:
 subscription { subscribe { action senderId message notificationId transferId messageId parentId location file } }
 ```
 
-Olaylar `action`'a göre dağıtılır. Genel tepkiler (bildirim sayısı, `CurrentUser`, `Transfers`/`Transfer` refetch, devre dışı logout) `SubscriptionProvider`'dadır. Sayfaya özel tepkiler `useAppEvent(['MESSAGE', ...], handler)` ile component'te yazılır. Refetch operasyon **adıyla** yapıldığı için liste ve detay query'leri `Transfers` / `Transfer` adını korumalıdır.
+Olaylar `action`'a göre dağıtılır. Genel tepkiler (bildirim sayısı, `CurrentUser`, `Transfers`/`Transfer` refetch, devre dışı logout) `SubscriptionProvider`'dadır. Sayfaya özel tepkiler `useAppEvent(['MESSAGE', ...], handler)` ile component'te yazılır. Refetch operasyon **adıyla** yapıldığı için liste, detay ve sohbet listesi query'leri `Transfers` / `Transfer` / `MessageThreads` adını korumalıdır.
 
 | `action` | Frontend tepkisi |
 |---|---|

@@ -7,6 +7,7 @@ import type {
   UpdateTransfer,
 } from '@/graphql/generated/graphql';
 import type { SelectedAddress } from '@/lib/geo';
+import { toPhoneValue } from '@/lib/phone';
 import { minPickupTime } from './schema';
 import type { RouteInfo, TransferFormValues } from './types';
 
@@ -26,7 +27,7 @@ export function emptyValues(user: CurrentUserFragment | null): TransferFormValue
     childSeatCount: 0,
     needsWheelchair: false,
     passengerName: user?.name || [user?.firstName, user?.lastName].filter(Boolean).join(' '),
-    passengerPhone: user?.phone ?? '',
+    passengerPhone: toPhoneValue(user?.phone),
     flightNumber: '',
     note: '',
     stops: [],
@@ -59,7 +60,7 @@ export function fromTransfer(t: BookingTransferFieldsFragment): TransferFormValu
     childSeatCount: t.childSeatCount ?? 0,
     needsWheelchair: !!t.needsWheelchair,
     passengerName: t.passengerName ?? '',
-    passengerPhone: t.passengerPhone ?? '',
+    passengerPhone: toPhoneValue(t.passengerPhone),
     flightNumber: t.flightNumber ?? '',
     note: t.note ?? '',
     stops: [],
@@ -120,7 +121,7 @@ export function toCreateInput(v: TransferFormValues, route: RouteInfo): CreateTr
     childSeatCount: v.childSeatCount,
     needsWheelchair: v.needsWheelchair,
     passengerName: v.passengerName.trim(),
-    passengerPhone: blankToUndefined(v.passengerPhone),
+    passengerPhone: blankToUndefined(v.passengerPhone.number),
     flightNumber: blankToUndefined(v.flightNumber.toUpperCase()),
     note: blankToUndefined(v.note),
     ...(legs.length > 0 && { legs }),
@@ -165,7 +166,7 @@ export function toUpdateInput(id: string, v: TransferFormValues, initial: Transf
   if (v.childSeatCount !== initial.childSeatCount) data.childSeatCount = v.childSeatCount;
   if (v.needsWheelchair !== initial.needsWheelchair) data.needsWheelchair = v.needsWheelchair;
   if (v.passengerName.trim() !== initial.passengerName) data.passengerName = v.passengerName.trim();
-  if (v.passengerPhone.trim() !== initial.passengerPhone) data.passengerPhone = v.passengerPhone.trim();
+  if (v.passengerPhone.number !== initial.passengerPhone.number) data.passengerPhone = v.passengerPhone.number;
   const flight = v.flightNumber.trim().toUpperCase();
   if (flight !== initial.flightNumber) data.flightNumber = flight;
   if (v.note !== initial.note) data.note = v.note;

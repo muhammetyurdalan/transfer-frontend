@@ -1,14 +1,12 @@
 import { Alert, Step, StepLabel, Stepper } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import type { TransferStatus } from '@/graphql/generated/graphql';
-import { useIsMobile } from '@/hooks/useIsMobile';
 
 const FLOW: TransferStatus[] = ['PENDING', 'PAID', 'ASSIGNED', 'STARTED', 'COMPLETED'];
 
-/** PENDING → PAID → ASSIGNED → STARTED → COMPLETED. İptalde kırmızı uyarı (§8.6). */
-export function StatusTimeline({ status }: { status?: TransferStatus | null }) {
+/** PENDING → PAID → ASSIGNED → STARTED → COMPLETED, her ekranda dikey. `dense`: küçük ikon ve aralıklar. İptalde kırmızı uyarı (§8.6). */
+export function StatusTimeline({ status, dense }: { status?: TransferStatus | null; dense?: boolean }) {
   const { t } = useTranslation('transfers');
-  const mobile = useIsMobile();
   if (status === 'CANCELLED') {
     return (
       <Alert severity="error" variant="filled">
@@ -20,8 +18,18 @@ export function StatusTimeline({ status }: { status?: TransferStatus | null }) {
   return (
     <Stepper
       activeStep={status === 'COMPLETED' ? FLOW.length : active + 1}
-      alternativeLabel={!mobile}
-      orientation={mobile ? 'vertical' : 'horizontal'}
+      orientation="vertical"
+      sx={
+        dense
+          ? {
+              '& .MuiStepLabel-root': { py: 0.25 },
+              '& .MuiStepLabel-label': { typography: 'body2' },
+              '& .MuiStepIcon-root': { fontSize: '1.25rem' },
+              '& .MuiStepConnector-line': { minHeight: 12 },
+              '& .MuiStepConnector-root': { ml: '10px' },
+            }
+          : undefined
+      }
     >
       {FLOW.map((s) => (
         <Step key={s}>

@@ -12,6 +12,8 @@ import {
   Skeleton,
   Stack,
   Typography,
+  type SxProps,
+  type Theme,
 } from '@mui/material';
 import {
   AccessibleRounded,
@@ -34,6 +36,7 @@ import { TransactionChip } from '@/components/StatusChip';
 import { UserAvatar } from '@/components/UserAvatar';
 import { formatDateTime, formatDistance, formatDuration } from '@/lib/format';
 import { mediaUrl } from '@/lib/media';
+import { formatPhone } from '@/lib/phone';
 
 type T = TransferDetailFragment;
 
@@ -42,13 +45,15 @@ export function SectionCard({
   title,
   action,
   children,
+  sx,
 }: {
   title: string;
   action?: ReactNode;
   children: ReactNode;
+  sx?: SxProps<Theme>;
 }) {
   return (
-    <Card>
+    <Card sx={sx}>
       <Stack
         direction="row"
         sx={{
@@ -200,7 +205,7 @@ export function TripCard({ transfer }: { transfer: T }) {
         <Field label={t('detail.passengerName')} value={transfer.passengerName} />
         <Field
           label={t('detail.passengerPhone')}
-          value={transfer.passengerPhone || '—'}
+          value={formatPhone(transfer.passengerPhone) || '—'}
           icon={<PhoneRounded fontSize="small" />}
         />
         <Field
@@ -275,7 +280,7 @@ export function VehicleDriverCard({ transfer }: { transfer: T }) {
               <Typography variant="subtitle2">{driver.name}</Typography>
               {driver.phone && (
                 <Link href={`tel:${driver.phone}`} variant="body2">
-                  {driver.phone}
+                  {formatPhone(driver.phone)}
                 </Link>
               )}
             </Box>

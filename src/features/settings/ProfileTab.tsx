@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, Button, Grid, Stack, TextField, Typography } from '@mui/material';
 import { DeleteForeverRounded, LockResetRounded } from '@mui/icons-material';
 import { useMutation } from '@apollo/client/react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link as RouterLink } from 'react-router';
@@ -11,16 +11,18 @@ import { useSnackbar } from 'notistack';
 import { DeleteUserDocument, UpdateUserDocument, type UpdateUser } from '@/graphql/generated/graphql';
 import { useAuth, useCurrentUser } from '@/app/providers/AuthProvider';
 import { ConfirmDialog } from '@/components/feedback/ConfirmDialog';
+import { PhoneField } from '@/components/PhoneField';
+import { normalizePhone, phoneSchema, toPhoneValue } from '@/lib/phone';
 import { AvatarPicker } from './AvatarPicker';
 import { SectionCard } from './SectionCard';
 
 const schema = z.object({
   firstName: z.string().trim().min(1, 'settings:profile.validation.required').max(50, 'settings:profile.validation.max'),
   lastName: z.string().trim().min(1, 'settings:profile.validation.required').max(50, 'settings:profile.validation.max'),
-  phone: z.string().trim().max(20, 'settings:profile.validation.max'),
+  phone: phoneSchema,
 });
 type FormValues = z.infer<typeof schema>;
-const MAX: Record<keyof FormValues, number> = { firstName: 50, lastName: 50, phone: 20 };
+const MAX = { firstName: 50, lastName: 50 };
 
 /** Profil sekmesi (§8.12): profil, güvenlik ve tehlikeli bölge kartları. Dil header'daki menüden değişir. */
 export function ProfileTab() {
@@ -34,10 +36,11 @@ export function ProfileTab() {
   const defaults: FormValues = {
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
-    phone: user.phone ?? '',
+    phone: toPhoneValue(user.phone),
   };
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, dirtyFields, isDirty },
@@ -50,7 +53,7 @@ export function ProfileTab() {
     const data: UpdateUser = {};
     if (dirtyFields.firstName) data.firstName = v.firstName.trim();
     if (dirtyFields.lastName) data.lastName = v.lastName.trim();
-    if (dirtyFields.phone) data.phone = v.phone.trim();
+    if (v.phone.number !== normalizePhone(user.phone)) data.phone = v.phone.number;
     if (avatar) data.profileImage = avatar;
     try {
       const res = await updateUser({ variables: { data } });
@@ -59,7 +62,7 @@ export function ProfileTab() {
         reset({
           firstName: updated.firstName ?? '',
           lastName: updated.lastName ?? '',
-          phone: updated.phone ?? '',
+          phone: toPhoneValue(updated.phone),
         });
       }
       setAvatar(null);
@@ -79,7 +82,7 @@ export function ProfileTab() {
     }
   };
 
-  const msg = (name: keyof FormValues) => {
+  const msg = (name: keyof typeof MAX) => {
     const m = errors[name]?.message;
     return m ? t(m, { count: MAX[name] }) : undefined;
   };
@@ -108,12 +111,19 @@ export function ProfileTab() {
                 <TextField required label={t('settings:profile.lastName')} {...register('lastName')} error={!!errors.lastName} helperText={msg('lastName')} />
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
-                <TextField
-                  label={t('settings:profile.phone')}
-                  {...register('phone')}
-                  error={!!errors.phone}
-                  helperText={msg('phone')}
-                  slotProps={{ htmlInput: { inputMode: 'tel', maxLength: 20 } }}
+                <Controller
+                  control={control}
+                  name="phone"
+                  render={({ field }) => (
+                    <PhoneField
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      inputRef={field.ref}
+                      label={t('settings:profile.phone')}
+                      error={!!errors.phone}
+                    />
+                  )}
                 />
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>

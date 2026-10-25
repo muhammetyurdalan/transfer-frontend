@@ -54,3 +54,38 @@ mutation SeeMessages($transferId: ID!) {
     success
   }
 }
+
+# Mesajlar sayfası: aktif (ASSIGNED/STARTED) transferler sohbet listesi olarak
+fragment MessageThread on Transfer {
+  id
+  status
+  pickupTime
+  pickupAddress
+  dropoffAddress
+  customerId
+  driverId
+  operatorId
+  customer {
+    id
+    name
+    firstName
+    lastName
+    profileImage
+  }
+  driver {
+    id
+    name
+    firstName
+    lastName
+    profileImage
+  }
+}
+
+query MessageThreads($filters: TransferFilter) {
+  transfers(filters: $filters, ordering: [{ pickupTime: ASC }], pagination: { offset: 0, limit: 100 }) {
+    count
+    transfers {
+      ...MessageThread
+    }
+  }
+}

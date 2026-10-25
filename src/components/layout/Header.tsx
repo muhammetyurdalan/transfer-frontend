@@ -24,8 +24,8 @@ export function Header({ onOpenDrawer }: { onOpenDrawer: () => void }) {
     <AppBar position="sticky" sx={{ pt: 'env(safe-area-inset-top)' }}>
       <Toolbar sx={{ gap: { xs: 0.5, sm: 1 }, minHeight: { xs: 60, sm: 68 } }}>
         {compact && (
-          <IconButton color="inherit" size="large" edge="start" aria-label={t('nav.openMenu')} onClick={onOpenDrawer}>
-            <MenuRounded />
+          <IconButton color="inherit" edge="start" aria-label={t('nav.openMenu')} onClick={onOpenDrawer}>
+            <MenuRounded fontSize="small" />
           </IconButton>
         )}
         <BrandLogo />
@@ -53,10 +53,13 @@ export function Header({ onOpenDrawer }: { onOpenDrawer: () => void }) {
           </Stack>
         )}
         <Box sx={{ flexGrow: 1 }} />
-        <NotificationMenu />
-        <ThemeModeMenu />
-        <LanguageMenu />
-        <ProfileMenu />
+        {/* Sağdaki ikonlar küçük (20px) ve aralıksız bir grup: Toolbar gap'i grubun içine uygulanmaz */}
+        <Stack direction="row" sx={{ alignItems: 'center', mr: -0.5 }}>
+          <NotificationMenu />
+          <ThemeModeMenu />
+          <LanguageMenu />
+          <ProfileMenu />
+        </Stack>
       </Toolbar>
     </AppBar>
   );

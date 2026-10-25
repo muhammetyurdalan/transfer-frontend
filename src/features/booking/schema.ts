@@ -2,6 +2,7 @@ import dayjs, { type Dayjs } from 'dayjs';
 import { z } from 'zod';
 import type { TFunction } from 'i18next';
 import type { SelectedAddress } from '@/lib/geo';
+import { phoneSchema } from '@/lib/phone';
 
 /** Pickup için en erken zaman: şu an + 15 dk (backend gelecek ister, ERR016). */
 export const MIN_LEAD_MINUTES = 15;
@@ -47,7 +48,7 @@ export function makeTransferSchema(t: TFunction, initialPickupTime?: Dayjs | nul
     childSeatCount: count(0),
     needsWheelchair: z.boolean(),
     passengerName: z.string().trim().min(1, { message: required }).max(100, { message: max(100) }),
-    passengerPhone: z.string().trim().max(20, { message: max(20) }),
+    passengerPhone: phoneSchema,
     flightNumber: z.string().trim().max(10, { message: max(10) }),
     note: z.string(),
     stops: z.array(z.object({ address })).max(MAX_STOPS),
