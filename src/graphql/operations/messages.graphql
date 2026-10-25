@@ -4,6 +4,7 @@ fragment MessageItem on Message {
   senderId
   parentId
   isDeleted
+  isEdited
   message
   location
   file

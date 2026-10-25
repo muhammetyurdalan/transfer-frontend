@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
-import { Alert, Box, Paper, Skeleton, Stack, Typography } from '@mui/material';
+import { Alert, Box, Divider, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { ChatRounded, LockRounded } from '@mui/icons-material';
 import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
 import {
   DeleteMessageDocument,
   MessagesDocument,
@@ -13,7 +14,6 @@ import { ConfirmDialog } from '@/components/feedback/ConfirmDialog';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { useAppEvent } from '@/app/providers/SubscriptionProvider';
 import { useAuth } from '@/app/providers/AuthProvider';
-import { formatDate } from '@/lib/format';
 import { MessageBubble } from './MessageBubble';
 import { MessageComposer } from './MessageComposer';
 
@@ -31,6 +31,13 @@ type Props = {
 /** Transfer mesajları (§8.6). Panel açıkken (mount) mesajlar okundu işaretlenir. */
 export function MessagePanel({ transferId, canWrite, readOnlyStaff, height = 560, title }: Props) {
   const { t } = useTranslation('messages');
+  // Gün ayracı etiketi: bugün / dün / uzun tarih (25 Ekim 2026 Pazar)
+  const dayLabel = (time: string | null) => {
+    const d = dayjs(time);
+    if (d.isSame(dayjs(), 'day')) return t('today');
+    if (d.isSame(dayjs().subtract(1, 'day'), 'day')) return t('yesterday');
+    return d.format('dddd, LL');
+  };
   const { user } = useAuth();
   const client = useApolloClient();
   const [closed, setClosed] = useState(false);
@@ -131,18 +138,13 @@ export function MessagePanel({ transferId, canWrite, readOnlyStaff, height = 560
         ) : (
           <Stack spacing={1}>
             {messages.map((m, i) => {
-              const day = formatDate(m.time);
-              const showDay = i === 0 || day !== formatDate(messages[i - 1].time);
+              const showDay = i === 0 || !dayjs(m.time).isSame(messages[i - 1].time, 'day');
               return (
                 <Box key={m.id}>
                   {showDay && (
-                    <Typography
-                      variant="caption"
-                      color="text.secondary"
-                      sx={{ display: 'block', textAlign: 'center', my: 1 }}
-                    >
-                      {day}
-                    </Typography>
+                    <Divider sx={{ my: 1.5, typography: 'caption', color: 'text.secondary', fontWeight: 600 }}>
+                      {dayLabel(m.time)}
+                    </Divider>
                   )}
                   <MessageBubble
                     message={m}

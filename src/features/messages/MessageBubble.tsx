@@ -102,7 +102,7 @@ function Attachment({ m }: { m: Content }) {
 /**
  * Mesaj kartı: köşeleri hafif yuvarlatılmış düz dikdörtgen, ince çerçeve ve yan tarafta altın/koyu vurgu çizgisi.
  * Kendi mesajı sağda (`highlight` zemin, sağda altın çizgi), diğerleri solda (kâğıt zemin, solda koyu çizgi).
- * Üst satırda gönderen ve saat, altında içerik.
+ * Karşı tarafın mesajında üstte gönderen adı; tüm kartlarda sağ altta saat (düzenlenmişse önünde "düzenlendi").
  */
 export function MessageBubble({
   message: m,
@@ -130,7 +130,7 @@ export function MessageBubble({
           minWidth: 140,
           px: 1.5,
           pt: 0.75,
-          pb: 1,
+          pb: 0.5,
           borderRadius: 0.5,
           border: 1,
           boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
@@ -150,29 +150,23 @@ export function MessageBubble({
               }),
         }}
       >
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            alignItems: 'baseline',
-            justifyContent: 'space-between',
-            pb: 0.5,
-            mb: 0.75,
-            borderBottom: 1,
-            borderColor: 'divider',
-          }}
-        >
+        {!mine && (
           <Typography
             variant="caption"
             noWrap
-            sx={{ fontWeight: 700, letterSpacing: '0.04em', color: mine ? 'primary.dark' : 'text.primary' }}
+            sx={{
+              display: 'block',
+              fontWeight: 700,
+              letterSpacing: '0.04em',
+              pb: 0.5,
+              mb: 0.75,
+              borderBottom: 1,
+              borderColor: 'divider',
+            }}
           >
-            {mine ? t('you') : m.sender?.name}
+            {m.sender?.name}
           </Typography>
-          <Typography variant="caption" color="text.secondary" sx={{ flexShrink: 0 }}>
-            {formatTime(m.time)}
-          </Typography>
-        </Stack>
+        )}
         {m.parent && !m.isDeleted && (
           <Box
             sx={{
@@ -219,6 +213,20 @@ export function MessageBubble({
             <Attachment m={m} />
           </Stack>
         )}
+        <Stack
+          direction="row"
+          spacing={0.75}
+          sx={{ justifyContent: 'flex-end', alignItems: 'baseline', mt: 0.25 }}
+        >
+          {m.isEdited && !m.isDeleted && (
+            <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+              {t('edited')}
+            </Typography>
+          )}
+          <Typography variant="caption" color="text.secondary">
+            {formatTime(m.time)}
+          </Typography>
+        </Stack>
       </Box>
       {hasMenu && (
         <>

@@ -891,7 +891,9 @@ Alanlar: `status, pickup*/dropoff*, pickupTime, endTime, distance, duration, pas
 - **Görünürlük:** `status` `ASSIGNED`/`STARTED` iken ve kullanıcı katılımcıysa (customer, driver, operator) yazma açıktır. Diğer durumlarda geçmiş salt okunur gösterilir ("Mesajlaşma sadece aktif transferlerde açık"). ADMIN/STAFF sadece okur.
 - **Liste:** `messages(transferId, ordering: [{ time: ASC }])`.
   - Kart görünümü (balon değil): köşeleri hafif yuvarlatılmış (4px) düz dikdörtgen, 1px ince çerçeve ve hafif gölge. Kendi mesajı sağda `highlight` zeminde, sağ kenarında 3px altın (`primary`) çizgi. Diğerleri solda kâğıt zeminde, sol kenarında 3px koyu (`text.primary`) çizgi.
-  - Kartın üst satırında gönderen adı (kendi mesajında "Siz") ve saat, altında ince ayraç çizgisi ve içerik.
+  - Karşı tarafın kartında üstte gönderen adı ve altında ince ayraç çizgisi. Kendi mesajında üst satır yoktur.
+  - Tüm kartlarda saat sağ alt köşededir. `isEdited` true ise (silinmemiş mesajda) saatin önünde italik "düzenlendi" yazar.
+  - Gün değişince mesajların arasına ortasında tarih olan bir `Divider` girer: "Bugün", "Dün" veya uzun tarih (`dddd, LL`, ör. "Cumartesi, 24 Ekim 2026").
   - Reply'da içerikten önce alıntı (`parent`): solda 2px altın çizgili, hafif gri zeminli kutu.
   - Silinmiş mesaj "Bu mesaj silindi" olarak görünür.
   - Dosya: görselse küçük önizleme, değilse indirme çipi. Konum: haritaya link.
