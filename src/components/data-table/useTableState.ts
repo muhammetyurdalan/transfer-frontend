@@ -62,6 +62,8 @@ export function useTableState(defaultOrdering?: TableOrdering, prefix = '') {
     /** Filtre parametresi yaz (sayfa sıfırlanır) */
     set: (k: string, v: string | string[] | null) =>
       update({ [k]: Array.isArray(v) ? v.join(',') || null : v }),
+    /** Birden çok filtre parametresini tek seferde yaz (ardışık `set` çağrıları birbirini ezebilir) */
+    setMany: (changes: Record<string, string | null>) => update(changes),
   };
 }
 

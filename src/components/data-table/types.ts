@@ -4,6 +4,8 @@ export type Column<T> = {
   key: string;
   /** i18n anahtarı (çevrilmiş metin de olabilir) */
   header: string;
+  /** Sütun seçicide gösterilecek ad (verilmezse `header`) */
+  columnLabel?: string;
   render: (row: T) => ReactNode;
   /** ordering alan adı (camelCase). Verilirse başlık sıralanabilir */
   sortField?: string;

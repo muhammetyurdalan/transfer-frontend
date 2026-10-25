@@ -8,10 +8,13 @@ fragment TransferRow on Transfer {
   pickupLongitude
   passengerName
   passengerCount
+  luggageCount
+  flightNumber
   price
   currency
   distance
   duration
+  createdAt
   customerId
   driverId
   operatorId
@@ -20,6 +23,14 @@ fragment TransferRow on Transfer {
     name
   }
   driver {
+    id
+    name
+  }
+  customer {
+    id
+    name
+  }
+  operator {
     id
     name
   }

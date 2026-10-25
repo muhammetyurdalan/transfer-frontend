@@ -89,7 +89,10 @@
     "displayedRows": "{{from}}–{{to}} / {{count}}",
     "empty": "Henüz gösterilecek kayıt yok",
     "selected_one": "{{count}} seçili",
-    "selected_other": "{{count}} seçili"
+    "selected_other": "{{count}} seçili",
+    "editColumns": "Sütunları düzenle",
+    "columns": "Gösterilecek sütunlar",
+    "resetColumns": "Varsayılana dön"
   },
   "phone": {
     "country": "Ülke kodu",

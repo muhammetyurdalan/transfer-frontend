@@ -5,7 +5,7 @@ import type { TransferRowFragment } from '@/graphql/generated/graphql';
 import type { Column } from '@/components/data-table';
 import { Money } from '@/components/Money';
 import { StatusChip } from '@/components/StatusChip';
-import { formatDateTime, formatDuration } from '@/lib/format';
+import { formatDateTime, formatDuration, formatRoute } from '@/lib/format';
 import { TransferRouteCell } from './TransferRouteCell';
 
 /** Transfer listesi, dispatch ve sürücü işlerinde ortak sütunlar (§8.2). */
@@ -14,6 +14,7 @@ export function transferColumns(t: TFunction): Column<TransferRowFragment>[] {
     {
       key: 'id',
       header: 'transfers:columns.id',
+      columnLabel: 'transfers:columns.transferNo',
       render: (r) => (
         <Typography
           variant="body2"
@@ -73,6 +74,51 @@ export function transferColumns(t: TFunction): Column<TransferRowFragment>[] {
       header: 'transfers:columns.driver',
       hideBelow: 'md',
       render: (r) => r.driver?.name ?? '—',
+    },
+  ];
+}
+
+/**
+ * Transfer listesinde sütun seçiciden eklenebilen ek sütunlar (§8.2).
+ * `staff` false ise (müşteri) müşteri/operatör sütunları sunulmaz.
+ */
+export function extraTransferColumns(staff: boolean): Column<TransferRowFragment>[] {
+  return [
+    {
+      key: 'flightNumber',
+      header: 'transfers:columns.flightNumber',
+      render: (r) => r.flightNumber || '—',
+    },
+    {
+      key: 'luggage',
+      header: 'transfers:columns.luggage',
+      align: 'right',
+      render: (r) => r.luggageCount ?? 0,
+    },
+    {
+      key: 'distance',
+      header: 'transfers:columns.distance',
+      render: (r) => <Box sx={{ whiteSpace: 'nowrap' }}>{formatRoute(r.distance, r.duration)}</Box>,
+    },
+    ...(staff
+      ? [
+          {
+            key: 'customer',
+            header: 'transfers:columns.customer',
+            render: (r: TransferRowFragment) => r.customer?.name ?? '—',
+          },
+          {
+            key: 'operator',
+            header: 'transfers:columns.operator',
+            render: (r: TransferRowFragment) => r.operator?.name ?? '—',
+          },
+        ]
+      : []),
+    {
+      key: 'createdAt',
+      header: 'transfers:columns.createdAt',
+      sortField: 'createdAt',
+      render: (r) => <Box sx={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</Box>,
     },
   ];
 }

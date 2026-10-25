@@ -11,6 +11,19 @@ export const ALL_STATUSES: TransferStatus[] = [
   'CANCELLED',
 ];
 
+/**
+ * Arama: A (alış) veya B (bırakış) adresi içinde geçen, sadece rakamsa transfer no'su da eşleşen.
+ * Backend `OR`'u aynı seviyedeki tüm filtrelere karşı uygular, bu yüzden üst seviyede `AND` içine konur:
+ * `durum VE (A adresi VEYA B adresi VEYA no)`.
+ */
+function searchFilter(search: string): TransferFilter {
+  const byDropoff: TransferFilter = {
+    dropoffAddress: { iContains: search },
+    ...(/^\d+$/.test(search) && { OR: { id: { exact: search } } }),
+  };
+  return { pickupAddress: { iContains: search }, OR: byDropoff };
+}
+
 /** URL parametrelerinden backend `TransferFilter`'ı üretir. */
 export function transferFilterFrom(state: TableState): TransferFilter {
   const statuses = state
@@ -18,7 +31,7 @@ export function transferFilterFrom(state: TableState): TransferFilter {
     .filter((s): s is TransferStatus => ALL_STATUSES.includes(s as TransferStatus));
   const from = state.get('from');
   const to = state.get('to');
-  const passenger = state.get('q');
+  const search = state.get('q')?.trim();
   const stateId = state.get('stateId');
   const customerId = state.get('customerId');
   return {
@@ -31,7 +44,7 @@ export function transferFilterFrom(state: TableState): TransferFilter {
         },
       },
     }),
-    ...(passenger && { passengerName: { iContains: passenger } }),
+    ...(search && { AND: searchFilter(search) }),
     ...(stateId && { stateId: { exact: stateId } }),
     ...(customerId && { customerId: { exact: customerId } }),
   };

@@ -89,7 +89,10 @@
     "displayedRows": "{{from}}–{{to}} of {{count}}",
     "empty": "Nothing to show yet",
     "selected_one": "{{count}} selected",
-    "selected_other": "{{count}} selected"
+    "selected_other": "{{count}} selected",
+    "editColumns": "Edit columns",
+    "columns": "Visible columns",
+    "resetColumns": "Reset to default"
   },
   "phone": {
     "country": "Country code",

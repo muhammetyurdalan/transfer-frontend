@@ -9,10 +9,12 @@
   },
   "filters": {
     "status": "Durum",
-    "passenger": "Yolcu adı",
+    "search": "Transfer no veya adres",
+    "dateRange": "Tarih aralığı",
     "region": "Bölge ID",
     "from": "Başlangıç",
-    "to": "Bitiş"
+    "to": "Bitiş",
+    "clear": "Temizle"
   },
   "columns": {
     "id": "#",
@@ -23,7 +25,14 @@
     "price": "Fiyat",
     "status": "Durum",
     "driver": "Sürücü",
-    "timeToPickup": "Alışa kalan süre"
+    "timeToPickup": "Alışa kalan süre",
+    "transferNo": "Transfer no",
+    "flightNumber": "Uçuş no",
+    "luggage": "Bagaj",
+    "distance": "Mesafe / süre",
+    "customer": "Müşteri",
+    "operator": "Operatör",
+    "createdAt": "Oluşturulma"
   },
   "passengers_one": "{{count}} yolcu",
   "passengers_other": "{{count}} yolcu",

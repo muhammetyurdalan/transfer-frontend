@@ -105,7 +105,7 @@ export function useTransferActions({ driverActions }: Options = {}) {
       label: 'transfers:actions.messages',
       icon: <ChatRounded />,
       visible: (r) => can.message(user, r),
-      onClick: (r) => void navigate(`/transfers/${r.id}#messages`),
+      onClick: (r) => void navigate(`/messages/${r.id}`),
     },
     {
       label: 'transfers:actions.tip',

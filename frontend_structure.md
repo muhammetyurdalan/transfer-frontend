@@ -217,7 +217,7 @@ src/
   types/                   # paket tip bildirimleri (apollo-upload-client)
   components/
     layout/                # AppLayout, AuthLayout, Header, NavDrawer, BrandLogo, LanguageMenu, ProfileMenu, ThemeModeMenu, navItems
-    data-table/            # DataTable, RowActions, TableFilters, useTableState (URL durumu)
+    data-table/            # DataTable, RowActions, TableFilters, ColumnPicker + useColumnVisibility, useTableState (URL durumu)
     address/               # AddressField, MapPickerDialog
     map/                   # RouteMap (A/B pin + rota), leafletSetup (ikon düzeltmesi, pinIcon)
     feedback/              # ConfirmDialog, EmptyState, ErrorState, LoadingSkeleton
@@ -650,24 +650,38 @@ Hatalar: `ERR010` (kullanıcı yok/pasif), `ERR012` (şifre yanlış).
 - Başlık.
 - CUSTOMER için "Create Transfer" butonu (mobilde gizli, drawer'daki Create Transfer linki kullanılır).
 
-Filtre toolbar'ı:
-- Durum (çoklu `Select` → `status: { inList }`).
-- Tarih aralığı (`pickupTime: { range }`).
-- Yolcu adı araması (`passengerName: { iContains }`, 400ms debounce).
-- ADMIN/STAFF/OPERATOR için bölge filtresi (`stateId: { exact }`). Backend'de State sorgusu olmadığı için sayısal id alanıdır.
+Filtre toolbar'ı (`TransferFilters`):
+- Solda **transfer no veya adres** araması (URL `?q=`, 400ms debounce). Metin A (`pickupAddress`) veya B (`dropoffAddress`) adresinde `iContains` ile aranır, sadece rakamsa transfer no'su (`id: { exact }`) da eşleşir. Backend `OR`'u aynı seviyedeki tüm filtrelere karşı uyguladığı için arama `AND` içine konur:
+  `{ status: …, AND: { pickupAddress: { iContains }, OR: { dropoffAddress: { iContains }, OR: { id: { exact } } } } }` → `durum VE (A VEYA B VEYA no)`.
+  `pickupAddress` / `dropoffAddress` filtreleri backend `TransferFilter`'a bunun için eklendi.
+- Solda ADMIN/STAFF/OPERATOR için bölge filtresi (`stateId: { exact }`). Backend'de State sorgusu olmadığı için sayısal id alanıdır.
+- Sağ üst köşede ikon butonları (tooltip'li):
+  - **Durum** (`FilterListRounded`): checkbox'lı `Menu` → `status: { inList }`. Seçili durum sayısı badge'de, altta "Temizle".
+  - **Tarih aralığı** (`DateRangeRounded`): iki `DatePicker`'lı `Popover` → `pickupTime: { range }`. Tarih seçiliyse nokta badge, "Temizle" ikisini birden siler (`state.setMany`).
+  - Aktif filtre varsa ikon `primary` renktedir.
+
+Satır ⋮ menüsündeki **Mesajlar** aksiyonu `/messages/:id` sayfasına gider (§8.14).
 
 `DataTable` → `transfers(filters, ordering: [{ pickupTime: DESC }], pagination)`.
 
-| Sütun | Alan |
-|---|---|
-| # | `id` |
-| Alış zamanı | `pickupTime` (sıralanabilir) |
-| Güzergah | `pickupAddress` → `dropoffAddress` (kısaltılmış, `mobilePrimary`) |
-| Yolcu | `passengerName`, `passengerCount` |
-| Araç | `vehicleCategory { name }` |
-| Fiyat | `price`, `currency` |
-| Durum | `status` (`StatusChip`) |
-| Sürücü | `driver { name }` (`hideBelow: 'md'`) |
+| Sütun | Alan | Varsayılan |
+|---|---|---|
+| # | `id` | görünür |
+| Alış zamanı | `pickupTime` (sıralanabilir) | görünür |
+| Güzergah | `pickupAddress` → `dropoffAddress` (kısaltılmış, `mobilePrimary`) | görünür |
+| Yolcu | `passengerName`, `passengerCount` | **gizli** |
+| Araç | `vehicleCategory { name }` | görünür |
+| Fiyat | `price`, `currency` | görünür |
+| Durum | `status` (`StatusChip`) | görünür |
+| Sürücü | `driver { name }` (`hideBelow: 'md'`) | görünür |
+| Uçuş no | `flightNumber` | gizli |
+| Bagaj | `luggageCount` | gizli |
+| Mesafe / süre | `distance`, `duration` | gizli |
+| Müşteri | `customer { name }` (CUSTOMER'a sunulmaz) | gizli |
+| Operatör | `operator { name }` (CUSTOMER'a sunulmaz) | gizli |
+| Oluşturulma | `createdAt` (sıralanabilir) | gizli |
+
+**Sütun seçici:** filtre ikonlarının altında "Sütunları düzenle" butonu (`ColumnPicker`, masaüstü/tablet). Checkbox'lı menüden sütunlar açılıp kapatılır, en az bir sütun kalır, "Varsayılana dön" seçimi sıfırlar. Seçilen sütunlar tanım sırasıyla tabloya eklenir. Seçim `localStorage`'da `transfer.transferListColumns` altında saklanır (`useColumnVisibility`, okunamazsa varsayılan). Sadece transfer listesinde: dispatch ve sürücü işleri kendi sabit sütunlarını kullanır. İlk 8 sütun `transferColumns`, ek sütunlar `extraTransferColumns` içindedir (`TransferRow` fragment'ı bu alanları da çeker).
 
 Satır tıklama → `/transfers/:id`.
 
@@ -679,7 +693,7 @@ Satır tıklama → `/transfers/:id`.
 | Araç seç / Öde | CUSTOMER, `PENDING` | `/transfers/:id/vehicle` |
 | Düzenle | CUSTOMER, `PENDING` | `/transfers/:id/edit` |
 | Sürücü ata | OPERATOR/ADMIN/STAFF, `PAID` veya `ASSIGNED` | `AssignDriverDialog` (§8.7) |
-| Mesajlar | `ASSIGNED`/`STARTED` ve kullanıcı katılımcı | `/transfers/:id#messages` |
+| Mesajlar | `ASSIGNED`/`STARTED` ve kullanıcı katılımcı | `/messages/:id` (§8.14) |
 | Bahşiş ver | CUSTOMER, `COMPLETED` | `TipDialog` (§8.6) |
 | İptal et | CUSTOMER/OPERATOR/ADMIN/STAFF, `PENDING`/`PAID`/`ASSIGNED` | `ConfirmDialog` → `cancelTransfer` (§8.6) |
 

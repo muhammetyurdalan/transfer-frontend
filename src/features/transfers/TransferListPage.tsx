@@ -5,18 +5,27 @@ import { useQuery } from '@apollo/client/react';
 import { Link as RouterLink, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { TransfersDocument, type TransferOrder } from '@/graphql/generated/graphql';
-import { DataTable, useTableState, type TableOrdering } from '@/components/data-table';
+import {
+  ColumnPicker,
+  DataTable,
+  useColumnVisibility,
+  useTableState,
+  type TableOrdering,
+} from '@/components/data-table';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { ErrorState } from '@/components/feedback/ErrorState';
 import { PageHeader } from '@/components/PageHeader';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { transferColumns } from './transferColumns';
+import { extraTransferColumns, transferColumns } from './transferColumns';
 import { transferFilterFrom } from './transferFilter';
 import { TransferFilters } from './TransferFilters';
 import { useTransferActions } from './useTransferActions';
 
 const DEFAULT_ORDERING: TableOrdering = { field: 'pickupTime', direction: 'DESC' };
+/** Sütun seçicide listelenen ama varsayılan olarak gizli sütunlar */
+const DEFAULT_HIDDEN = ['passenger', 'flightNumber', 'luggage', 'distance', 'customer', 'operator', 'createdAt'];
+const COLUMNS_STORAGE_KEY = 'transfer.transferListColumns';
 
 /** Transfer listesi (§8.2). Backend kapsamı role göre otomatik daraltır. */
 export default function TransferListPage() {
@@ -26,7 +35,15 @@ export default function TransferListPage() {
   const navigate = useNavigate();
   const state = useTableState(DEFAULT_ORDERING);
   const isCustomer = hasRole('CUSTOMER');
-  const columns = useMemo(() => transferColumns(t), [t]);
+  const allColumns = useMemo(
+    () => [...transferColumns(t), ...extraTransferColumns(!isCustomer)],
+    [t, isCustomer],
+  );
+  const { columns, visible, setVisible, reset } = useColumnVisibility(
+    COLUMNS_STORAGE_KEY,
+    allColumns,
+    DEFAULT_HIDDEN,
+  );
   const { actions, dialogs } = useTransferActions();
 
   const { data, dataState, loading, error, refetch } = useQuery(TransfersDocument, {
@@ -74,7 +91,20 @@ export default function TransferListPage() {
         actions={actions}
         onRowClick={(r) => void navigate(`/transfers/${r.id}`)}
         toolbar={
-          <TransferFilters state={state} showRegion={hasRole('ADMIN', 'STAFF', 'OPERATOR')} />
+          <TransferFilters
+            state={state}
+            showRegion={hasRole('ADMIN', 'STAFF', 'OPERATOR')}
+            columnPicker={
+              !mobile && (
+                <ColumnPicker
+                  columns={allColumns}
+                  visible={visible}
+                  onChange={setVisible}
+                  onReset={reset}
+                />
+              )
+            }
+          />
         }
         emptyState={
           <EmptyState

@@ -9,10 +9,12 @@
   },
   "filters": {
     "status": "Status",
-    "passenger": "Passenger name",
+    "search": "Transfer no. or address",
+    "dateRange": "Date range",
     "region": "Region ID",
     "from": "From",
-    "to": "To"
+    "to": "To",
+    "clear": "Clear"
   },
   "columns": {
     "id": "#",
@@ -23,7 +25,14 @@
     "price": "Price",
     "status": "Status",
     "driver": "Driver",
-    "timeToPickup": "Time to pickup"
+    "timeToPickup": "Time to pickup",
+    "transferNo": "Transfer no.",
+    "flightNumber": "Flight no.",
+    "luggage": "Luggage",
+    "distance": "Distance / duration",
+    "customer": "Customer",
+    "operator": "Operator",
+    "createdAt": "Created"
   },
   "passengers_one": "{{count}} passenger",
   "passengers_other": "{{count}} passengers",
