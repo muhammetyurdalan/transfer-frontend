@@ -1082,7 +1082,9 @@ Veri: `user` query'si (`id firstName lastName email phone language role profileI
 
 Filtreler: kategori (`category: { inList }`), tarih aralığı (`orderTime: { range }`).
 
-Üstte özet kartları (`>= sm`): bu sayfadaki toplam ödeme / bahşiş / iade, para birimine göre gruplu (ödeme kartı `inverse` zemin + altın tutar). Filtreler URL'de: `?category=PAYMENT,TIP&from=YYYY-MM-DD&to=YYYY-MM-DD`.
+Üstte özet kartları (`>= sm`): bu sayfadaki toplam ödeme / bahşiş / iade (ödeme kartı `inverse` zemin + altın tutar). Filtreler URL'de: `?category=PAYMENT,TIP&from=YYYY-MM-DD&to=YYYY-MM-DD`.
+
+**Para birimi:** sayfadaki tüm tutarlar (tablo, özet kartları, iade onay metni) sabit **EUR** ile gösterilir (`STATEMENT_CURRENCY`, `features/settings/statement.ts`). Hareketin `currency` alanı bu sayfada kullanılmaz.
 
 | Sütun | Alan |
 |---|---|
