@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="VIP Transfer">
+  <defs>
+    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="10" x2="0" y2="56">
+      <stop offset="0" stop-color="#E8C960"/>
+      <stop offset="1" stop-color="#B8901F"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0B0B0C"/>
+  <!-- VIP -->
+  <g fill="none" stroke="url(#g)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15.5 12.5 21 26.5 26.5 12.5"/>
+    <path d="M32.5 12.5v14"/>
+    <path d="M39 26.5v-14h4.8a4.3 4.3 0 0 1 0 8.6H39"/>
+  </g>
+  <!-- Sedan -->
+  <path fill="url(#g)" d="M7 47.2c0-2.7 1.9-4.9 4.5-5.4l8.3-1.6 6.4-5.6a5 5 0 0 1 3.3-1.2h9.2a5 5 0 0 1 3.7 1.6l5 5.3 6.2 1.1A5 5 0 0 1 58 46.3v2.2a1.5 1.5 0 0 1-1.5 1.5h-49A1.5 1.5 0 0 1 7 48.5z"/>
+  <path fill="#0B0B0C" d="M23.6 40.3l4-3.5a2.4 2.4 0 0 1 1.6-.6H32v4.1zM34.6 36.2h4.8a2.4 2.4 0 0 1 1.8.8l3.2 3.3h-9.8z"/>
+  <circle cx="18.5" cy="49.5" r="4.6" fill="#0B0B0C" stroke="url(#g)" stroke-width="2.6"/>
+  <circle cx="46" cy="49.5" r="4.6" fill="#0B0B0C" stroke="url(#g)" stroke-width="2.6"/>
+</svg>

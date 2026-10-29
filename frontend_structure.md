@@ -192,7 +192,8 @@ export default config;
 ## 3. Klasör yapısı
 
 ```
-index.html                 # viewport-fit=cover, tema flash'ını önleyen inline script (§5.2)
+public/logo.svg            # VIP + sedan logo (siyah kare, altın gradyan); BrandLogo ve favicon olarak kullanılır. URL: /logo.svg
+index.html                 # favicon /logo.svg, viewport-fit=cover, tema flash'ını önleyen inline script (§5.2)
 codegen.ts, vite.config.ts, eslint.config.js, tsconfig*.json
 src/
   main.tsx                 # Providers: Theme (dile göre locale), LocalizationProvider, Snackbar (2 sn, kapatma butonlu, en fazla 3), Apollo, Router

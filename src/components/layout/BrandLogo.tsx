@@ -1,9 +1,8 @@
 import { Box, Typography } from '@mui/material';
-import { AirportShuttleRounded } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
-/** Koyu zemin üzerinde altın logo. `tone="dark"` açık zemin için siyah metin kullanır. */
+/** VIP + araç logosu (`public/logo.svg`) ve uygulama adı. `tone="dark"` açık zemin için siyah metin kullanır. */
 export function BrandLogo({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
   const { t } = useTranslation();
   return (
@@ -20,18 +19,12 @@ export function BrandLogo({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
       }}
     >
       <Box
-        sx={{
-          width: 36,
-          height: 36,
-          borderRadius: 2.5,
-          display: 'grid',
-          placeItems: 'center',
-          bgcolor: 'primary.main',
-          color: 'primary.contrastText',
-        }}
-      >
-        <AirportShuttleRounded fontSize="small" />
-      </Box>
+        component="img"
+        src="/logo.svg"
+        alt=""
+        // Dark modda header zemini de siyah; ince altın çerçeve kenarı belli eder
+        sx={{ width: 36, height: 36, borderRadius: '8px', display: 'block', border: 1, borderColor: 'inverse.accentSoft' }}
+      />
       <Typography variant="h6" component="span" sx={{ letterSpacing: '0.02em' }}>
         {t('appName')}
       </Typography>
