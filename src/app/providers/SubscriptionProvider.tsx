@@ -40,8 +40,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         case 'USER_DEACTIVATED':
           void logout('deactivated');
           return;
-        case 'TRANSFER_PAID':
-        case 'TRANSFER_ASSIGNED':
+        case 'TRANSFER_ACCEPTED':
         case 'TRANSFER_STATUS_UPDATED':
         case 'TRANSFER_CANCELLED':
         case 'PAYMENT_SUCCESS':
