@@ -56,7 +56,7 @@ mutation SeeMessages($transferId: ID!) {
   }
 }
 
-# Mesajlar sayfası: aktif (ASSIGNED/STARTED) transferler sohbet listesi olarak
+# Mesajlar sayfası: aktif (ACCEPTED/STARTED) transferler sohbet listesi olarak
 fragment MessageThread on Transfer {
   id
   status

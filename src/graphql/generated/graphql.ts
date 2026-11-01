@@ -13,9 +13,9 @@ export type Action =
   | 'REFUND'
   | 'TIP_PAYMENT_FAILED'
   | 'TIP_PAYMENT_SUCCESS'
+  | 'TRANSFER_ACCEPTED'
   | 'TRANSFER_ASSIGNED'
   | 'TRANSFER_CANCELLED'
-  | 'TRANSFER_PAID'
   | 'TRANSFER_STATUS_UPDATED'
   | 'UPDATE_MESSAGE'
   | 'USER_DEACTIVATED'
@@ -303,9 +303,10 @@ export type NotificationFilter = {
   isSeen?: boolean | null | undefined;
 };
 
-export type NotificationOrder =
-  {   createdAt: Ordering; id?: never; }
-  |  { createdAt?: never;   id: Ordering; };
+export type NotificationOrder = {
+  createdAt?: Ordering | null | undefined;
+  id?: Ordering | null | undefined;
+};
 
 export type OffsetPaginationInput = {
   limit?: number | null | undefined;
@@ -471,10 +472,11 @@ export type TransactionFilter = {
   userId?: IdBaseFilterLookup | null | undefined;
 };
 
-export type TransactionOrder =
-  {   id: Ordering; orderAmount?: never; orderTime?: never; }
-  |  { id?: never;   orderAmount: Ordering; orderTime?: never; }
-  |  { id?: never; orderAmount?: never;   orderTime: Ordering; };
+export type TransactionOrder = {
+  id?: Ordering | null | undefined;
+  orderAmount?: Ordering | null | undefined;
+  orderTime?: Ordering | null | undefined;
+};
 
 /** Transfer(id, customer, operator, driver, vehicle_category, vehicle, status, state, pickup_district, dropoff_district, pickup_address, pickup_latitude, pickup_longitude, dropoff_address, dropoff_latitude, dropoff_longitude, pickup_time, end_time, distance, duration, passenger_count, luggage_count, child_seat_count, needs_wheelchair, passenger_name, passenger_phone, flight_number, note, price, currency, psp_data, created_at, updated_at) */
 export type TransferFilter = {
@@ -500,16 +502,16 @@ export type TransferFilter = {
   vehicleId?: IdBaseFilterLookup | null | undefined;
 };
 
-export type TransferOrder =
-  {   createdAt: Ordering; id?: never; pickupTime?: never; }
-  |  { createdAt?: never;   id: Ordering; pickupTime?: never; }
-  |  { createdAt?: never; id?: never;   pickupTime: Ordering; };
+export type TransferOrder = {
+  createdAt?: Ordering | null | undefined;
+  id?: Ordering | null | undefined;
+  pickupTime?: Ordering | null | undefined;
+};
 
 export type TransferStatus =
-  | 'ASSIGNED'
+  | 'ACCEPTED'
   | 'CANCELLED'
   | 'COMPLETED'
-  | 'PAID'
   | 'PENDING'
   | 'STARTED';
 
@@ -578,7 +580,7 @@ export type UpdateTransfer = {
 
 export type UpdateTransferStatus = {
   id: string | number;
-  /** ASSIGNED -> STARTED -> COMPLETED */
+  /** ACCEPTED -> STARTED -> COMPLETED */
   status: TransferStatus;
 };
 
@@ -655,12 +657,13 @@ export type UserFilter = {
   role?: RoleBaseFilterLookup | null | undefined;
 };
 
-export type UserOrder =
-  {   createdAt: Ordering; email?: never; firstName?: never; id?: never; lastName?: never; }
-  |  { createdAt?: never;   email: Ordering; firstName?: never; id?: never; lastName?: never; }
-  |  { createdAt?: never; email?: never;   firstName: Ordering; id?: never; lastName?: never; }
-  |  { createdAt?: never; email?: never; firstName?: never;   id: Ordering; lastName?: never; }
-  |  { createdAt?: never; email?: never; firstName?: never; id?: never;   lastName: Ordering; };
+export type UserOrder = {
+  createdAt?: Ordering | null | undefined;
+  email?: Ordering | null | undefined;
+  firstName?: Ordering | null | undefined;
+  id?: Ordering | null | undefined;
+  lastName?: Ordering | null | undefined;
+};
 
 export type ValidateCode = {
   /** 6 chars */
@@ -683,11 +686,12 @@ export type VehicleCategoryFilter = {
   name?: StrFilterLookup | null | undefined;
 };
 
-export type VehicleCategoryOrder =
-  {   createdAt: Ordering; id?: never; maxPassengers?: never; order?: never; }
-  |  { createdAt?: never;   id: Ordering; maxPassengers?: never; order?: never; }
-  |  { createdAt?: never; id?: never;   maxPassengers: Ordering; order?: never; }
-  |  { createdAt?: never; id?: never; maxPassengers?: never;   order: Ordering; };
+export type VehicleCategoryOrder = {
+  createdAt?: Ordering | null | undefined;
+  id?: Ordering | null | undefined;
+  maxPassengers?: Ordering | null | undefined;
+  order?: Ordering | null | undefined;
+};
 
 /** Vehicle(id, driver, category, plate, brand, model, year, color, image, is_active, created_at) */
 export type VehicleFilter = {
@@ -703,10 +707,11 @@ export type VehicleFilter = {
   plate?: StrFilterLookup | null | undefined;
 };
 
-export type VehicleOrder =
-  {   createdAt: Ordering; id?: never; plate?: never; }
-  |  { createdAt?: never;   id: Ordering; plate?: never; }
-  |  { createdAt?: never; id?: never;   plate: Ordering; };
+export type VehicleOrder = {
+  createdAt?: Ordering | null | undefined;
+  id?: Ordering | null | undefined;
+  plate?: Ordering | null | undefined;
+};
 
 export type SignInMutationVariables = Exact<{
   data: SignIn;

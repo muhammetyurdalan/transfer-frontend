@@ -31,7 +31,7 @@ export function PaymentPendingBanner({ transferId, status, refetch }: Props) {
   });
   const [phase, setPhase] = useState<Phase>('checking');
   const isTip = pending?.kind === 'tip';
-  // Poll/olay sonrası status değiştiyse (PAID veya ileri) ödeme sonuçlanmıştır.
+  // Poll/olay sonrası status değiştiyse (ACCEPTED veya ileri) ödeme sonuçlanmıştır.
   const resolvedByStatus =
     !!pending && !isTip && phase === 'checking' && !!status && status !== 'PENDING';
 

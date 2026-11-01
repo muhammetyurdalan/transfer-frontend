@@ -21,8 +21,8 @@ import { useTransferActions } from './useTransferActions';
 type DispatchTab = 'waiting' | 'assigned';
 
 const TABS: Record<DispatchTab, TransferFilter> = {
-  waiting: { status: { exact: 'PAID' } },
-  assigned: { status: { inList: ['ASSIGNED', 'STARTED'] } },
+  waiting: { status: { exact: 'ACCEPTED' } },
+  assigned: { status: { inList: ['ACCEPTED', 'STARTED'] } },
 };
 const ORDERING: TableOrdering = { field: 'pickupTime', direction: 'ASC' };
 const DISPATCH_ACTIONS = [
@@ -42,7 +42,7 @@ export default function DispatchPage() {
     variables: { filters: TABS.waiting, pagination: { offset: 0, limit: 1 } },
   });
   const { enqueueSnackbar } = useSnackbar();
-  useAppEvent(['TRANSFER_PAID'], (e) => {
+  useAppEvent(['TRANSFER_ACCEPTED'], (e) => {
     void waitingCount.refetch();
     enqueueSnackbar(t('dispatch.newPaid', { id: e.transferId }), { variant: 'info' });
   });
@@ -101,7 +101,7 @@ function DispatchTable({ tab }: { tab: DispatchTab }) {
       pagination: state.pagination,
     },
   });
-  useAppEvent(['TRANSFER_PAID'], () => {
+  useAppEvent(['TRANSFER_ACCEPTED'], () => {
     if (tab === 'waiting') void refetch();
   });
   const list = dataState === 'complete' ? data.transfers : undefined;

@@ -19,19 +19,19 @@ const isOps = (u: User) => isStaff(u) || u?.role === 'OPERATOR';
 export const can = {
   pay: (u: User, t: TransferLike) => u?.role === 'CUSTOMER' && is(t, 'PENDING'),
   edit: (u: User, t: TransferLike) => u?.role === 'CUSTOMER' && is(t, 'PENDING'),
-  assign: (u: User, t: TransferLike) => isOps(u) && is(t, 'PAID', 'ASSIGNED'),
+  assign: (u: User, t: TransferLike) => isOps(u) && is(t, 'ACCEPTED'),
   start: (u: User, t: TransferLike) =>
-    is(t, 'ASSIGNED') && ((u?.role === 'DRIVER' && t.driverId === u.id) || isStaff(u)),
+    is(t, 'ACCEPTED') && ((u?.role === 'DRIVER' && t.driverId === u.id) || isStaff(u)),
   complete: (u: User, t: TransferLike) =>
     is(t, 'STARTED') && ((u?.role === 'DRIVER' && t.driverId === u.id) || isStaff(u)),
   tip: (u: User, t: TransferLike) => u?.role === 'CUSTOMER' && is(t, 'COMPLETED'),
   cancel: (u: User, t: TransferLike) =>
-    (u?.role === 'CUSTOMER' || isOps(u)) && is(t, 'PENDING', 'PAID', 'ASSIGNED'),
+    (u?.role === 'CUSTOMER' || isOps(u)) && is(t, 'PENDING', 'ACCEPTED'),
   /** Mesajlaşma katılımcısı mı (customer, driver, operator) */
   participant: (u: User, t: TransferLike) =>
     !!u && [t.customerId, t.driverId, t.operatorId].includes(u.id),
   /** Mesaj yazılabilir mi */
-  message: (u: User, t: TransferLike) => is(t, 'ASSIGNED', 'STARTED') && can.participant(u, t),
+  message: (u: User, t: TransferLike) => is(t, 'ACCEPTED', 'STARTED') && can.participant(u, t),
   /** Detay sayfasında gösterilecek en az bir aksiyon var mı */
   anyDetailAction: (u: User, t: TransferLike) =>
     can.pay(u, t) ||

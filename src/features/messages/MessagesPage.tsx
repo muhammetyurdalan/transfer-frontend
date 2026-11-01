@@ -37,7 +37,7 @@ import { can } from '@/features/transfers/transferPermissions';
 import { MessagePanel } from './MessagePanel';
 
 /** Sohbeti açık olan (mesaj yazılabilen) durumlar */
-const ACTIVE_STATUSES = ['ASSIGNED', 'STARTED'] as const;
+const ACTIVE_STATUSES = ['ACCEPTED', 'STARTED'] as const;
 
 /** Kullanıcının katılımcı olduğu aktif transferler. OPERATOR backend'de tüm transferleri görür, kendine atananlarla sınırlanır. */
 function threadFilter(user: CurrentUserFragment): TransferFilter {

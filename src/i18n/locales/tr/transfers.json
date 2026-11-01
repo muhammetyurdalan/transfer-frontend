@@ -88,8 +88,7 @@
   },
   "timeline": {
     "PENDING": "Oluşturuldu",
-    "PAID": "Ödendi",
-    "ASSIGNED": "Sürücü atandı",
+    "ACCEPTED": "Kabul edildi",
     "STARTED": "Yolda",
     "COMPLETED": "Tamamlandı"
   },

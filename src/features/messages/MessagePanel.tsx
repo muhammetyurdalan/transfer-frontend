@@ -19,7 +19,7 @@ import { MessageComposer } from './MessageComposer';
 
 type Props = {
   transferId: string;
-  /** ASSIGNED/STARTED ve kullanıcı katılımcı */
+  /** ACCEPTED/STARTED ve kullanıcı katılımcı */
   canWrite: boolean;
   /** Salt okunur sebebi (ADMIN/STAFF sadece okur) */
   readOnlyStaff?: boolean;

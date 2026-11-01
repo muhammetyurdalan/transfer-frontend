@@ -4,8 +4,7 @@ import type { TableState } from '@/components/data-table';
 
 export const ALL_STATUSES: TransferStatus[] = [
   'PENDING',
-  'PAID',
-  'ASSIGNED',
+  'ACCEPTED',
   'STARTED',
   'COMPLETED',
   'CANCELLED',

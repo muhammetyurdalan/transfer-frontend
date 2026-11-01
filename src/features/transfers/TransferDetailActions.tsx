@@ -74,7 +74,7 @@ export function TransferDetailActions({
         onClick={onAssign}
         startIcon={<AssignmentIndRounded />}
       >
-        {t(transfer.status === 'ASSIGNED' ? 'actions.changeDriver' : 'actions.assignDriver')}
+        {t(transfer.status === 'ACCEPTED' ? 'actions.changeDriver' : 'actions.assignDriver')}
       </Button>,
     );
   if (can.start(user, transfer))

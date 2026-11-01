@@ -8,7 +8,7 @@ const PAGE_SIZES = [10, 20, 50] as const;
 
 /**
  * DataTable sayfa/sıralama/filtre durumunu URL'de tutar (§6.2):
- * `?page=2&pageSize=20&ordering=-createdAt&status=PAID`.
+ * `?page=2&pageSize=20&ordering=-createdAt&status=ACCEPTED`.
  * `prefix` ile aynı sayfada birden fazla tablo ayrışır (ör. sekmeler).
  */
 export function useTableState(defaultOrdering?: TableOrdering, prefix = '') {

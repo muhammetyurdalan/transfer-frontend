@@ -20,7 +20,7 @@ export function CancelTransferDialog({ transfer, onClose }: Props) {
     refetchQueries: ['Transfers', 'Transfer', 'TransferTransactions'],
   });
 
-  const paid = transfer?.status === 'PAID' || transfer?.status === 'ASSIGNED';
+  const paid = transfer?.status === 'ACCEPTED';
 
   return (
     <ConfirmDialog

@@ -4,16 +4,14 @@ import {
   CancelRounded,
   CheckCircleRounded,
   DirectionsCarRounded,
-  HourglassEmptyRounded,
-  PaymentsRounded,
+  HourglassEmptyRounded
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import type { TransactionCategory, TransferStatus } from '@/graphql/generated/graphql';
 
 const STATUS: Record<TransferStatus, { color: ChipProps['color']; icon: React.ReactElement }> = {
   PENDING: { color: 'default', icon: <HourglassEmptyRounded /> },
-  PAID: { color: 'info', icon: <PaymentsRounded /> },
-  ASSIGNED: { color: 'primary', icon: <AssignmentIndRounded /> },
+  ACCEPTED: { color: 'info', icon: <AssignmentIndRounded /> },
   STARTED: { color: 'warning', icon: <DirectionsCarRounded /> },
   COMPLETED: { color: 'success', icon: <CheckCircleRounded /> },
   CANCELLED: { color: 'error', icon: <CancelRounded /> },

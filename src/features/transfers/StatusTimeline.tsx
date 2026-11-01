@@ -2,9 +2,9 @@ import { Alert, Step, StepLabel, Stepper } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import type { TransferStatus } from '@/graphql/generated/graphql';
 
-const FLOW: TransferStatus[] = ['PENDING', 'PAID', 'ASSIGNED', 'STARTED', 'COMPLETED'];
+const FLOW: TransferStatus[] = ['PENDING', 'ACCEPTED', 'STARTED', 'COMPLETED'];
 
-/** PENDING → PAID → ASSIGNED → STARTED → COMPLETED, her ekranda dikey. `dense`: küçük ikon ve aralıklar. İptalde kırmızı uyarı (§8.6). */
+/** PENDING → ACCEPTED → STARTED → COMPLETED, her ekranda dikey. `dense`: küçük ikon ve aralıklar. İptalde kırmızı uyarı (§8.6). */
 export function StatusTimeline({ status, dense }: { status?: TransferStatus | null; dense?: boolean }) {
   const { t } = useTranslation('transfers');
   if (status === 'CANCELLED') {

@@ -26,7 +26,7 @@ type JobsTab = 'upcoming' | 'past';
 
 const TABS: Record<JobsTab, { filters: TransferFilter; ordering: TableOrdering }> = {
   upcoming: {
-    filters: { status: { inList: ['ASSIGNED', 'STARTED'] } },
+    filters: { status: { inList: ['ACCEPTED', 'STARTED'] } },
     ordering: { field: 'pickupTime', direction: 'ASC' },
   },
   past: {

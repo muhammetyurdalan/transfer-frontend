@@ -88,8 +88,7 @@
   },
   "timeline": {
     "PENDING": "Created",
-    "PAID": "Paid",
-    "ASSIGNED": "Driver assigned",
+    "ACCEPTED": "Accepted",
     "STARTED": "On the way",
     "COMPLETED": "Completed"
   },

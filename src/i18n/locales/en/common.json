@@ -58,8 +58,7 @@
   },
   "status": {
     "PENDING": "Pending",
-    "PAID": "Paid",
-    "ASSIGNED": "Assigned",
+    "ACCEPTED": "Accepted",
     "STARTED": "Started",
     "COMPLETED": "Completed",
     "CANCELLED": "Cancelled"

@@ -58,8 +58,7 @@
   },
   "status": {
     "PENDING": "Beklemede",
-    "PAID": "Ödendi",
-    "ASSIGNED": "Atandı",
+    "ACCEPTED": "Kabul edildi",
     "STARTED": "Başladı",
     "COMPLETED": "Tamamlandı",
     "CANCELLED": "İptal edildi"
