@@ -21,8 +21,8 @@ import { useTransferActions } from './useTransferActions';
 type DispatchTab = 'waiting' | 'assigned';
 
 const TABS: Record<DispatchTab, TransferFilter> = {
-  waiting: { status: { exact: 'ACCEPTED' } },
-  assigned: { status: { inList: ['ACCEPTED', 'STARTED'] } },
+  waiting: { status: { exact: 'ACCEPTED' }, hasDriver: false },
+  assigned: { status: { inList: ['ACCEPTED', 'STARTED'] }, hasDriver: true },
 };
 const ORDERING: TableOrdering = { field: 'pickupTime', direction: 'ASC' };
 const DISPATCH_ACTIONS = [

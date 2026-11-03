@@ -61,7 +61,8 @@
     "ACCEPTED": "Kabul edildi",
     "STARTED": "Başladı",
     "COMPLETED": "Tamamlandı",
-    "CANCELLED": "İptal edildi"
+    "CANCELLED": "İptal edildi",
+    "WITHDRAWN": "Geri çekildi"
   },
   "transactionCategory": {
     "PAYMENT": "Ödeme",

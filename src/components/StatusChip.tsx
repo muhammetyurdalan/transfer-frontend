@@ -15,6 +15,7 @@ const STATUS: Record<TransferStatus, { color: ChipProps['color']; icon: React.Re
   STARTED: { color: 'warning', icon: <DirectionsCarRounded /> },
   COMPLETED: { color: 'success', icon: <CheckCircleRounded /> },
   CANCELLED: { color: 'error', icon: <CancelRounded /> },
+  WITHDRAWN: { color: 'error', icon: <CancelRounded /> }
 };
 
 export function StatusChip({ status, size = 'small' }: { status?: TransferStatus | null; size?: ChipProps['size'] }) {

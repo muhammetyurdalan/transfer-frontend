@@ -61,7 +61,8 @@
     "ACCEPTED": "Accepted",
     "STARTED": "Started",
     "COMPLETED": "Completed",
-    "CANCELLED": "Cancelled"
+    "CANCELLED": "Cancelled",
+    "WITHDRAWN": "Withdrawn"
   },
   "transactionCategory": {
     "PAYMENT": "Payment",

@@ -17,6 +17,7 @@ export type Action =
   | 'TRANSFER_ASSIGNED'
   | 'TRANSFER_CANCELLED'
   | 'TRANSFER_STATUS_UPDATED'
+  | 'TRANSFER_WITHDRAWN'
   | 'UPDATE_MESSAGE'
   | 'USER_DEACTIVATED'
   | 'USER_UPDATED';
@@ -490,6 +491,7 @@ export type TransferFilter = {
   dropoffAddress?: StrFilterLookup | null | undefined;
   dropoffDistrictId?: IdBaseFilterLookup | null | undefined;
   flightNumber?: StrFilterLookup | null | undefined;
+  hasDriver?: boolean | null | undefined;
   id?: IdBaseFilterLookup | null | undefined;
   operatorId?: IdBaseFilterLookup | null | undefined;
   passengerName?: StrFilterLookup | null | undefined;
@@ -513,7 +515,8 @@ export type TransferStatus =
   | 'CANCELLED'
   | 'COMPLETED'
   | 'PENDING'
-  | 'STARTED';
+  | 'STARTED'
+  | 'WITHDRAWN';
 
 export type TransferStatusBaseFilterLookup = {
   /** Exact match. Filter will be skipped on `null` value */
