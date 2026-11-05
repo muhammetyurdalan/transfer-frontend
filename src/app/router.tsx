@@ -7,7 +7,7 @@ import ErrorBoundaryPage from '@/features/errors/ErrorBoundaryPage';
 import NotFoundPage from '@/features/errors/NotFoundPage';
 import { AuthProvider } from './providers/AuthProvider';
 import { SubscriptionProvider } from './providers/SubscriptionProvider';
-import { GuestOnly, HomeRedirect, RequireAuth } from './guards';
+import { GuestOnly, HomeRedirect, MovedTo, RequireAuth, VehiclesRoute } from './guards';
 
 const LoginPage = lazy(() => import('@/features/auth/LoginPage'));
 const RegisterPage = lazy(() => import('@/features/auth/RegisterPage'));
@@ -20,9 +20,6 @@ const EditTransferPage = lazy(() => import('@/features/transfers/EditTransferPag
 const DispatchPage = lazy(() => import('@/features/transfers/DispatchPage'));
 const JobsPage = lazy(() => import('@/features/transfers/JobsPage'));
 const VehiclesPage = lazy(() => import('@/features/vehicles/VehiclesPage'));
-const DriversPage = lazy(() => import('@/features/drivers/DriversPage'));
-const VehicleCategoriesPage = lazy(() => import('@/features/vehicles/VehicleCategoriesPage'));
-const UsersPage = lazy(() => import('@/features/users/UsersPage'));
 const SettingsPage = lazy(() => import('@/features/settings/SettingsPage'));
 const MessagesPage = lazy(() => import('@/features/messages/MessagesPage'));
 
@@ -80,12 +77,21 @@ export const router = createBrowserRouter([
               { path: '/jobs', element: guard(<JobsPage />, ['DRIVER']) },
               { path: '/messages', element: guard(<MessagesPage />, PARTICIPANTS) },
               { path: '/messages/:transferId', element: guard(<MessagesPage />, PARTICIPANTS) },
-              { path: '/vehicles', element: guard(<VehiclesPage />, [...OPERATIONS, 'DRIVER']) },
-              { path: '/drivers', element: guard(<DriversPage />, OPERATIONS) },
-              { path: '/vehicle-categories', element: guard(<VehicleCategoriesPage />, STAFF) },
-              { path: '/users', element: guard(<UsersPage />, STAFF) },
+              {
+                path: '/vehicles',
+                element: guard(
+                  <VehiclesRoute>
+                    <VehiclesPage />
+                  </VehiclesRoute>,
+                  [...OPERATIONS, 'DRIVER'],
+                ),
+              },
+              // Operasyon sayfaları Settings sekmelerine taşındı; eski linkler yönlendirilir
+              { path: '/drivers', element: guard(<MovedTo to="/settings/network/drivers" />, OPERATIONS) },
+              { path: '/vehicle-categories', element: guard(<MovedTo to="/settings/vehicles/categories" />, STAFF) },
               { path: '/settings', element: <Navigate to="/settings/profile" replace /> },
               { path: '/settings/:tab', element: <SettingsPage /> },
+              { path: '/settings/:tab/:sub', element: <SettingsPage /> },
               { path: '*', element: <NotFoundPage /> },
             ],
           },

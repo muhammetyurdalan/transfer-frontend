@@ -4,7 +4,14 @@
     "profile": "Profile",
     "statement": "Statement",
     "notifications": "Notifications",
-    "states": "Regions"
+    "states": "Regions",
+    "vehicles": "Vehicles",
+    "vehicleList": "Vehicles",
+    "categories": "Categories",
+    "network": "Network",
+    "customers": "Customers",
+    "drivers": "Drivers",
+    "operators": "Operators"
   },
   "profile": {
     "cardTitle": "Profile",

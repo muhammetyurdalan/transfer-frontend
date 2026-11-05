@@ -65,7 +65,7 @@ export function StatementTab() {
 
   const columns: Column<TransactionItemFragment>[] = [
     { key: 'date', header: 'settings:statement.columns.date', sortField: 'orderTime', render: (r) => formatDateTime(r.orderTime) },
-    { key: 'type', header: 'settings:statement.columns.type', render: (r) => <TransactionChip category={r.category} /> },
+    { key: 'type', header: 'settings:statement.columns.type', render: (r) => <TransactionChip category={r.category} fixedWidth /> },
     {
       key: 'amount',
       header: 'settings:statement.columns.amount',

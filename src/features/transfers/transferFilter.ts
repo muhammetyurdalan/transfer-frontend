@@ -35,6 +35,7 @@ export function transferFilterFrom(state: TableState): TransferFilter {
   const stateId = state.get('stateId');
   const customerId = state.get('customerId');
   const driverId = state.get('driverId');
+  const operatorId = state.get('operatorId');
   return {
     ...(statuses.length && { status: { inList: statuses } }),
     ...((from || to) && {
@@ -49,5 +50,6 @@ export function transferFilterFrom(state: TableState): TransferFilter {
     ...(stateId && { stateId: { exact: stateId } }),
     ...(customerId && { customerId: { exact: customerId } }),
     ...(driverId && { driverId: { exact: driverId } }),
+    ...(operatorId && { operatorId: { exact: operatorId } }),
   };
 }

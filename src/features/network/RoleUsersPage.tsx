@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import {
+  BadgeRounded,
   CampaignRounded,
   DirectionsCarRounded,
   FilterListRounded,
@@ -33,16 +34,26 @@ import { formatPhone } from '@/lib/phone';
 import { ActiveChip } from '@/features/vehicles/ActiveChip';
 import { nameOrEmailFilter } from '@/features/users/filters';
 import { SendNotificationDialog } from '@/features/users/SendNotificationDialog';
+import { UpdateRoleDialog } from '@/features/users/UpdateRoleDialog';
 
 /** Sabit referans: DataTable `rows` değişince seçimi sıfırlar, her render'da yeni dizi döngü yaratır. */
 const EMPTY: never[] = [];
 const DEFAULT_ORDERING = { field: 'firstName', direction: 'ASC' as const };
 
+/** Listelenen rol ve çeviri namespace'i (`drivers.json` / `customers.json`) */
+const CONFIG = {
+  DRIVER: { ns: 'drivers', idParam: 'driverId' },
+  CUSTOMER: { ns: 'customers', idParam: 'customerId' },
+  OPERATOR: { ns: 'operators', idParam: 'operatorId' },
+} as const;
+
 /**
- * Sürücüler: OPERATOR/ADMIN/STAFF. `users` sorgusu `role: DRIVER` ile daraltılır.
- * Aktiflik değişikliği sadece ADMIN, bildirim gönderme ADMIN/STAFF (kullanıcılar sayfasıyla aynı yetkiler).
+ * Settings > Network altındaki Müşteriler / Sürücüler (OPERATOR/ADMIN/STAFF) ve Operatörler (ADMIN/STAFF).
+ * `users` sorgusu verilen rolle daraltılır. Aktiflik değişikliği sadece ADMIN,
+ * rol değiştirme ve aktiflik sadece ADMIN, bildirim gönderme ADMIN/STAFF.
  */
-export default function DriversPage() {
+export function RoleUsersPage({ role }: { role: keyof typeof CONFIG }) {
+  const { ns, idParam } = CONFIG[role];
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -61,7 +72,7 @@ export default function DriversPage() {
   const active = table.get('isActive');
 
   const filters: UserFilter = {
-    role: { exact: 'DRIVER' },
+    role: { exact: role },
     ...(active && { isActive: active === 'true' }),
     ...(search && { AND: nameOrEmailFilter(search) }),
   };
@@ -70,11 +81,12 @@ export default function DriversPage() {
   });
   const [update] = useMutation(UpdateAdminUserDocument);
   const [notifyUsers, setNotifyUsers] = useState<UserItemFragment[] | null>(null);
+  const [roleUser, setRoleUser] = useState<UserItemFragment | null>(null);
 
   const setActive = async (u: UserItemFragment, isActive: boolean) => {
     try {
       await update({ variables: { data: { id: u.id, isActive } } });
-      enqueueSnackbar(t('drivers:updated'), { variant: 'success' });
+      enqueueSnackbar(t(`${ns}:updated`), { variant: 'success' });
     } catch {
       // hata snackbar'ı error link'ten
     }
@@ -83,7 +95,7 @@ export default function DriversPage() {
   const columns: Column<UserItemFragment>[] = [
     {
       key: 'name',
-      header: 'drivers:columns.name',
+      header: `${ns}:columns.name`,
       sortField: 'firstName',
       mobilePrimary: true,
       render: (u) => (
@@ -97,7 +109,7 @@ export default function DriversPage() {
     },
     {
       key: 'email',
-      header: 'drivers:columns.email',
+      header: `${ns}:columns.email`,
       sortField: 'email',
       render: (u) => (
         <Typography variant="body2" noWrap title={u.email ?? ''}>
@@ -105,11 +117,11 @@ export default function DriversPage() {
         </Typography>
       ),
     },
-    { key: 'phone', header: 'drivers:columns.phone', render: (u) => formatPhone(u.phone) || '—' },
-    { key: 'status', header: 'drivers:columns.status', render: (u) => <ActiveChip active={u.isActive} /> },
+    { key: 'phone', header: `${ns}:columns.phone`, render: (u) => formatPhone(u.phone) || '—' },
+    { key: 'status', header: `${ns}:columns.status`, render: (u) => <ActiveChip active={u.isActive} /> },
     {
       key: 'createdAt',
-      header: 'drivers:columns.createdAt',
+      header: `${ns}:columns.createdAt`,
       sortField: 'createdAt',
       hideBelow: 'md',
       render: (u) => formatDate(u.createdAt),
@@ -118,32 +130,38 @@ export default function DriversPage() {
 
   const actions: RowAction<UserItemFragment>[] = [
     {
-      label: 'drivers:actions.vehicles',
+      label: `${ns}:actions.vehicles`,
       icon: <DirectionsCarRounded fontSize="small" />,
-      onClick: (u) => void navigate(`/vehicles?driverId=${u.id}`),
+      visible: () => role === 'DRIVER',
+      onClick: (u) => void navigate(`/settings/vehicles/list?driverId=${u.id}`),
     },
     {
-      label: 'drivers:actions.transfers',
+      label: `${ns}:actions.transfers`,
       icon: <ListAltRounded fontSize="small" />,
-      onClick: (u) => void navigate(`/transfers?driverId=${u.id}`),
+      onClick: (u) => void navigate(`/transfers?${idParam}=${u.id}`),
     },
     {
-      label: 'drivers:actions.notify',
+      label: `${ns}:actions.notify`,
       icon: <CampaignRounded fontSize="small" />,
       visible: () => canNotify,
       onClick: (u) => setNotifyUsers([u]),
     },
     {
-      label: 'drivers:actions.deactivate',
-      icon: <ToggleOffRounded fontSize="small" />,
+      label: 'users:actions.changeRole',
+      icon: <BadgeRounded fontSize="small" />,
       dividerBefore: true,
+      visible: () => isAdmin,
+      onClick: setRoleUser,
+    },
+    {
+      label: `${ns}:actions.deactivate`,
+      icon: <ToggleOffRounded fontSize="small" />,
       visible: (u) => isAdmin && !!u.isActive,
       onClick: (u) => void setActive(u, false),
     },
     {
-      label: 'drivers:actions.activate',
+      label: `${ns}:actions.activate`,
       icon: <ToggleOnRounded fontSize="small" />,
-      dividerBefore: true,
       visible: (u) => isAdmin && !u.isActive,
       onClick: (u) => void setActive(u, true),
     },
@@ -151,7 +169,7 @@ export default function DriversPage() {
 
   return (
     <>
-      <PageHeader title={t('drivers:title')} />
+      <PageHeader title={t(`${ns}:title`)} />
       {error && !data ? (
         <ErrorState error={error} onRetry={() => void refetch()} />
       ) : (
@@ -172,7 +190,7 @@ export default function DriversPage() {
               <TextField
                 size="small"
                 fullWidth={false}
-                label={t('drivers:search')}
+                label={t(`${ns}:search`)}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 slotProps={{
@@ -188,7 +206,7 @@ export default function DriversPage() {
               />
               <Stack direction="row" spacing={0.5} sx={{ ml: 'auto' }}>
                 <FilterMenuButton
-                  label={t('drivers:status')}
+                  label={t(`${ns}:status`)}
                   icon={<FilterListRounded />}
                   value={active}
                   allLabel={t('all')}
@@ -201,10 +219,18 @@ export default function DriversPage() {
               </Stack>
             </Stack>
           }
-          emptyState={<EmptyState icon={<PersonSearchRounded />} title={t('drivers:empty')} />}
+          emptyState={<EmptyState icon={<PersonSearchRounded />} title={t(`${ns}:empty`)} />}
         />
       )}
       <SendNotificationDialog users={notifyUsers} onClose={() => setNotifyUsers(null)} />
+      <UpdateRoleDialog
+        user={roleUser}
+        onClose={() => {
+          setRoleUser(null);
+          // Rolü değişen kullanıcı bu listeden çıkar
+          void refetch();
+        }}
+      />
     </>
   );
 }

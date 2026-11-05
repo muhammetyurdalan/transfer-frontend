@@ -1,0 +1,20 @@
+{
+  "title": "Operators",
+  "search": "Search name or e-mail",
+  "status": "Status",
+  "columns": {
+    "name": "Operator",
+    "email": "E-mail",
+    "phone": "Phone",
+    "status": "Status",
+    "createdAt": "Registered"
+  },
+  "actions": {
+    "transfers": "View transfers",
+    "notify": "Send notification",
+    "activate": "Activate",
+    "deactivate": "Deactivate"
+  },
+  "updated": "Operator updated",
+  "empty": "No operators found"
+}

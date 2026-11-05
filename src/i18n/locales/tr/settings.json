@@ -4,7 +4,14 @@
     "profile": "Profil",
     "statement": "Ödeme hareketleri",
     "notifications": "Bildirimler",
-    "states": "Bölgeler"
+    "states": "Bölgeler",
+    "vehicles": "Araçlar",
+    "vehicleList": "Araçlar",
+    "categories": "Kategoriler",
+    "network": "Ağ",
+    "customers": "Müşteriler",
+    "drivers": "Sürücüler",
+    "operators": "Operatörler"
   },
   "profile": {
     "cardTitle": "Profil",

@@ -1,4 +1,4 @@
-import { Chip, type ChipProps } from '@mui/material';
+import { Box, Chip, type ChipProps } from '@mui/material';
 import {
   AssignmentIndRounded,
   CancelRounded,
@@ -56,8 +56,40 @@ const CATEGORY: Record<TransactionCategory, ChipProps['color']> = {
   REFUND: 'warning',
 };
 
-export function TransactionChip({ category }: { category?: TransactionCategory | null }) {
+/** Sabit genişlikli kategori etiketinin ölçüsü: bu metin sığacak kadar geniş olur */
+const CATEGORY_SIZER = 'PAYMENT--';
+
+export function TransactionChip({
+  category,
+  fixedWidth,
+}: {
+  category?: TransactionCategory | null;
+  /** Tüm kategoriler aynı genişlikte (tablolarda alt alta hizalı görünsün diye) */
+  fixedWidth?: boolean;
+}) {
   const { t } = useTranslation();
   if (!category) return null;
-  return <Chip size="small" color={CATEGORY[category]} label={t(`transactionCategory.${category}`)} />;
+  const text = t(`transactionCategory.${category}`);
+  return (
+    <Chip
+      size="small"
+      color={CATEGORY[category]}
+      label={
+        fixedWidth ? (
+          // Görünmez ölçü metni ile gerçek etiket aynı hücrede üst üste: genişlik yazı tipinden bağımsız olarak
+          // "PAYMENT--" kadar olur, daha uzun bir çeviri gelirse etiket kesilmeden genişler.
+          <Box component="span" sx={{ display: 'inline-grid', justifyItems: 'center' }}>
+            <Box component="span" aria-hidden sx={{ gridArea: '1 / 1', visibility: 'hidden' }}>
+              {CATEGORY_SIZER}
+            </Box>
+            <Box component="span" sx={{ gridArea: '1 / 1' }}>
+              {text}
+            </Box>
+          </Box>
+        ) : (
+          text
+        )
+      }
+    />
+  );
 }

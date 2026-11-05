@@ -1,0 +1,20 @@
+{
+  "title": "Operatörler",
+  "search": "Ad veya e-posta ara",
+  "status": "Durum",
+  "columns": {
+    "name": "Operatör",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "status": "Durum",
+    "createdAt": "Kayıt tarihi"
+  },
+  "actions": {
+    "transfers": "Transferlerini gör",
+    "notify": "Bildirim gönder",
+    "activate": "Aktif et",
+    "deactivate": "Pasif et"
+  },
+  "updated": "Operatör güncellendi",
+  "empty": "Operatör bulunamadı"
+}

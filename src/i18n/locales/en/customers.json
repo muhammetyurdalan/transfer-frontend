@@ -1,0 +1,20 @@
+{
+  "title": "Customers",
+  "search": "Search name or e-mail",
+  "status": "Status",
+  "columns": {
+    "name": "Customer",
+    "email": "E-mail",
+    "phone": "Phone",
+    "status": "Status",
+    "createdAt": "Registered"
+  },
+  "actions": {
+    "transfers": "View transfers",
+    "notify": "Send notification",
+    "activate": "Activate",
+    "deactivate": "Deactivate"
+  },
+  "updated": "Customer updated",
+  "empty": "No customers found"
+}

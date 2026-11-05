@@ -31,3 +31,18 @@ export function HomeRedirect() {
   const { user } = useAuth();
   return <Navigate to={homePathFor(user?.role)} replace />;
 }
+
+/** Eski adresi (sorgu parametreleriyle) yeni adrese taşır, ör. `/drivers?q=a` → `/settings/network/drivers?q=a`. */
+export function MovedTo({ to }: { to: string }) {
+  const { search } = useLocation();
+  return <Navigate to={to + search} replace />;
+}
+
+/**
+ * Araçlar: DRIVER kendi "Araçlarım" sayfasını burada görür; OPERATOR/ADMIN/STAFF için sayfa
+ * Settings > Vehicles altına taşındı.
+ */
+export function VehiclesRoute({ children }: { children: ReactNode }) {
+  const { hasRole } = useAuth();
+  return hasRole('DRIVER') ? children : <MovedTo to="/settings/vehicles/list" />;
+}
