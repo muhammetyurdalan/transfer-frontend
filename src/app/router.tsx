@@ -20,6 +20,7 @@ const EditTransferPage = lazy(() => import('@/features/transfers/EditTransferPag
 const DispatchPage = lazy(() => import('@/features/transfers/DispatchPage'));
 const JobsPage = lazy(() => import('@/features/transfers/JobsPage'));
 const VehiclesPage = lazy(() => import('@/features/vehicles/VehiclesPage'));
+const DriversPage = lazy(() => import('@/features/drivers/DriversPage'));
 const VehicleCategoriesPage = lazy(() => import('@/features/vehicles/VehicleCategoriesPage'));
 const UsersPage = lazy(() => import('@/features/users/UsersPage'));
 const SettingsPage = lazy(() => import('@/features/settings/SettingsPage'));
@@ -28,6 +29,7 @@ const MessagesPage = lazy(() => import('@/features/messages/MessagesPage'));
 const STAFF: Role[] = ['ADMIN', 'STAFF'];
 const OPERATIONS: Role[] = ['OPERATOR', 'ADMIN', 'STAFF'];
 const PARTICIPANTS: Role[] = ['CUSTOMER', 'DRIVER', 'OPERATOR'];
+const BOOKERS: Role[] = ['CUSTOMER', ...OPERATIONS];
 
 function Root() {
   return (
@@ -70,15 +72,16 @@ export const router = createBrowserRouter([
             children: [
               { path: '/', element: <HomeRedirect /> },
               { path: '/transfers', element: <TransferListPage /> },
-              { path: '/transfers/new', element: guard(<CreateTransferPage />, ['CUSTOMER']) },
+              { path: '/transfers/new', element: guard(<CreateTransferPage />, BOOKERS) },
               { path: '/transfers/:id', element: <TransferDetailPage /> },
-              { path: '/transfers/:id/vehicle', element: guard(<SelectVehiclePage />, ['CUSTOMER']) },
+              { path: '/transfers/:id/vehicle', element: guard(<SelectVehiclePage />, BOOKERS) },
               { path: '/transfers/:id/edit', element: guard(<EditTransferPage />, ['CUSTOMER']) },
               { path: '/dispatch', element: guard(<DispatchPage />, OPERATIONS) },
               { path: '/jobs', element: guard(<JobsPage />, ['DRIVER']) },
               { path: '/messages', element: guard(<MessagesPage />, PARTICIPANTS) },
               { path: '/messages/:transferId', element: guard(<MessagesPage />, PARTICIPANTS) },
               { path: '/vehicles', element: guard(<VehiclesPage />, [...OPERATIONS, 'DRIVER']) },
+              { path: '/drivers', element: guard(<DriversPage />, OPERATIONS) },
               { path: '/vehicle-categories', element: guard(<VehicleCategoriesPage />, STAFF) },
               { path: '/users', element: guard(<UsersPage />, STAFF) },
               { path: '/settings', element: <Navigate to="/settings/profile" replace /> },

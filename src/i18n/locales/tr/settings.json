@@ -3,7 +3,8 @@
   "tabs": {
     "profile": "Profil",
     "statement": "Ödeme hareketleri",
-    "notifications": "Bildirimler"
+    "notifications": "Bildirimler",
+    "states": "Bölgeler"
   },
   "profile": {
     "cardTitle": "Profil",
@@ -78,5 +79,57 @@
     "deleteAllTitle": "Tüm bildirimler silinsin mi?",
     "deleteAllBody": "Tüm bildirimleriniz kalıcı olarak silinecek.",
     "empty": "Bildirim yok"
+  },
+  "states": {
+    "title": "Bölgeler",
+    "description": "Bölgeler, ödeme sağlayıcıları, sürücü tamponu ve iptal cezaları.",
+    "readOnly": "Bölgeleri sadece admin ve staff kullanıcıları değiştirebilir.",
+    "search": "Ad, kod veya sağlayıcı ara",
+    "add": "Bölge ekle",
+    "createTitle": "Yeni bölge",
+    "editTitle": "Bölgeyi düzenle",
+    "columns": {
+      "name": "Bölge",
+      "code": "Kod",
+      "psp": "Ödeme sağlayıcı",
+      "driverBufferMinutes": "Sürücü tamponu",
+      "penalties": "İptal cezaları"
+    },
+    "fields": {
+      "name": "Ad",
+      "code": "Kod",
+      "psp": "Ödeme sağlayıcı",
+      "driverBufferMinutes": "Sürücü tamponu"
+    },
+    "pspHelper": "Bu bölgede kullanılan ödeme sağlayıcısı",
+    "minutes": "dk",
+    "hoursUnit": "sa",
+    "minutesValue_one": "{{count}} dk",
+    "minutesValue_other": "{{count}} dk",
+    "penalties": {
+      "title": "İptal cezaları",
+      "description": "Müşteri alış saatine belirtilen saatten az kala iptal ederse fiyatın bu yüzdesi kesilir. Kaydederken basamaklar saate göre sıralanır.",
+      "hours": "Kalan süre <",
+      "rate": "Ceza",
+      "add": "Basamak ekle",
+      "remove": "Basamağı kaldır",
+      "summary": "<{{hours}} sa: %{{percent}}"
+    },
+    "actions": {
+      "edit": "Düzenle",
+      "delete": "Sil"
+    },
+    "saved": "Bölge kaydedildi",
+    "deleted": "Bölge silindi",
+    "empty": "Bölge bulunamadı",
+    "deleteTitle": "Bölgeyi sil",
+    "deleteBody": "{{name}} ve bağlı tüm il ve ilçeler silinecek. Bu işlem geri alınamaz.",
+    "validation": {
+      "required": "Zorunlu",
+      "max": "En fazla {{count}} karakter",
+      "integer": "Tam sayı girin",
+      "percent": "0 ile 100 arasında bir değer girin",
+      "duplicate": "Bu saat zaten kullanılıyor"
+    }
   }
 }

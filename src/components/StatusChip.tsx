@@ -18,7 +18,19 @@ const STATUS: Record<TransferStatus, { color: ChipProps['color']; icon: React.Re
   WITHDRAWN: { color: 'error', icon: <CancelRounded /> }
 };
 
-export function StatusChip({ status, size = 'small' }: { status?: TransferStatus | null; size?: ChipProps['size'] }) {
+/** Tablolarda tüm durumlar aynı genişlikte görünsün diye en uzun etiketi ("Kabul edildi", "İptal edildi") sığdıran genişlik */
+const FIXED_WIDTH = 100;
+
+export function StatusChip({
+  status,
+  size = 'small',
+  fixedWidth,
+}: {
+  status?: TransferStatus | null;
+  size?: ChipProps['size'];
+  /** Tüm durumlar aynı genişlikte (etiket daha uzunsa genişler) */
+  fixedWidth?: boolean;
+}) {
   const { t } = useTranslation();
   if (!status) return null;
   const s = STATUS[status];
@@ -29,6 +41,11 @@ export function StatusChip({ status, size = 'small' }: { status?: TransferStatus
       icon={s.icon}
       label={t(`status.${status}`)}
       variant={status === 'PENDING' ? 'outlined' : 'filled'}
+      sx={
+        fixedWidth
+          ? { minWidth: FIXED_WIDTH, justifyContent: 'flex-start', '& .MuiChip-label': { px: 0.75 } }
+          : undefined
+      }
     />
   );
 }

@@ -34,12 +34,15 @@ import { errorKey } from '@/lib/errors';
 import { formatRoute } from '@/lib/format';
 import type { LatLng, SelectedAddress } from '@/lib/geo';
 import { CounterField } from './CounterField';
+import { customerName, type CustomerOption } from './customer';
+import { CustomerAutocomplete } from './CustomerAutocomplete';
 import { FormSection } from './FormSection';
 import { makeTransferSchema, minPickupTime } from './schema';
 import { StopsEditor } from './StopsEditor';
 import type { RouteInfo, TransferFormValues } from './types';
 import { useRoute } from './useRoute';
 import { sameAddress } from './values';
+import { toPhoneValue } from '@/lib/phone';
 
 type Props = {
   mode: 'create' | 'edit';
@@ -50,6 +53,8 @@ type Props = {
   legsSlot?: ReactNode;
   submitLabel: string;
   submitting: boolean;
+  /** Verilirse yolcu bölümünde müşteri seçimi gösterilir (sadece OPERATOR/ADMIN/STAFF oluştururken) */
+  customer?: { value: CustomerOption | null; onChange: (c: CustomerOption | null) => void };
   /** Ek submit koşulu (düzenlemede: değişiklik var mı) */
   canSubmit?: (values: TransferFormValues) => boolean;
   /** Başarısızsa backend hata kodunu döner, form alanlara dağıtır */
@@ -65,6 +70,7 @@ export function TransferForm({
   submitLabel,
   submitting,
   canSubmit,
+  customer,
   onSubmit,
 }: Props) {
   const { t } = useTranslation(['booking', 'common']);
@@ -126,6 +132,14 @@ export function TransferForm({
       setFormError(t(errorKey(code)));
     }
   });
+
+  // Müşteri seçilince yolcu bilgisi onunla dolar; seçim kalkınca varsayılana (giriş yapan kullanıcı) döner.
+  const selectCustomer = (c: CustomerOption | null) => {
+    customer?.onChange(c);
+    const opts = { shouldDirty: true, shouldValidate: true };
+    setValue('passengerName', c ? customerName(c) : defaultValues.passengerName, opts);
+    setValue('passengerPhone', c ? toPhoneValue(c.phone) : defaultValues.passengerPhone, opts);
+  };
 
   // Yer değiştirmede ara duraklar da ters sıraya girer.
   const swap = () => {
@@ -316,6 +330,11 @@ export function TransferForm({
 
             <FormSection index={4} title={t('booking:sections.passenger')}>
               <Grid container spacing={2}>
+                {customer && (
+                  <Grid size={12}>
+                    <CustomerAutocomplete value={customer.value} onChange={selectCustomer} />
+                  </Grid>
+                )}
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Controller
                     control={control}

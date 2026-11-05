@@ -1,0 +1,21 @@
+{
+  "title": "Sürücüler",
+  "search": "Ad veya e-posta ara",
+  "status": "Durum",
+  "columns": {
+    "name": "Sürücü",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "status": "Durum",
+    "createdAt": "Kayıt tarihi"
+  },
+  "actions": {
+    "vehicles": "Araçlarını gör",
+    "transfers": "Transferlerini gör",
+    "notify": "Bildirim gönder",
+    "activate": "Aktif et",
+    "deactivate": "Pasif et"
+  },
+  "updated": "Sürücü güncellendi",
+  "empty": "Sürücü bulunamadı"
+}

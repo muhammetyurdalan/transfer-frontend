@@ -3,7 +3,8 @@
   "tabs": {
     "profile": "Profile",
     "statement": "Statement",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "states": "Regions"
   },
   "profile": {
     "cardTitle": "Profile",
@@ -78,5 +79,57 @@
     "deleteAllTitle": "Delete all notifications?",
     "deleteAllBody": "All of your notifications will be permanently deleted.",
     "empty": "No notifications"
+  },
+  "states": {
+    "title": "Regions",
+    "description": "Regions, their payment provider, driver buffer and cancellation penalties.",
+    "readOnly": "Regions can only be changed by admin and staff users.",
+    "search": "Search name, code or provider",
+    "add": "Add region",
+    "createTitle": "New region",
+    "editTitle": "Edit region",
+    "columns": {
+      "name": "Region",
+      "code": "Code",
+      "psp": "Payment provider",
+      "driverBufferMinutes": "Driver buffer",
+      "penalties": "Cancellation penalties"
+    },
+    "fields": {
+      "name": "Name",
+      "code": "Code",
+      "psp": "Payment provider",
+      "driverBufferMinutes": "Driver buffer"
+    },
+    "pspHelper": "Payment provider used in this region",
+    "minutes": "min",
+    "hoursUnit": "h",
+    "minutesValue_one": "{{count}} min",
+    "minutesValue_other": "{{count}} min",
+    "penalties": {
+      "title": "Cancellation penalties",
+      "description": "If the customer cancels less than the given hours before pickup, this percentage of the price is charged. Tiers are sorted by hour on save.",
+      "hours": "Less than",
+      "rate": "Penalty",
+      "add": "Add tier",
+      "remove": "Remove tier",
+      "summary": "<{{hours}}h: {{percent}}%"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "saved": "Region saved",
+    "deleted": "Region deleted",
+    "empty": "No regions found",
+    "deleteTitle": "Delete region",
+    "deleteBody": "{{name}} and all of its cities and districts will be deleted. This can't be undone.",
+    "validation": {
+      "required": "Required",
+      "max": "Max {{count}} characters",
+      "integer": "Enter a whole number",
+      "percent": "Enter a value between 0 and 100",
+      "duplicate": "This hour is already used"
+    }
   }
 }

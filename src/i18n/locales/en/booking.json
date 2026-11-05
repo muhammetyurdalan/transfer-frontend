@@ -99,5 +99,11 @@
     "remove": "Remove stop",
     "item": "Stop {{n}}",
     "limit": "Max {{max}} stops"
+  },
+  "customer": {
+    "label": "Customer",
+    "placeholder": "Search by name or email",
+    "helper": "If no customer is selected, the transfer is created on your account.",
+    "minChars": "Type at least {{count}} characters"
   }
 }

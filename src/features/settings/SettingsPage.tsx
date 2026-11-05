@@ -1,19 +1,24 @@
 import { Box, Paper, Tab, Tabs } from '@mui/material';
-import { NotificationsRounded, PersonRounded, ReceiptLongRounded } from '@mui/icons-material';
+import { MapRounded, NotificationsRounded, PersonRounded, ReceiptLongRounded } from '@mui/icons-material';
 import { Navigate, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
+import { useAuth } from '@/app/providers/AuthProvider';
+import type { Role } from '@/graphql/generated/graphql';
 import { useIsCompact } from '@/hooks/useIsMobile';
 import { NotificationsTab } from './NotificationsTab';
 import { ProfileTab } from './ProfileTab';
 import { StatementTab } from './StatementTab';
+import { StatesTab } from './states/StatesTab';
 
-const TABS = [
+type TabValue = 'profile' | 'statement' | 'notifications' | 'states';
+/** `roles` verilmişse sekme sadece o rollere görünür */
+const TABS: { value: TabValue; icon: React.ReactElement; roles?: Role[] }[] = [
   { value: 'profile', icon: <PersonRounded /> },
   { value: 'statement', icon: <ReceiptLongRounded /> },
   { value: 'notifications', icon: <NotificationsRounded /> },
-] as const;
-type TabValue = (typeof TABS)[number]['value'];
+  { value: 'states', icon: <MapRounded />, roles: ['OPERATOR', 'ADMIN', 'STAFF'] },
+];
 
 /** Settings (§8.12): masaüstünde solda dikey sekmeler, mobilde üstte kaydırılabilir sekmeler. */
 export default function SettingsPage() {
@@ -21,7 +26,9 @@ export default function SettingsPage() {
   const navigate = useNavigate();
   const compact = useIsCompact();
   const { tab } = useParams();
-  if (!TABS.some((x) => x.value === tab)) return <Navigate to="/settings/profile" replace />;
+  const { hasRole } = useAuth();
+  const tabs = TABS.filter((x) => !x.roles || hasRole(...x.roles));
+  if (!tabs.some((x) => x.value === tab)) return <Navigate to="/settings/profile" replace />;
   const current = tab as TabValue;
 
   return (
@@ -52,7 +59,7 @@ export default function SettingsPage() {
               '& .MuiTabs-indicator': { left: { md: 0 }, right: { md: 'auto' } },
             }}
           >
-            {TABS.map((x) => (
+            {tabs.map((x) => (
               <Tab key={x.value} value={x.value} icon={x.icon} iconPosition="start" label={t(`settings:tabs.${x.value}`)} />
             ))}
           </Tabs>
@@ -61,6 +68,7 @@ export default function SettingsPage() {
           {current === 'profile' && <ProfileTab />}
           {current === 'statement' && <StatementTab />}
           {current === 'notifications' && <NotificationsTab />}
+          {current === 'states' && <StatesTab />}
         </Box>
       </Box>
     </>

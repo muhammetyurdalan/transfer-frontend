@@ -99,5 +99,11 @@
     "remove": "Durağı kaldır",
     "item": "{{n}}. durak",
     "limit": "En fazla {{max}} durak"
+  },
+  "customer": {
+    "label": "Müşteri",
+    "placeholder": "Ad veya e-posta ile ara",
+    "helper": "Müşteri seçilmezse transfer sizin hesabınıza oluşturulur.",
+    "minChars": "En az {{count}} karakter yazın"
   }
 }

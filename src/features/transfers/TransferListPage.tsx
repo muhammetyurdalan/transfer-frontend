@@ -35,6 +35,7 @@ export default function TransferListPage() {
   const navigate = useNavigate();
   const state = useTableState(DEFAULT_ORDERING);
   const isCustomer = hasRole('CUSTOMER');
+  const canCreate = hasRole('CUSTOMER', 'OPERATOR', 'ADMIN', 'STAFF');
   const allColumns = useMemo(
     () => [...transferColumns(t), ...extraTransferColumns(!isCustomer)],
     [t, isCustomer],
@@ -64,7 +65,7 @@ export default function TransferListPage() {
         title={isCustomer ? t('list.customerTitle') : t('list.title')}
         subtitle={isCustomer ? undefined : t('list.subtitle')}
         actions={
-          isCustomer &&
+          canCreate &&
           !mobile && (
             <Button
               component={RouterLink}
@@ -111,7 +112,7 @@ export default function TransferListPage() {
             icon={<ListAltRounded />}
             title={isCustomer ? t('list.emptyCustomer') : t('list.empty')}
             action={
-              isCustomer && (
+              canCreate && (
                 <Button
                   component={RouterLink}
                   to="/transfers/new"

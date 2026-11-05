@@ -67,7 +67,7 @@ export function transferColumns(t: TFunction): Column<TransferRowFragment>[] {
     {
       key: 'status',
       header: 'transfers:columns.status',
-      render: (r) => <StatusChip status={r.status} />,
+      render: (r) => <StatusChip status={r.status} fixedWidth />,
     },
     {
       key: 'driver',

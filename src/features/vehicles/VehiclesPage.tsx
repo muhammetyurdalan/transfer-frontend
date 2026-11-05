@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Button, InputAdornment, MenuItem, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import {
   AddRounded,
+  CategoryRounded,
   DeleteRounded,
   DirectionsCarRounded,
   EditRounded,
+  FilterListRounded,
   SearchRounded,
   ToggleOffRounded,
   ToggleOnRounded,
@@ -21,7 +23,7 @@ import {
   type VehicleItemFragment,
   type VehicleOrder,
 } from '@/graphql/generated/graphql';
-import { DataTable, TableFilters, useTableState, type Column, type RowAction } from '@/components/data-table';
+import { DataTable, FilterMenuButton, useTableState, type Column, type RowAction } from '@/components/data-table';
 import { PageHeader } from '@/components/PageHeader';
 import { UserAvatar } from '@/components/UserAvatar';
 import { EmptyState } from '@/components/feedback/EmptyState';
@@ -54,11 +56,14 @@ export default function VehiclesPage() {
   }, [plate]);
   const categoryId = table.get('categoryId');
   const active = table.get('isActive');
+  // Sürücüler sayfasından "Araçlarını gör" ile gelinir
+  const driverId = table.get('driverId');
 
   const filters: VehicleFilter = {
     ...(plate && { plate: { iContains: plate } }),
     ...(categoryId && { categoryId: { exact: categoryId } }),
     ...(active && { isActive: active === 'true' }),
+    ...(driverId && { driverId: { exact: driverId } }),
   };
   const { data, loading, error, refetch } = useQuery(VehiclesDocument, {
     variables: { filters, ordering: table.orderingInput as VehicleOrder[] | undefined, pagination: table.pagination },
@@ -188,7 +193,7 @@ export default function VehiclesPage() {
           onOrderingChange={table.setOrdering}
           actions={actions}
           toolbar={
-            <TableFilters>
+            <Stack direction="row" spacing={1} useFlexGap sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <TextField
                 size="small"
                 fullWidth={false}
@@ -204,35 +209,34 @@ export default function VehiclesPage() {
                     ),
                   },
                 }}
+                sx={{ width: { xs: 'auto', md: 280 }, flex: { xs: 1, md: 'none' }, minWidth: 160 }}
               />
-              <TextField
-                select
-                size="small"
-                fullWidth={false}
-                label={t('vehicles:columns.category')}
-                value={categoryId ?? ''}
-                onChange={(e) => table.set('categoryId', e.target.value || null)}
-              >
-                <MenuItem value="">{t('vehicles:allCategories')}</MenuItem>
-                {(categoryData?.vehicleCategories?.vehicleCategories ?? []).map((c) => (
-                  <MenuItem key={c.id} value={c.id}>
-                    {c.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                select
-                size="small"
-                fullWidth={false}
-                label={t('vehicles:status')}
-                value={active ?? ''}
-                onChange={(e) => table.set('isActive', e.target.value || null)}
-              >
-                <MenuItem value="">{t('all')}</MenuItem>
-                <MenuItem value="true">{t('active')}</MenuItem>
-                <MenuItem value="false">{t('inactive')}</MenuItem>
-              </TextField>
-            </TableFilters>
+              {/* Kategori ve durum filtreleri sağ üstte ikon buton + açılır liste */}
+              <Box sx={{ ml: 'auto', display: 'flex', gap: 0.5 }}>
+                <FilterMenuButton
+                  label={t('vehicles:columns.category')}
+                  icon={<CategoryRounded />}
+                  value={categoryId}
+                  allLabel={t('vehicles:allCategories')}
+                  options={(categoryData?.vehicleCategories?.vehicleCategories ?? []).map((c) => ({
+                    value: c.id,
+                    label: c.name ?? '',
+                  }))}
+                  onChange={(v) => table.set('categoryId', v)}
+                />
+                <FilterMenuButton
+                  label={t('vehicles:status')}
+                  icon={<FilterListRounded />}
+                  value={active}
+                  allLabel={t('all')}
+                  options={[
+                    { value: 'true', label: t('active') },
+                    { value: 'false', label: t('inactive') },
+                  ]}
+                  onChange={(v) => table.set('isActive', v)}
+                />
+              </Box>
+            </Stack>
           }
           emptyState={
             <EmptyState

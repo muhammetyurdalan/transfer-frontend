@@ -19,9 +19,9 @@ export const ALL_STATUSES: TransferStatus[] = [
 function searchFilter(search: string): TransferFilter {
   const byDropoff: TransferFilter = {
     dropoffAddress: { iContains: search },
-    ...(/^\d+$/.test(search) && { OR: { id: { exact: search } } }),
+    ...(/^\d+$/.test(search) && { OR: [{ id: { exact: search } }] }),
   };
-  return { pickupAddress: { iContains: search }, OR: byDropoff };
+  return { pickupAddress: { iContains: search }, OR: [byDropoff] };
 }
 
 /** URL parametrelerinden backend `TransferFilter`'ı üretir. */
@@ -34,6 +34,7 @@ export function transferFilterFrom(state: TableState): TransferFilter {
   const search = state.get('q')?.trim();
   const stateId = state.get('stateId');
   const customerId = state.get('customerId');
+  const driverId = state.get('driverId');
   return {
     ...(statuses.length && { status: { inList: statuses } }),
     ...((from || to) && {
@@ -44,8 +45,9 @@ export function transferFilterFrom(state: TableState): TransferFilter {
         },
       },
     }),
-    ...(search && { AND: searchFilter(search) }),
+    ...(search && { AND: [searchFilter(search)] }),
     ...(stateId && { stateId: { exact: stateId } }),
     ...(customerId && { customerId: { exact: customerId } }),
+    ...(driverId && { driverId: { exact: driverId } }),
   };
 }

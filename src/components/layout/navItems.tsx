@@ -7,6 +7,7 @@ import {
   DirectionsCarRounded,
   GroupRounded,
   HeadsetMicRounded,
+  BadgeRounded,
   ListAltRounded,
   WorkRounded,
 } from '@mui/icons-material';
@@ -19,18 +20,19 @@ export function navItemsFor(role: Role | null | undefined): NavItem[] {
   const transfers = { to: '/transfers', label: 'nav.transfers', icon: <ListAltRounded /> };
   const dispatch = { to: '/dispatch', label: 'nav.dispatch', icon: <HeadsetMicRounded /> };
   const vehicles = { to: '/vehicles', label: 'nav.vehicles', icon: <DirectionsCarRounded /> };
+  const drivers = { to: '/drivers', label: 'nav.drivers', icon: <BadgeRounded /> };
   // Mesajlaşma katılımcıları (customer, driver, operator). ADMIN/STAFF mesajları transfer detayında okur.
   const messages = { to: '/messages', label: 'nav.messages', icon: <ChatRounded /> };
+  const createTransfer = { to: '/transfers/new', label: 'nav.createTransfer', icon: <AddRounded /> };
   switch (role) {
     case 'CUSTOMER':
-      // createTransfer sadece CUSTOMER'a açık
       return [
-        { to: '/transfers/new', label: 'nav.createTransfer', icon: <AddRounded /> },
+        createTransfer,
         { ...transfers, label: 'nav.myTransfers' },
         messages,
       ];
     case 'OPERATOR':
-      return [dispatch, transfers, messages, vehicles];
+      return [dispatch, transfers, createTransfer, messages, vehicles, drivers];
     case 'DRIVER':
       return [
         { to: '/jobs', label: 'nav.jobs', icon: <WorkRounded /> },
@@ -41,8 +43,10 @@ export function navItemsFor(role: Role | null | undefined): NavItem[] {
     case 'STAFF':
       return [
         transfers,
+        createTransfer,
         dispatch,
         vehicles,
+        drivers,
         { to: '/vehicle-categories', label: 'nav.categories', icon: <CategoryRounded /> },
         { to: '/users', label: 'nav.users', icon: <GroupRounded /> },
       ];

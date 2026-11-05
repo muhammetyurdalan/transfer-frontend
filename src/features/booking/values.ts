@@ -8,7 +8,6 @@ import type {
 } from '@/graphql/generated/graphql';
 import type { SelectedAddress } from '@/lib/geo';
 import { toPhoneValue } from '@/lib/phone';
-import { minPickupTime } from './schema';
 import type { RouteInfo, TransferFormValues } from './types';
 
 export const sameAddress = (a: SelectedAddress | null, b: SelectedAddress | null) =>
@@ -21,7 +20,8 @@ export function emptyValues(user: CurrentUserFragment | null): TransferFormValue
   return {
     pickup: null,
     dropoff: null,
-    pickupTime: minPickupTime().add(45, 'minute').startOf('hour'),
+    // Varsayılan: ertesi gün 12:00
+    pickupTime: dayjs().add(1, 'day').hour(12).startOf('hour'),
     passengerCount: 1,
     luggageCount: 0,
     childSeatCount: 0,

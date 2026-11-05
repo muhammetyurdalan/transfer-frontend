@@ -1,0 +1,36 @@
+fragment StateItem on State {
+  id
+  name
+  code
+  psp
+  customerImposedHours
+  customerImposedRates
+  driverBufferMinutes
+}
+
+query States($filters: StateFilter, $ordering: [StateOrder!], $pagination: OffsetPaginationInput) {
+  states(filters: $filters, ordering: $ordering, pagination: $pagination) {
+    count
+    states {
+      ...StateItem
+    }
+  }
+}
+
+mutation CreateState($data: CreateState!) {
+  createState(data: $data) {
+    ...StateItem
+  }
+}
+
+mutation UpdateState($data: UpdateState!) {
+  updateState(data: $data) {
+    ...StateItem
+  }
+}
+
+mutation DeleteState($id: ID!) {
+  deleteState(id: $id) {
+    success
+  }
+}
