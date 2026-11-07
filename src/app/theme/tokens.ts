@@ -72,16 +72,17 @@ export const lightPalette = {
 export const darkPalette = {
   primary: { main: gold[400], light: gold[300], dark: gold[600], contrastText: ink[900] },
   secondary: { main: ink[100], light: scales.white, dark: ink[300], contrastText: ink[900] },
-  background: { default: ink[900], paper: ink[800] },
+  // Zeminler saf siyah yerine biraz açık antrasit
+  background: { default: '#1C1C21', paper: '#26262C' },
   text: { primary: '#F2EFE8', secondary: ink[300], disabled: ink[500] },
-  divider: 'rgba(255, 255, 255, 0.10)',
+  divider: 'rgba(255, 255, 255, 0.12)',
   success: { main: '#5FBF86' },
   warning: { main: '#F0A33A' },
   error: { main: '#EF6B6B' },
   info: { main: '#6FA8E8' },
   inverse: {
-    main: '#050506',
-    light: ink[800],
+    main: '#141418',
+    light: '#2F2F36',
     contrastText: '#F5F2EA',
     accent: gold[400],
     accentSoft: 'rgba(212, 175, 55, 0.14)',
