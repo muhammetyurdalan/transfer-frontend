@@ -60,18 +60,42 @@ const errorLink = new ErrorLink(({ error, operation }) => {
 let wsClient: Client = createWsClient();
 let wsLink = new GraphQLWsLink(wsClient);
 
+/** Boşta kalan bağlantı proxy/sunucu tarafından kapatılmasın diye bu aralıkla ping atılır. */
+const PING_INTERVAL = 20_000;
+/** Ping'e bu süre içinde pong gelmezse bağlantı ölü sayılır ve yeniden kurulur. */
+const PONG_TIMEOUT = 10_000;
+
 function createWsClient() {
   let connectedBefore = false;
+  let socket: WebSocket | null = null;
+  let pongTimer: ReturnType<typeof setTimeout> | undefined;
   return createClient({
     url: env.WS_URL,
     connectionParams: () => ({ authorization: tokenStore.get() ?? '' }),
     lazy: true,
     retryAttempts: Infinity,
     shouldRetry: () => true,
+    keepAlive: PING_INTERVAL,
     on: {
-      connected: () => {
+      connected: (s) => {
+        socket = s as WebSocket;
         if (connectedBefore) apolloEvents.onReconnect();
         connectedBefore = true;
+      },
+      // Sadece kendi ping'lerimizi (received=false) izleriz; pong gelmezse soket kapatılır, istemci yeniden bağlanır.
+      ping: (received) => {
+        if (received) return;
+        clearTimeout(pongTimer);
+        pongTimer = setTimeout(() => {
+          if (socket?.readyState === WebSocket.OPEN) socket.close(4408, 'Pong timeout');
+        }, PONG_TIMEOUT);
+      },
+      pong: (received) => {
+        if (received) clearTimeout(pongTimer);
+      },
+      closed: () => {
+        clearTimeout(pongTimer);
+        socket = null;
       },
     },
   });
