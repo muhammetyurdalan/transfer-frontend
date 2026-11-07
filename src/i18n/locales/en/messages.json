@@ -2,7 +2,6 @@
   "title": "Messages",
   "empty": "No messages yet",
   "readOnly": "Messaging is only open for active transfers",
-  "readOnlyStaff": "You can read messages but cannot write",
   "placeholder": "Write a message…",
   "send": "Send",
   "attach": "Attach file",
@@ -28,6 +27,7 @@
   "page": {
     "title": "Messages",
     "subtitle": "Chats of your active transfers",
+    "subtitleStaff": "Chats of all active transfers",
     "empty": "No active chats",
     "emptyBody": "Chats open when a driver is assigned to your transfer and close when the transfer is completed.",
     "notActive": "This chat is not active",

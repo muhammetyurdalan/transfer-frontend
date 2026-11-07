@@ -7,7 +7,7 @@ import ErrorBoundaryPage from '@/features/errors/ErrorBoundaryPage';
 import NotFoundPage from '@/features/errors/NotFoundPage';
 import { AuthProvider } from './providers/AuthProvider';
 import { SubscriptionProvider } from './providers/SubscriptionProvider';
-import { GuestOnly, HomeRedirect, MovedTo, RequireAuth, VehiclesRoute } from './guards';
+import { GuestOnly, HomeGate, MovedTo, RequireAuth, VehiclesRoute } from './guards';
 
 const LoginPage = lazy(() => import('@/features/auth/LoginPage'));
 const RegisterPage = lazy(() => import('@/features/auth/RegisterPage'));
@@ -26,6 +26,8 @@ const MessagesPage = lazy(() => import('@/features/messages/MessagesPage'));
 const STAFF: Role[] = ['ADMIN', 'STAFF'];
 const OPERATIONS: Role[] = ['OPERATOR', 'ADMIN', 'STAFF'];
 const PARTICIPANTS: Role[] = ['CUSTOMER', 'DRIVER', 'OPERATOR'];
+/** Mesajlar sayfası: katılımcılar + tüm aktif transferlerin sohbetlerini okuyan ADMIN/STAFF */
+const MESSAGE_READERS: Role[] = [...PARTICIPANTS, ...STAFF];
 const BOOKERS: Role[] = ['CUSTOMER', ...OPERATIONS];
 
 function Root() {
@@ -58,6 +60,8 @@ export const router = createBrowserRouter([
           { path: '/register', element: <RegisterPage /> },
         ],
       },
+      // Ana sayfa: misafire karşılama (login butonu + A/B seçimi), giriş yapmışa rol ana sayfası
+      { path: '/', element: <HomeGate />, errorElement: <ErrorBoundaryPage fullPage /> },
       // Şifre sıfırlama profil sayfasından da açılır, bu yüzden misafir şartı yok.
       { element: <AuthLayout />, children: [{ path: '/forgot-password', element: <ForgotPasswordPage /> }] },
       {
@@ -67,7 +71,6 @@ export const router = createBrowserRouter([
             // Sayfa hataları header/menü korunarak içerik alanında gösterilir
             errorElement: <ErrorBoundaryPage />,
             children: [
-              { path: '/', element: <HomeRedirect /> },
               { path: '/transfers', element: <TransferListPage /> },
               { path: '/transfers/new', element: guard(<CreateTransferPage />, BOOKERS) },
               { path: '/transfers/:id', element: <TransferDetailPage /> },
@@ -75,8 +78,8 @@ export const router = createBrowserRouter([
               { path: '/transfers/:id/edit', element: guard(<EditTransferPage />, ['CUSTOMER']) },
               { path: '/dispatch', element: guard(<DispatchPage />, OPERATIONS) },
               { path: '/jobs', element: guard(<JobsPage />, ['DRIVER']) },
-              { path: '/messages', element: guard(<MessagesPage />, PARTICIPANTS) },
-              { path: '/messages/:transferId', element: guard(<MessagesPage />, PARTICIPANTS) },
+              { path: '/messages', element: guard(<MessagesPage />, MESSAGE_READERS) },
+              { path: '/messages/:transferId', element: guard(<MessagesPage />, MESSAGE_READERS) },
               {
                 path: '/vehicles',
                 element: guard(

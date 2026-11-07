@@ -98,7 +98,21 @@
     "paid": "Ödemeniz iade edilecek.",
     "customerFee": "Müşteri iptallerinde kesinti uygulanabilir.",
     "confirm": "Transferi iptal et",
-    "done": "Transfer iptal edildi"
+    "done": "Transfer iptal edildi",
+    "policy": {
+      "title": "İade politikası",
+      "free": "Başlangıca {{hours}} saatten fazla varken: ücretsiz iptal, tamamı iade edilir",
+      "tier": "Başlangıca {{hours}} saatten az kala: %{{percent}} kesinti",
+      "current": "şu an geçerli",
+      "none": "Bu bölgede iptal kesintisi yok; ödemenin tamamı iade edilir.",
+      "staff": "Personel tarafından yapılan iptallerde kesinti uygulanmaz."
+    },
+    "amounts": {
+      "paid": "Ödenen tutar",
+      "deducted": "Kesinti",
+      "deductedRate": "Kesinti (%{{percent}})",
+      "refund": "İade edilecek tutar"
+    }
   },
   "tip": {
     "title": "Sürücünüze bahşiş verin",

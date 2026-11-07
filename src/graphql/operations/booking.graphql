@@ -93,3 +93,9 @@ mutation PayTransfer($data: PayTransfer!) {
     linkExpireTime
   }
 }
+
+query CheckDistricts($data: CheckDistricts!) {
+  checkDistricts(data: $data) {
+    success
+  }
+}

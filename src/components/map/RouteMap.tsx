@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Box, type SxProps, type Theme } from '@mui/material';
 import { MapContainer, Marker, Polyline, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import { shape } from '@/app/theme';
 import { env } from '@/lib/env';
 import type { LatLng } from '@/lib/geo';
 import { pinIcon } from './leafletSetup';
@@ -39,7 +40,7 @@ export function RouteMap({ from, to, stops = [], path, height = 280, sx }: Props
   return (
     <Box
       sx={[
-        { height, borderRadius: 4, overflow: 'hidden', border: 1, borderColor: 'divider', '& .leaflet-container': { height: '100%', width: '100%' },
+        { height, borderRadius: `${shape.cardRadius}px`, overflow: 'hidden', border: 1, borderColor: 'divider', '& .leaflet-container': { height: '100%', width: '100%' },
           // SVG attribute'ları CSS değişkenini çözmez, rota rengi class ile verilir.
           '& .route-line': { stroke: 'var(--mui-palette-primary-main)' },
         },

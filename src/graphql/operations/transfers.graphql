@@ -99,6 +99,8 @@ fragment TransferDetail on Transfer {
   state {
     id
     name
+    customerImposedHours
+    customerImposedRates
   }
   legs {
     id

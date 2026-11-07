@@ -1,0 +1,61 @@
+{
+  "login": "Log in",
+  "hero": {
+    "title": "Your private ride, ready when you are.",
+    "subtitle": "Book VIP transfers between airports, hotels and anywhere in the city with fixed prices and professional drivers.",
+    "badges": {
+      "airport": "Airport transfers",
+      "safe": "Licensed, insured drivers"
+    }
+  },
+  "booking": {
+    "title": "Where are you going?",
+    "hint": "Choose pickup and dropoff to see your route",
+    "continue": "Continue"
+  },
+  "features": {
+    "title": "Why travel with us",
+    "subtitle": "Comfortable vehicles, transparent pricing and a team that follows every ride.",
+    "items": {
+      "vip": {
+        "title": "VIP vehicles",
+        "body": "Clean, comfortable vehicles from sedans to vans for every group size."
+      },
+      "onTime": {
+        "title": "Always on time",
+        "body": "Drivers track your flight and are waiting when you arrive."
+      },
+      "price": {
+        "title": "Fixed prices",
+        "body": "See the price before you book. No meters, no surprises."
+      },
+      "support": {
+        "title": "24/7 support",
+        "body": "Our operators follow your transfer and reach you through in-app chat."
+      }
+    }
+  },
+  "steps": {
+    "title": "How it works",
+    "items": {
+      "route": {
+        "title": "Choose your route",
+        "body": "Enter pickup and dropoff, add stops if you need them."
+      },
+      "vehicle": {
+        "title": "Pick a vehicle",
+        "body": "Compare categories and prices for your trip."
+      },
+      "ride": {
+        "title": "Pay and ride",
+        "body": "Pay securely online; your driver is assigned and you can chat in the app."
+      }
+    }
+  },
+  "cta": {
+    "title": "Ready for your next transfer?",
+    "body": "Create your account in a minute and book your first ride.",
+    "book": "Book a transfer",
+    "register": "Sign up"
+  }
+}

@@ -17,7 +17,7 @@ export function navItemsFor(role: Role | null | undefined): NavItem[] {
   const transfers = { to: '/transfers', label: 'nav.transfers', icon: <ListAltRounded /> };
   const dispatch = { to: '/dispatch', label: 'nav.dispatch', icon: <HeadsetMicRounded /> };
   const vehicles = { to: '/vehicles', label: 'nav.vehicles', icon: <DirectionsCarRounded /> };
-  // Mesajlaşma katılımcıları (customer, driver, operator). ADMIN/STAFF mesajları transfer detayında okur.
+  // Mesajlaşma katılımcıları (customer, driver, operator) yazar; ADMIN/STAFF tüm aktif transferlerin sohbetlerini okur.
   const messages = { to: '/messages', label: 'nav.messages', icon: <ChatRounded /> };
   const createTransfer = { to: '/transfers/new', label: 'nav.createTransfer', icon: <AddRounded /> };
   switch (role) {
@@ -29,7 +29,7 @@ export function navItemsFor(role: Role | null | undefined): NavItem[] {
       ];
     case 'OPERATOR':
       // Araçlar, müşteriler ve sürücüler Settings sekmelerinde
-      return [dispatch, transfers, createTransfer, messages];
+      return [createTransfer, transfers, dispatch, messages];
     case 'DRIVER':
       return [
         { to: '/jobs', label: 'nav.jobs', icon: <WorkRounded /> },
@@ -39,7 +39,7 @@ export function navItemsFor(role: Role | null | undefined): NavItem[] {
     case 'ADMIN':
     case 'STAFF':
       // Araçlar, kategoriler, müşteriler, sürücüler ve operatörler Settings sekmelerinde
-      return [transfers, createTransfer, dispatch];
+      return [createTransfer, transfers, dispatch, messages];
     default:
       return [];
   }

@@ -30,7 +30,7 @@ import { can } from './transferPermissions';
 export default function TransferDetailPage() {
   const { id = '' } = useParams();
   const { t } = useTranslation('transfers');
-  const { user, hasRole } = useAuth();
+  const { user } = useAuth();
   const mobile = useIsMobile();
   const location = useLocation();
   const navigate = useNavigate();
@@ -90,7 +90,6 @@ export default function TransferDetailPage() {
     <MessagePanel
       transferId={transfer.id}
       canWrite={canWrite}
-      readOnlyStaff={hasRole('ADMIN', 'STAFF') && !can.participant(user, transfer)}
       height={mobile ? 'calc(100dvh - 240px)' : 560}
     />
   );

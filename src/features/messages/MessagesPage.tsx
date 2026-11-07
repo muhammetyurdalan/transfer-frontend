@@ -39,16 +39,28 @@ import { MessagePanel } from './MessagePanel';
 /** Sohbeti açık olan (mesaj yazılabilen) durumlar */
 const ACTIVE_STATUSES = ['ACCEPTED', 'STARTED'] as const;
 
-/** Kullanıcının katılımcı olduğu aktif transferler. OPERATOR backend'de tüm transferleri görür, kendine atananlarla sınırlanır. */
+const isStaff = (user: CurrentUserFragment) => user.role === 'ADMIN' || user.role === 'STAFF';
+
+/**
+ * Listelenen aktif (ACCEPTED/STARTED) transferler. ADMIN/STAFF hepsini görür ve yazabilir.
+ * Diğerleri katılımcı oldukları transferleri görür; OPERATOR backend'de tüm transferleri görür, kendine atananlarla sınırlanır.
+ */
 function threadFilter(user: CurrentUserFragment): TransferFilter {
   const filters: TransferFilter = { status: { inList: [...ACTIVE_STATUSES] } };
+  if (isStaff(user)) return filters;
   if (user.role === 'OPERATOR') filters.operatorId = { exact: user.id };
   return filters;
 }
 
-/** Listede gösterilen karşı taraf: müşteriye sürücü, sürücü ve operatöre müşteri */
+/** Listede gösterilen karşı taraf: müşteriye sürücü, diğerlerine müşteri */
 function counterpart(user: CurrentUserFragment, thread: MessageThreadFragment) {
   return user.role === 'CUSTOMER' ? thread.driver : thread.customer;
+}
+
+/** Başlık: katılımcılar için karşı taraf, ADMIN/STAFF için "müşteri ↔ sürücü" */
+function threadTitle(user: CurrentUserFragment, thread: MessageThreadFragment, fallback: string) {
+  const other = counterpart(user, thread)?.name ?? fallback;
+  return isStaff(user) ? `${thread.customer?.name ?? '—'} ↔ ${thread.driver?.name ?? fallback}` : other;
 }
 
 /**
@@ -133,7 +145,7 @@ export default function MessagesPage() {
       chat
     ) : (
       <>
-        <PageHeader title={t('page.title')} subtitle={t('page.subtitle')} />
+        <PageHeader title={t('page.title')} subtitle={t(isStaff(user) ? 'page.subtitleStaff' : 'page.subtitle')} />
         {list}
       </>
     );
@@ -141,7 +153,7 @@ export default function MessagesPage() {
 
   return (
     <>
-      <PageHeader title={t('page.title')} subtitle={t('page.subtitle')} />
+      <PageHeader title={t('page.title')} subtitle={t(isStaff(user) ? 'page.subtitleStaff' : 'page.subtitle')} />
       {threads.length === 0 && !loading ? (
         list
       ) : (
@@ -219,7 +231,7 @@ function ThreadList({
                 primary={
                   <Stack direction="row" spacing={1} sx={{ alignItems: 'center', minWidth: 0 }}>
                     <Typography variant="subtitle2" noWrap sx={{ fontWeight: count ? 800 : 700, flexGrow: 1, minWidth: 0 }}>
-                      {other?.name ?? t('page.noCounterpart')}
+                      {threadTitle(user, th, t('page.noCounterpart'))}
                     </Typography>
                     <Typography variant="caption" color="text.secondary" sx={{ flexShrink: 0 }}>
                       #{th.id}
@@ -268,7 +280,7 @@ function ChatTitle({ thread, user, back }: { thread: MessageThreadFragment; user
       <UserAvatar user={other} size={32} />
       <Box sx={{ minWidth: 0, flexGrow: 1 }}>
         <Typography variant="subtitle1" noWrap sx={{ fontWeight: 700, lineHeight: 1.2 }}>
-          {other?.name ?? t('page.noCounterpart')}
+          {threadTitle(user, thread, t('page.noCounterpart'))}
         </Typography>
         <Typography variant="caption" noWrap sx={{ opacity: 0.75, display: 'block' }}>
           {t('page.transferNo', { id: thread.id })} · {formatDateTime(thread.pickupTime)}

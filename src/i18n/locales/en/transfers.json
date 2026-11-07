@@ -98,7 +98,21 @@
     "paid": "Your payment will be refunded.",
     "customerFee": "A cancellation fee may apply for customer cancellations.",
     "confirm": "Cancel transfer",
-    "done": "Transfer cancelled"
+    "done": "Transfer cancelled",
+    "policy": {
+      "title": "Refund policy",
+      "free": "More than {{hours}} hours before pickup: free cancellation, full refund",
+      "tier": "Less than {{hours}} hours before pickup: {{percent}}% deduction",
+      "current": "applies now",
+      "none": "No cancellation fee in this region; the full payment will be refunded.",
+      "staff": "No deduction applies to cancellations made by staff."
+    },
+    "amounts": {
+      "paid": "Amount paid",
+      "deducted": "Deduction",
+      "deductedRate": "Deduction ({{percent}}%)",
+      "refund": "Refund amount"
+    }
   },
   "tip": {
     "title": "Tip your driver",

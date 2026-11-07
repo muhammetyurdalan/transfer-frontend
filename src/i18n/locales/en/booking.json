@@ -10,7 +10,8 @@
     "locationDenied": "Location permission denied. Allow location access in your browser settings.",
     "locationFailed": "Could not get your location.",
     "outOfArea": "This address is outside our service area",
-    "noDistrict": "Couldn't find the district for this address. Pick a more specific one (district, neighbourhood, street, hotel or airport)."
+    "noDistrict": "Couldn't find the district for this address. Pick a more specific one (district, neighbourhood, street, hotel or airport).",
+    "notServed": "Sorry, we don't operate between the selected locations yet. Please choose different pickup or drop-off points."
   },
   "map": {
     "title": "Pick a location",

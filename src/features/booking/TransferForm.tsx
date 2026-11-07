@@ -23,6 +23,7 @@ import {
   SwapVertRounded,
 } from '@mui/icons-material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +32,7 @@ import { RouteMap } from '@/components/map/RouteMap';
 import { PhoneField } from '@/components/PhoneField';
 import { StickyActionBar } from '@/components/StickyActionBar';
 import { errorKey } from '@/lib/errors';
+import { CheckDistrictsDocument } from '@/graphql/generated/graphql';
 import { formatRoute } from '@/lib/format';
 import type { LatLng, SelectedAddress } from '@/lib/geo';
 import { CounterField } from './CounterField';
@@ -108,9 +110,23 @@ export function TransferForm({
     !!a && !!a.latitude && !!a.longitude && !addressReady(a, initial)
       ? t('booking:address.noDistrict')
       : undefined;
+  const bothReady = addressReady(pickup, defaultValues.pickup) && addressReady(dropoff, defaultValues.dropoff);
+
+  // Oluşturmada A ve B seçilir seçilmez backend'e bu ilçeler arasında hizmet verilip verilmediği sorulur.
+  const districts = useQuery(CheckDistrictsDocument, {
+    variables: { data: { pickupDistrictName: pickup?.districtName ?? '', dropoffDistrictName: dropoff?.districtName ?? '' } },
+    skip: mode !== 'create' || !bothReady,
+    fetchPolicy: 'cache-first',
+    context: { skipErrorToast: true },
+  });
+  const districtsChecking = mode === 'create' && bothReady && districts.loading;
+  // Sadece açıkça false dönerse engellenir; sorgu hatasında son kararı createTransfer verir.
+  const notServed = mode === 'create' && bothReady && !districts.loading && districts.data?.checkDistricts.success === false;
+
   const ready =
-    addressReady(pickup, defaultValues.pickup) &&
-    addressReady(dropoff, defaultValues.dropoff) &&
+    bothReady &&
+    !districtsChecking &&
+    !notServed &&
     !!effectiveRoute &&
     Number(effectiveRoute.distance) > 0 &&
     effectiveRoute.duration > 0 &&
@@ -200,7 +216,8 @@ export function TransferForm({
     <Box component="form" noValidate onSubmit={(e) => void submit(e)}>
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 7 }}>
-          <Stack spacing={2.5}>
+          {/* useFlexGap: masaüstünde gizli mobil harita boşluk almaz, Route kartı sağdaki haritayla aynı hizada başlar */}
+          <Stack spacing={2.5} useFlexGap>
             {/* Mobilde harita formun üstünde küçük önizleme */}
             {pickup && dropoff && <Box sx={{ display: { xs: 'block', md: 'none' } }}>{map(180)}</Box>}
 
@@ -242,6 +259,7 @@ export function TransferForm({
                     />
                   )}
                 />
+                {notServed && <Alert severity="error">{t('booking:address.notServed')}</Alert>}
                 {routeFailed && (
                   <Alert
                     severity="warning"

@@ -1,0 +1,61 @@
+{
+  "login": "Giriş yap",
+  "hero": {
+    "title": "Özel aracınız, siz hazır olduğunuzda kapıda.",
+    "subtitle": "Havalimanı, otel ve şehir içi VIP transferlerinizi sabit fiyat ve profesyonel sürücülerle ayırtın.",
+    "badges": {
+      "airport": "Havalimanı transferleri",
+      "safe": "Lisanslı ve sigortalı sürücüler"
+    }
+  },
+  "booking": {
+    "title": "Nereye gidiyorsunuz?",
+    "hint": "Rotayı görmek için alış ve bırakış noktası seçin",
+    "continue": "Devam et"
+  },
+  "features": {
+    "title": "Neden bizimle",
+    "subtitle": "Konforlu araçlar, şeffaf fiyatlar ve her yolculuğu takip eden bir ekip.",
+    "items": {
+      "vip": {
+        "title": "VIP araçlar",
+        "body": "Her grup büyüklüğü için sedandan minibüse temiz ve konforlu araçlar."
+      },
+      "onTime": {
+        "title": "Her zaman zamanında",
+        "body": "Sürücüler uçuşunuzu takip eder, indiğinizde sizi bekler."
+      },
+      "price": {
+        "title": "Sabit fiyat",
+        "body": "Fiyatı ayırtmadan önce görün. Taksimetre yok, sürpriz yok."
+      },
+      "support": {
+        "title": "7/24 destek",
+        "body": "Operatörlerimiz transferinizi takip eder, uygulama içi mesajla size ulaşır."
+      }
+    }
+  },
+  "steps": {
+    "title": "Nasıl çalışır",
+    "items": {
+      "route": {
+        "title": "Rotanızı seçin",
+        "body": "Alış ve bırakış noktasını girin, gerekirse ara durak ekleyin."
+      },
+      "vehicle": {
+        "title": "Aracınızı seçin",
+        "body": "Yolculuğunuz için kategori ve fiyatları karşılaştırın."
+      },
+      "ride": {
+        "title": "Ödeyin ve yola çıkın",
+        "body": "Güvenle online ödeyin; sürücünüz atanır, uygulamadan mesajlaşabilirsiniz."
+      }
+    }
+  },
+  "cta": {
+    "title": "Bir sonraki transferinize hazır mısınız?",
+    "body": "Bir dakikada hesabınızı oluşturun ve ilk yolculuğunuzu ayırtın.",
+    "book": "Transfer ayırt",
+    "register": "Kayıt ol"
+  }
+}

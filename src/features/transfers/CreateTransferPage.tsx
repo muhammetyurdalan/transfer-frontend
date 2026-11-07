@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client/react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import { TransferForm } from '@/features/booking/TransferForm';
 import { emptyValues, toCreateInput } from '@/features/booking/values';
 import type { VehicleRouteState } from '@/features/booking/navigation';
 import type { CustomerOption } from '@/features/booking/customer';
+import { bookingDraftStore } from '@/lib/storage';
 
 /** `/transfers/new` (§8.3). Başarılıysa her zaman araç seçimine gidilir. */
 export default function CreateTransferPage() {
@@ -19,7 +20,10 @@ export default function CreateTransferPage() {
   const canPickCustomer = hasRole('OPERATOR', 'ADMIN', 'STAFF');
   const [customer, setCustomer] = useState<CustomerOption | null>(null);
   const navigate = useNavigate();
-  const [defaults] = useState(() => emptyValues(user));
+  // Karşılama sayfasında seçilen A/B noktaları varsa form onlarla açılır
+  const [defaults] = useState(() => ({ ...emptyValues(user), ...bookingDraftStore.get() }));
+  // Taslak bir kez kullanılır (StrictMode'da initializer iki kez çalıştığı için temizlik effect'te)
+  useEffect(() => bookingDraftStore.set(null), []);
   const [createTransfer, { loading }] = useMutation(CreateTransferDocument, {
     context: { skipErrorToast: true },
   });

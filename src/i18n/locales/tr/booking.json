@@ -10,7 +10,8 @@
     "locationDenied": "Konum izni reddedildi. Tarayıcı ayarlarından konum erişimine izin verin.",
     "locationFailed": "Konumunuz alınamadı.",
     "outOfArea": "Bu adres hizmet bölgemizin dışında",
-    "noDistrict": "Bu adresin ilçesi bulunamadı. Daha belirli bir adres seçin (ilçe, mahalle, sokak, otel veya havalimanı)."
+    "noDistrict": "Bu adresin ilçesi bulunamadı. Daha belirli bir adres seçin (ilçe, mahalle, sokak, otel veya havalimanı).",
+    "notServed": "Üzgünüz, seçilen lokasyonlar arasında henüz hizmet vermiyoruz. Lütfen farklı bir alış veya varış noktası seçin."
   },
   "map": {
     "title": "Konum seçin",

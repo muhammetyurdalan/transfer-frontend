@@ -19,17 +19,15 @@ import { MessageComposer } from './MessageComposer';
 
 type Props = {
   transferId: string;
-  /** ACCEPTED/STARTED ve kullanıcı katılımcı */
+  /** ACCEPTED/STARTED ve kullanıcı katılımcı ya da ADMIN/STAFF */
   canWrite: boolean;
-  /** Salt okunur sebebi (ADMIN/STAFF sadece okur) */
-  readOnlyStaff?: boolean;
   height?: number | string;
   /** Başlık bandının içeriği (varsayılan "Mesajlar"). Mesajlar sayfası transfer bilgisini gösterir. */
   title?: ReactNode;
 };
 
 /** Transfer mesajları (§8.6). Panel açıkken (mount) mesajlar okundu işaretlenir. */
-export function MessagePanel({ transferId, canWrite, readOnlyStaff, height = 560, title }: Props) {
+export function MessagePanel({ transferId, canWrite, height = 560, title }: Props) {
   const { t } = useTranslation('messages');
   // Gün ayracı etiketi: bugün / dün / uzun tarih (25 Ekim 2026 Pazar)
   const dayLabel = (time: string | null) => {
@@ -181,7 +179,7 @@ export function MessagePanel({ transferId, canWrite, readOnlyStaff, height = 560
         />
       ) : (
         <Alert severity="info" icon={<LockRounded fontSize="small" />} sx={{ borderRadius: 0 }}>
-          {readOnlyStaff ? t('readOnlyStaff') : t('readOnly')}
+          {t('readOnly')}
         </Alert>
       )}
       <ConfirmDialog

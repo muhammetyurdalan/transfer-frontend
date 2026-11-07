@@ -30,8 +30,8 @@ export const can = {
   /** Mesajlaşma katılımcısı mı (customer, driver, operator) */
   participant: (u: User, t: TransferLike) =>
     !!u && [t.customerId, t.driverId, t.operatorId].includes(u.id),
-  /** Mesaj yazılabilir mi */
-  message: (u: User, t: TransferLike) => is(t, 'ACCEPTED', 'STARTED') && can.participant(u, t),
+  /** Mesaj yazılabilir mi: aktif transferde katılımcılar ve ADMIN/STAFF */
+  message: (u: User, t: TransferLike) => is(t, 'ACCEPTED', 'STARTED') && (can.participant(u, t) || isStaff(u)),
   /** Detay sayfasında gösterilecek en az bir aksiyon var mı */
   anyDetailAction: (u: User, t: TransferLike) =>
     can.pay(u, t) ||

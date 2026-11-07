@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { lazy, Suspense, type ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router';
 import type { Role } from '@/graphql/generated/graphql';
 import { PageSkeleton } from '@/components/feedback/LoadingSkeleton';
@@ -25,6 +25,20 @@ export function GuestOnly({ children }: { children: ReactNode }) {
   if (initializing) return <PageSkeleton />;
   if (isAuthenticated) return <Navigate to="/" replace />;
   return children;
+}
+
+const LandingPage = lazy(() => import('@/features/landing/LandingPage'));
+
+/** `/`: misafire karşılama sayfası, giriş yapmışa rolünün ana sayfası. */
+export function HomeGate() {
+  const { initializing, isAuthenticated } = useAuth();
+  if (initializing) return <PageSkeleton />;
+  if (isAuthenticated) return <HomeRedirect />;
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <LandingPage />
+    </Suspense>
+  );
 }
 
 export function HomeRedirect() {

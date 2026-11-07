@@ -2,7 +2,6 @@
   "title": "Mesajlar",
   "empty": "Henüz mesaj yok",
   "readOnly": "Mesajlaşma sadece aktif transferlerde açık",
-  "readOnlyStaff": "Mesajları okuyabilirsiniz, yazamazsınız",
   "placeholder": "Mesaj yazın…",
   "send": "Gönder",
   "attach": "Dosya ekle",
@@ -28,6 +27,7 @@
   "page": {
     "title": "Mesajlar",
     "subtitle": "Aktif transferlerinizin sohbetleri",
+    "subtitleStaff": "Aktif tüm transferlerin sohbetleri",
     "empty": "Aktif sohbet yok",
     "emptyBody": "Sohbetler transferinize sürücü atanınca açılır, transfer tamamlanınca kapanır.",
     "notActive": "Bu sohbet aktif değil",
